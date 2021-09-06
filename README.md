@@ -1,45 +1,217 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# servicesenligne
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+This application was generated using JHipster 7.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.1.0](https://www.jhipster.tech/documentation-archive/v7.1.0).
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+## Development
 
----
+Before you can build this project, you must install and configure the following dependencies on your machine:
 
-## Edit a file
+1. [Node.js][]: We use Node to run a development web server and build the project.
+   Depending on your system, you can install Node either from source or as a pre-packaged bundle.
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+After installing Node, you should be able to run the following command to install development tools.
+You will only need to run this command when dependencies change in [package.json](package.json).
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+```
+npm install
+```
 
----
+We use npm scripts and [Angular CLI][] with [Webpack][] as our build system.
 
-## Create a file
+Run the following commands in two separate terminals to create a blissful development experience where your browser
+auto-refreshes when files change on your hard drive.
 
-Next, you’ll add a new file to this repository.
+```
+./mvnw
+npm start
+```
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+Npm is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
+specifying a newer version in [package.json](package.json). You can also run `npm update` and `npm install` to manage dependencies.
+Add the `help` flag on any command to see how you can use it. For example, `npm help update`.
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+The `npm run` command will list all of the scripts available to run for this project.
 
----
+### PWA Support
 
-## Clone a repository
+JHipster ships with PWA (Progressive Web App) support, and it's turned off by default. One of the main components of a PWA is a service worker.
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+The service worker initialization code is disabled by default. To enable it, uncomment the following code in `src/main/webapp/app/app.module.ts`:
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+```typescript
+ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
+```
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+### Managing dependencies
+
+For example, to add [Leaflet][] library as a runtime dependency of your application, you would run following command:
+
+```
+npm install --save --save-exact leaflet
+```
+
+To benefit from TypeScript type definitions from [DefinitelyTyped][] repository in development, you would run following command:
+
+```
+npm install --save-dev --save-exact @types/leaflet
+```
+
+Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
+Edit [src/main/webapp/app/app.module.ts](src/main/webapp/app/app.module.ts) file:
+
+```
+import 'leaflet/dist/leaflet.js';
+```
+
+Edit [src/main/webapp/content/scss/vendor.scss](src/main/webapp/content/scss/vendor.scss) file:
+
+```
+@import '~leaflet/dist/leaflet.css';
+```
+
+Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
+
+For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
+
+### Using Angular CLI
+
+You can also use [Angular CLI][] to generate some custom client code.
+
+For example, the following command:
+
+```
+ng generate component my-component
+```
+
+will generate few files:
+
+```
+create src/main/webapp/app/my-component/my-component.component.html
+create src/main/webapp/app/my-component/my-component.component.ts
+update src/main/webapp/app/app.module.ts
+```
+
+## Building for production
+
+### Packaging as jar
+
+To build the final jar and optimize the servicesenligne application for production, run:
+
+```
+./mvnw -Pprod clean verify
+```
+
+This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
+To ensure everything worked, run:
+
+```
+java -jar target/*.jar
+```
+
+Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
+
+Refer to [Using JHipster in production][] for more details.
+
+### Packaging as war
+
+To package your application as a war in order to deploy it to an application server, run:
+
+```
+./mvnw -Pprod,war clean verify
+```
+
+## Testing
+
+To launch your application's tests, run:
+
+```
+./mvnw verify
+```
+
+### Client tests
+
+Unit tests are run by [Jest][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
+
+```
+npm test
+```
+
+For more information, refer to the [Running tests page][].
+
+### Code quality
+
+Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
+
+```
+docker-compose -f src/main/docker/sonar.yml up -d
+```
+
+Note: we have turned off authentication in [src/main/docker/sonar.yml](src/main/docker/sonar.yml) for out of the box experience while trying out SonarQube, for real use cases turn it back on.
+
+You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
+
+Then, run a Sonar analysis:
+
+```
+./mvnw -Pprod clean verify sonar:sonar
+```
+
+If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
+
+```
+./mvnw initialize sonar:sonar
+```
+
+For more information, refer to the [Code quality page][].
+
+## Using Docker to simplify development (optional)
+
+You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+
+For example, to start a postgresql database in a docker container, run:
+
+```
+docker-compose -f src/main/docker/postgresql.yml up -d
+```
+
+To stop it and remove the container, run:
+
+```
+docker-compose -f src/main/docker/postgresql.yml down
+```
+
+You can also fully dockerize your application and all the services that it depends on.
+To achieve this, first build a docker image of your app by running:
+
+```
+./mvnw -Pprod verify jib:dockerBuild
+```
+
+Then run:
+
+```
+docker-compose -f src/main/docker/app.yml up -d
+```
+
+For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
+
+## Continuous Integration (optional)
+
+To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
+
+[jhipster homepage and latest documentation]: https://www.jhipster.tech
+[jhipster 7.1.0 archive]: https://www.jhipster.tech/documentation-archive/v7.1.0
+[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v7.1.0/development/
+[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v7.1.0/docker-compose
+[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v7.1.0/production/
+[running tests page]: https://www.jhipster.tech/documentation-archive/v7.1.0/running-tests/
+[code quality page]: https://www.jhipster.tech/documentation-archive/v7.1.0/code-quality/
+[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v7.1.0/setting-up-ci/
+[node.js]: https://nodejs.org/
+[webpack]: https://webpack.github.io/
+[angular cli]: https://cli.angular.io/
+[browsersync]: https://www.browsersync.io/
+[jest]: https://facebook.github.io/jest/
+[jasmine]: https://jasmine.github.io/2.0/introduction.html
+[leaflet]: https://leafletjs.com/
+[definitelytyped]: https://definitelytyped.org/
