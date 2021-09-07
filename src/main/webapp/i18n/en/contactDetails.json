@@ -1,0 +1,25 @@
+{
+  "servicesenligneApp": {
+    "contactDetails": {
+      "home": {
+        "title": "Contact Details",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Contact Details",
+        "createOrEditLabel": "Create or edit a Contact Details",
+        "notFound": "No Contact Details found"
+      },
+      "created": "A new Contact Details is created with identifier {{ param }}",
+      "updated": "A Contact Details is updated with identifier {{ param }}",
+      "deleted": "A Contact Details is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Contact Details {{ id }}?"
+      },
+      "detail": {
+        "title": "Contact Details"
+      },
+      "id": "ID",
+      "phoneNumber": "Phone Number",
+      "address": "Address"
+    }
+  }
+}

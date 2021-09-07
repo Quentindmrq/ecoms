@@ -1,0 +1,50 @@
+{
+  "name": "Product",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "logo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "game",
+      "fieldType": "Game",
+      "fieldValues": "LEAGUE_OF_LEGENDS,OVERWATCH"
+    },
+    {
+      "fieldName": "productType",
+      "fieldType": "ProductType",
+      "fieldValues": "GAME_ACCOUNT,BOOSTING,COACHING,INTING"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "stock",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "stock",
+      "ownerSide": false
+    }
+  ],
+  "entityTableName": "product",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210907081518"
+}

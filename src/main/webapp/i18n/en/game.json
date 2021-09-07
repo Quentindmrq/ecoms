@@ -1,0 +1,9 @@
+{
+  "servicesenligneApp": {
+    "Game": {
+      "null": "",
+      "LEAGUE_OF_LEGENDS": "LEAGUE_OF_LEGENDS",
+      "OVERWATCH": "OVERWATCH"
+    }
+  }
+}

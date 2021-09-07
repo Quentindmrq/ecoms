@@ -1,0 +1,33 @@
+{
+  "name": "Order",
+  "fields": [
+    {
+      "fieldName": "purchaseDate",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "orderLine",
+      "otherEntityRelationshipName": "order",
+      "relationshipName": "orderLines"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "contactDetails",
+      "otherEntityRelationshipName": "order",
+      "relationshipName": "contactDetails"
+    }
+  ],
+  "entityTableName": "jhi_order",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210907081522"
+}

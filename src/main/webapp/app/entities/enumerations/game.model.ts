@@ -1,0 +1,5 @@
+export enum Game {
+  LEAGUE_OF_LEGENDS = 'LEAGUE_OF_LEGENDS',
+
+  OVERWATCH = 'OVERWATCH',
+}

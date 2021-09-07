@@ -1,0 +1,12 @@
+{
+  "servicesenligneApp": {
+    "Country": {
+      "null": "",
+      "FRANCE": "FRANCE",
+      "SPAIN": "SPAIN",
+      "ITALY": "ITALY",
+      "ENGLAND": "ENGLAND",
+      "GERMANY": "GERMANY"
+    }
+  }
+}

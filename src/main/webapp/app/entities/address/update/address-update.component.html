@@ -1,0 +1,83 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-address-heading" data-cy="AddressCreateUpdateHeading" jhiTranslate="servicesenligneApp.address.home.createOrEditLabel">
+        Create or edit a Address
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.address.firstName" for="field_firstName">First Name</label>
+          <input type="text" class="form-control" name="firstName" id="field_firstName" data-cy="firstName" formControlName="firstName" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.address.lastName" for="field_lastName">Last Name</label>
+          <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.address.country" for="field_country">Country</label>
+          <select class="form-control" name="country" formControlName="country" id="field_country" data-cy="country">
+            <option [ngValue]="null">{{ 'servicesenligneApp.Country.null' | translate }}</option>
+            <option value="FRANCE">{{ 'servicesenligneApp.Country.FRANCE' | translate }}</option>
+            <option value="SPAIN">{{ 'servicesenligneApp.Country.SPAIN' | translate }}</option>
+            <option value="ITALY">{{ 'servicesenligneApp.Country.ITALY' | translate }}</option>
+            <option value="ENGLAND">{{ 'servicesenligneApp.Country.ENGLAND' | translate }}</option>
+            <option value="GERMANY">{{ 'servicesenligneApp.Country.GERMANY' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.address.postalCode" for="field_postalCode">Postal Code</label>
+          <input
+            type="text"
+            class="form-control"
+            name="postalCode"
+            id="field_postalCode"
+            data-cy="postalCode"
+            formControlName="postalCode"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.address.city" for="field_city">City</label>
+          <input type="text" class="form-control" name="city" id="field_city" data-cy="city" formControlName="city" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.address.address1" for="field_address1">Address 1</label>
+          <input type="text" class="form-control" name="address1" id="field_address1" data-cy="address1" formControlName="address1" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.address.address2" for="field_address2">Address 2</label>
+          <input type="text" class="form-control" name="address2" id="field_address2" data-cy="address2" formControlName="address2" />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

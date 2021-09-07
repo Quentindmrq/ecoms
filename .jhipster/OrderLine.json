@@ -1,0 +1,34 @@
+{
+  "name": "OrderLine",
+  "fields": [
+    {
+      "fieldName": "quantity",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "orderLine",
+      "relationshipName": "product",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "order",
+      "otherEntityRelationshipName": "orderLines",
+      "relationshipName": "order"
+    }
+  ],
+  "entityTableName": "order_line",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210907081523"
+}

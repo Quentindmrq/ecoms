@@ -1,0 +1,90 @@
+<div>
+  <h2 id="page-heading" data-cy="AddressHeading">
+    <span jhiTranslate="servicesenligneApp.address.home.title">Addresses</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="servicesenligneApp.address.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-address"
+        [routerLink]="['/address/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="servicesenligneApp.address.home.createLabel"> Create a new Address </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="addresses?.length === 0">
+    <span jhiTranslate="servicesenligneApp.address.home.notFound">No addresses found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="addresses && addresses.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.address.firstName">First Name</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.address.lastName">Last Name</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.address.country">Country</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.address.postalCode">Postal Code</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.address.city">City</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.address.address1">Address 1</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.address.address2">Address 2</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let address of addresses; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/address', address.id, 'view']">{{ address.id }}</a>
+          </td>
+          <td>{{ address.firstName }}</td>
+          <td>{{ address.lastName }}</td>
+          <td jhiTranslate="{{ 'servicesenligneApp.Country.' + address.country }}">{{ address.country }}</td>
+          <td>{{ address.postalCode }}</td>
+          <td>{{ address.city }}</td>
+          <td>{{ address.address1 }}</td>
+          <td>{{ address.address2 }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/address', address.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/address', address.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(address)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

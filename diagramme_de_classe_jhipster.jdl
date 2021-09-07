@@ -1,0 +1,62 @@
+entity Product {
+	name String
+    description String
+    logo String
+    price Float
+    game Game
+    productType ProductType
+}
+
+entity Stock {
+	stock Integer
+}
+
+entity ContactDetails {
+	phoneNumber String
+}
+
+entity Address {
+	firstName String
+    lastName String
+	country Country
+    postalCode String
+    city String
+    address1 String
+    address2 String
+}
+
+entity Order {
+	purchaseDate ZonedDateTime
+}
+
+entity OrderLine {
+	quantity Integer
+}
+
+enum Game {
+	LEAGUE_OF_LEGENDS, OVERWATCH
+}
+
+enum ProductType {
+	GAME_ACCOUNT, BOOSTING, COACHING, INTING
+}
+
+enum Country {
+	FRANCE, SPAIN, ITALY, ENGLAND, GERMANY
+}
+
+
+relationship OneToOne {
+	Stock{product} to Product{stock},
+    OrderLine{product} to Product,
+    ContactDetails{address} to Address
+}
+
+relationship OneToMany {
+	Order{orderLines} to OrderLine{order},
+}
+
+relationship ManyToOne {
+	Order{contactDetails} to ContactDetails
+}
+
