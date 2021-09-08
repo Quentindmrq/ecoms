@@ -5,6 +5,7 @@ import om.cgi.formation.jhipster.ecom.security.jwt.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -92,6 +93,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.GET,"/api/products").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+            .antMatchers(HttpMethod.GET,"/api/stocks").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/stocks/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/orders").authenticated()
+            .antMatchers(HttpMethod.POST, "/api/order-lines").authenticated()
+            .antMatchers("/api/addresses").authenticated()
+            .antMatchers(HttpMethod.DELETE, "/api/addresses/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/api/addresses/**").authenticated()
+            .antMatchers("/api/users").authenticated()
+            .antMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/api/users/**").authenticated()
+            .antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.PUT, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.PATCH, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.POST, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/health/**").permitAll()
