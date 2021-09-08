@@ -18,6 +18,14 @@
       "otherEntityName": "contactDetails",
       "otherEntityRelationshipName": "order",
       "relationshipName": "contactDetails"
+    },
+    {
+      "relationshipName": "owner",
+      "otherEntityName": "user",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "login",
+      "ownerSide": true,
+      "otherEntityRelationshipName": "order"
     }
   ],
   "entityTableName": "jhi_order",

@@ -12,6 +12,9 @@ import { IOrder, Order } from '../order.model';
 import { IContactDetails } from 'app/entities/contact-details/contact-details.model';
 import { ContactDetailsService } from 'app/entities/contact-details/service/contact-details.service';
 
+import { IUser } from 'app/entities/user/user.model';
+import { UserService } from 'app/entities/user/user.service';
+
 import { OrderUpdateComponent } from './order-update.component';
 
 describe('Component Tests', () => {
@@ -21,6 +24,7 @@ describe('Component Tests', () => {
     let activatedRoute: ActivatedRoute;
     let orderService: OrderService;
     let contactDetailsService: ContactDetailsService;
+    let userService: UserService;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -35,6 +39,7 @@ describe('Component Tests', () => {
       activatedRoute = TestBed.inject(ActivatedRoute);
       orderService = TestBed.inject(OrderService);
       contactDetailsService = TestBed.inject(ContactDetailsService);
+      userService = TestBed.inject(UserService);
 
       comp = fixture.componentInstance;
     });
@@ -62,16 +67,38 @@ describe('Component Tests', () => {
         expect(comp.contactDetailsSharedCollection).toEqual(expectedCollection);
       });
 
+      it('Should call User query and add missing value', () => {
+        const order: IOrder = { id: 456 };
+        const owner: IUser = { id: 95442 };
+        order.owner = owner;
+
+        const userCollection: IUser[] = [{ id: 55391 }];
+        jest.spyOn(userService, 'query').mockReturnValue(of(new HttpResponse({ body: userCollection })));
+        const additionalUsers = [owner];
+        const expectedCollection: IUser[] = [...additionalUsers, ...userCollection];
+        jest.spyOn(userService, 'addUserToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+        activatedRoute.data = of({ order });
+        comp.ngOnInit();
+
+        expect(userService.query).toHaveBeenCalled();
+        expect(userService.addUserToCollectionIfMissing).toHaveBeenCalledWith(userCollection, ...additionalUsers);
+        expect(comp.usersSharedCollection).toEqual(expectedCollection);
+      });
+
       it('Should update editForm', () => {
         const order: IOrder = { id: 456 };
         const contactDetails: IContactDetails = { id: 68701 };
         order.contactDetails = contactDetails;
+        const owner: IUser = { id: 60405 };
+        order.owner = owner;
 
         activatedRoute.data = of({ order });
         comp.ngOnInit();
 
         expect(comp.editForm.value).toEqual(expect.objectContaining(order));
         expect(comp.contactDetailsSharedCollection).toContain(contactDetails);
+        expect(comp.usersSharedCollection).toContain(owner);
       });
     });
 
@@ -144,6 +171,14 @@ describe('Component Tests', () => {
         it('Should return tracked ContactDetails primary key', () => {
           const entity = { id: 123 };
           const trackResult = comp.trackContactDetailsById(0, entity);
+          expect(trackResult).toEqual(entity.id);
+        });
+      });
+
+      describe('trackUserById', () => {
+        it('Should return tracked User primary key', () => {
+          const entity = { id: 123 };
+          const trackResult = comp.trackUserById(0, entity);
           expect(trackResult).toEqual(entity.id);
         });
       });

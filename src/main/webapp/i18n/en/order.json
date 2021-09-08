@@ -20,7 +20,8 @@
       "id": "ID",
       "purchaseDate": "Purchase Date",
       "orderLines": "Order Lines",
-      "contactDetails": "Contact Details"
+      "contactDetails": "Contact Details",
+      "owner": "Owner"
     }
   }
 }

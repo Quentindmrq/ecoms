@@ -3,6 +3,7 @@ package om.cgi.formation.jhipster.ecom.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -81,6 +82,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "reset_date")
     private Instant resetDate = null;
+
+    @OneToMany(mappedBy = "owner")
+    private Collection<Order> orders;
 
     @JsonIgnore
     @ManyToMany

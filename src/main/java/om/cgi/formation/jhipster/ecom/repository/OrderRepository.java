@@ -1,5 +1,6 @@
 package om.cgi.formation.jhipster.ecom.repository;
 
+import java.util.List;
 import om.cgi.formation.jhipster.ecom.domain.Order;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
@@ -9,4 +10,7 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Long> {}
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    @Query("select jhiOrder from Order jhiOrder where jhiOrder.owner.login = ?#{principal.username}")
+    List<Order> findByOwnerIsCurrentUser();
+}
