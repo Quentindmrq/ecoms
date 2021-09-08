@@ -1,0 +1,23 @@
+<!-- Vérifie si le panier est vide, si oui -> emptyCartBlock, sinon affiche le panier -->
+<div class="container-fluid" *ngIf="totalAmount > 0.0; else emptyCartBlock">
+  <div class="row" *ngFor="let product of products">
+    <div class="col-md-3">LOGO.jpg</div>
+    <div class="col-md-7">
+      <h4>{{ product.name }}</h4>
+      <p>{{ product.description }}</p>
+    </div>
+    <div class="col-md-2">
+      <p>{{ product.price }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+      <p>{{ totalAmount }} €</p>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyCartBlock>
+  <h1>Votre panier est vide !</h1>
+</ng-template>

@@ -30,6 +30,14 @@ export class ProductComponent implements OnInit {
   }
 
   @HostListener('click') onClick(): void {
-    window.console.log('User clicked on product');
+    let cart: Array<number>;
+    let tmp: any;
+    if ((tmp = sessionStorage.getItem('cart')) != null) {
+      cart = JSON.parse(tmp);
+      if ((tmp = this.product.id) != null) {
+        cart.push(tmp);
+        sessionStorage.setItem('cart', JSON.stringify(cart));
+      }
+    }
   }
 }
