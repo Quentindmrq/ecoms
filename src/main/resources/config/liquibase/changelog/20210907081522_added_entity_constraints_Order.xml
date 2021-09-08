@@ -13,5 +13,11 @@
                                  constraintName="fk_jhi_order__contact_details_id"
                                  referencedColumnNames="id"
                                  referencedTableName="contact_details"/>
+
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="jhi_order"
+                                 constraintName="fk_jhi_order__owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
     </changeSet>
 </databaseChangeLog>

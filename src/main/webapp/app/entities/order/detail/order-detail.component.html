@@ -24,6 +24,10 @@
             <a [routerLink]="['/contact-details', order.contactDetails?.id, 'view']">{{ order.contactDetails?.id }}</a>
           </div>
         </dd>
+        <dt><span jhiTranslate="servicesenligneApp.order.owner">Owner</span></dt>
+        <dd>
+          <span>{{ order.owner?.login }}</span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

@@ -35,6 +35,7 @@
           <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
           <th scope="col"><span jhiTranslate="servicesenligneApp.order.purchaseDate">Purchase Date</span></th>
           <th scope="col"><span jhiTranslate="servicesenligneApp.order.contactDetails">Contact Details</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.order.owner">Owner</span></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -48,6 +49,9 @@
             <div *ngIf="order.contactDetails">
               <a [routerLink]="['/contact-details', order.contactDetails?.id, 'view']">{{ order.contactDetails?.id }}</a>
             </div>
+          </td>
+          <td>
+            {{ order.owner?.login }}
           </td>
           <td class="text-right">
             <div class="btn-group">

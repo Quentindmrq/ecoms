@@ -30,7 +30,7 @@ public class OrderLine implements Serializable {
     private Product product;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "orderLines", "contactDetails" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "orderLines" }, allowSetters = true)
     private Order order;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

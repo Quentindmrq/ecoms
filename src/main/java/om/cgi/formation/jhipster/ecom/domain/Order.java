@@ -36,6 +36,13 @@ public class Order implements Serializable {
     @JsonIgnoreProperties(value = { "address" }, allowSetters = true)
     private ContactDetails contactDetails;
 
+    @ManyToOne
+    @JsonIgnoreProperties(
+        value = { "login", "firstName", "lastName", "email", "activated", "langKey", "imageUrl", "resetDate" },
+        allowSetters = true
+    )
+    private User owner;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -105,6 +112,19 @@ public class Order implements Serializable {
 
     public void setContactDetails(ContactDetails contactDetails) {
         this.contactDetails = contactDetails;
+    }
+
+    public User getOwner() {
+        return this.owner;
+    }
+
+    public Order owner(User user) {
+        this.setOwner(user);
+        return this;
+    }
+
+    public void setOwner(User user) {
+        this.owner = user;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

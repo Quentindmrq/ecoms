@@ -12,6 +12,8 @@ import { IOrder, Order } from '../order.model';
 import { OrderService } from '../service/order.service';
 import { IContactDetails } from 'app/entities/contact-details/contact-details.model';
 import { ContactDetailsService } from 'app/entities/contact-details/service/contact-details.service';
+import { IUser } from 'app/entities/user/user.model';
+import { UserService } from 'app/entities/user/user.service';
 
 @Component({
   selector: 'jhi-order-update',
@@ -21,16 +23,19 @@ export class OrderUpdateComponent implements OnInit {
   isSaving = false;
 
   contactDetailsSharedCollection: IContactDetails[] = [];
+  usersSharedCollection: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
     purchaseDate: [],
     contactDetails: [],
+    owner: [],
   });
 
   constructor(
     protected orderService: OrderService,
     protected contactDetailsService: ContactDetailsService,
+    protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
   ) {}
@@ -66,6 +71,10 @@ export class OrderUpdateComponent implements OnInit {
     return item.id!;
   }
 
+  trackUserById(index: number, item: IUser): number {
+    return item.id!;
+  }
+
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IOrder>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
       () => this.onSaveSuccess(),
@@ -90,12 +99,14 @@ export class OrderUpdateComponent implements OnInit {
       id: order.id,
       purchaseDate: order.purchaseDate ? order.purchaseDate.format(DATE_TIME_FORMAT) : null,
       contactDetails: order.contactDetails,
+      owner: order.owner,
     });
 
     this.contactDetailsSharedCollection = this.contactDetailsService.addContactDetailsToCollectionIfMissing(
       this.contactDetailsSharedCollection,
       order.contactDetails
     );
+    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing(this.usersSharedCollection, order.owner);
   }
 
   protected loadRelationshipsOptions(): void {
@@ -108,6 +119,12 @@ export class OrderUpdateComponent implements OnInit {
         )
       )
       .subscribe((contactDetails: IContactDetails[]) => (this.contactDetailsSharedCollection = contactDetails));
+
+    this.userService
+      .query()
+      .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
+      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing(users, this.editForm.get('owner')!.value)))
+      .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
   }
 
   protected createFromForm(): IOrder {
@@ -118,6 +135,7 @@ export class OrderUpdateComponent implements OnInit {
         ? dayjs(this.editForm.get(['purchaseDate'])!.value, DATE_TIME_FORMAT)
         : undefined,
       contactDetails: this.editForm.get(['contactDetails'])!.value,
+      owner: this.editForm.get(['owner'])!.value,
     };
   }
 }
