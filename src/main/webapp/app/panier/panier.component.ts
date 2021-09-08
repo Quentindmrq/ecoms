@@ -16,6 +16,8 @@ export class PanierComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.totalAmount = 0.0;
+    /*
     let cart: Array<number>;
     let tmp: any;
     if ((tmp = sessionStorage.getItem('cart')) != null) {
@@ -33,5 +35,6 @@ export class PanierComponent implements OnInit {
         })
       );
     }
+    */
   }
 }
