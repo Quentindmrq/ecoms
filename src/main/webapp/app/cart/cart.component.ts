@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'app/entities/product/product.model';
+import { CartItem, CartService } from './cart.service';
 
 @Component({
   selector: 'jhi-cart',
@@ -7,34 +8,13 @@ import { Product } from 'app/entities/product/product.model';
   styleUrls: ['./cart.component.scss'],
 })
 export class CartComponent implements OnInit {
-  products: Product[];
-  totalAmount = 0.0;
+  private cartItems: CartItem[];
 
-  constructor() {
+  constructor(private cartService: CartService) {
     // donothing
   }
 
   ngOnInit(): void {
-    this.totalAmount = 0.0;
-
-    /*
-    let cart: Array<number>;
-    let tmp: any;
-    if ((tmp = sessionStorage.getItem('cart')) != null) {
-      cart = JSON.parse(tmp);
-
-      cart.forEach(id =>
-        this.productService.find(id).subscribe(findRes => {
-          if (findRes.body != null) {
-            this.products.push(findRes.body);
-
-            if (findRes.body.price != null) {
-              this.totalAmount += findRes.body.price;
-            }
-          }
-        })
-      );
-    }
-    */
+    this.cartService.cart.subscribe(cartItems => (this.cartItems = cartItems));
   }
 }
