@@ -29,11 +29,11 @@ export class CartService {
   }
 
   // TODO finir ajout quantité
-  addToCart(product: Product /*, quantity: number*/) {
-    this.shoppingCart.next([...this.shoppingCart.getValue(), { product: product, quantity: 1 }]);
+  addToCart(product: Product /*, quantity: number*/): void {
+    this.shoppingCart.next([...this.shoppingCart.getValue(), { product, quantity: 1 }]);
   }
 
-  removeFromCart(product: Product) {
+  removeFromCart(product: Product): void {
     // TODO
   }
 }
