@@ -109,6 +109,7 @@
   },
   "defaultProject": "servicesenligne",
   "cli": {
+    "analytics": "97e1dcd4-afd0-49c3-bfc8-21d3cbe1cd3a",
     "packageManager": "npm"
   }
 }
