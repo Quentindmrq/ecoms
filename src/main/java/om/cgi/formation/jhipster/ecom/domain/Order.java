@@ -27,13 +27,12 @@ public class Order implements Serializable {
     @Column(name = "purchase_date")
     private ZonedDateTime purchaseDate;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "product", "order" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "order" }, allowSetters = true)
     private Set<OrderLine> orderLines = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "address" }, allowSetters = true)
     private ContactDetails contactDetails;
 
     @ManyToOne

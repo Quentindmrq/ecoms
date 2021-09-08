@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Optional;
 import om.cgi.formation.jhipster.ecom.domain.ContactDetails;
 import om.cgi.formation.jhipster.ecom.repository.ContactDetailsRepository;
+import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
+import om.cgi.formation.jhipster.ecom.service.UserService;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +34,13 @@ public class ContactDetailsResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final UserService userService;
+
     private final ContactDetailsRepository contactDetailsRepository;
 
-    public ContactDetailsResource(ContactDetailsRepository contactDetailsRepository) {
+    public ContactDetailsResource(ContactDetailsRepository contactDetailsRepository, UserService userService) {
         this.contactDetailsRepository = contactDetailsRepository;
+        this.userService = userService;
     }
 
     /**
@@ -141,13 +146,21 @@ public class ContactDetailsResource {
 
     /**
      * {@code GET  /contact-details} : get all the contactDetails.
-     *
+     *  Only an admin can get all the contatc details
+     *  A user will only get his if it exist
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of contactDetails in body.
      */
     @GetMapping("/contact-details")
     public List<ContactDetails> getAllContactDetails() {
         log.debug("REST request to get all ContactDetails");
-        return contactDetailsRepository.findAll();
+        List<String> auth = userService.getAuthorities();
+        if (auth.contains(AuthoritiesConstants.ADMIN)) {
+            return contactDetailsRepository.findAll();
+        }
+        /*if(auth.contains(AuthoritiesConstants.USER)){
+            return contactDetailsRepository.findOneIsCurrentUser();
+        }*/
+        return null;
     }
 
     /**

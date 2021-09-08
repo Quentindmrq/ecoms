@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Optional;
 import om.cgi.formation.jhipster.ecom.domain.Order;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
+import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
+import om.cgi.formation.jhipster.ecom.service.UserService;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +36,11 @@ public class OrderResource {
 
     private final OrderRepository orderRepository;
 
-    public OrderResource(OrderRepository orderRepository) {
+    private final UserService userService;
+
+    public OrderResource(OrderRepository orderRepository, UserService userService) {
         this.orderRepository = orderRepository;
+        this.userService = userService;
     }
 
     /**
@@ -143,7 +148,15 @@ public class OrderResource {
     @GetMapping("/orders")
     public List<Order> getAllOrders() {
         log.debug("REST request to get all Orders");
-        return orderRepository.findAll();
+        List<String> auth = userService.getAuthorities();
+        if (auth.contains(AuthoritiesConstants.ADMIN)) {
+            return orderRepository.findAll();
+        }
+        if (auth.contains(AuthoritiesConstants.USER)) {
+            return orderRepository.findByOwnerIsCurrentUser();
+        }
+
+        return null;
     }
 
     /**
@@ -155,7 +168,7 @@ public class OrderResource {
     @GetMapping("/orders/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable Long id) {
         log.debug("REST request to get Order : {}", id);
-        Optional<Order> order = orderRepository.findById(id);
+        Optional<Order> order = orderRepository.findOneByIdIfOwnerIsCurrentUser(id);
         return ResponseUtil.wrapOrNotFound(order);
     }
 

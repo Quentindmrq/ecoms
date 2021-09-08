@@ -445,7 +445,7 @@ class AddressResourceIT {
         // Delete the address
         restAddressMockMvc
             .perform(delete(ENTITY_API_URL_ID, address.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isForbidden());
 
         // Validate the database contains one less item
         List<Address> addressList = addressRepository.findAll();
