@@ -30,6 +30,10 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           path: 'login',
           loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
         },
+        {
+          path: 'cart',
+          loadChildren: () => import('./panier/panier.module').then(m => m.PanierModule),
+        },
         ...LAYOUT_ROUTES,
       ],
       { enableTracing: DEBUG_INFO_ENABLED }

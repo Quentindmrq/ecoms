@@ -53,6 +53,10 @@ export class NavbarComponent implements OnInit {
     this.isNavbarCollapsed = true;
   }
 
+  cart(): void {
+    this.router.navigate(['/cart']);
+  }
+
   login(): void {
     this.router.navigate(['/login']);
   }

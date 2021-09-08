@@ -1,3 +1,4 @@
+<h1>Your cart :</h1>
 <!-- Vérifie si le panier est vide, si oui -> emptyCartBlock, sinon affiche le panier -->
 <div class="container-fluid" *ngIf="totalAmount > 0.0; else emptyCartBlock">
   <div class="row" *ngFor="let product of products">
@@ -19,5 +20,5 @@
 </div>
 
 <ng-template #emptyCartBlock>
-  <h1>Votre panier est vide !</h1>
+  <h3>Your cart is empty !</h3>
 </ng-template>

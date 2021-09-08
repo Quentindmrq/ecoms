@@ -13,7 +13,6 @@ import { SortByDirective } from './sort/sort-by.directive';
 import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
 import { ProductComponent } from './product/product.component';
-import { PanierComponent } from './panier/panier.component';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -30,7 +29,6 @@ import { PanierComponent } from './panier/panier.component';
     SortDirective,
     ItemCountComponent,
     ProductComponent,
-    PanierComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -46,7 +44,6 @@ import { PanierComponent } from './panier/panier.component';
     SortDirective,
     ItemCountComponent,
     ProductComponent,
-    PanierComponent,
   ],
 })
 export class SharedModule {}
