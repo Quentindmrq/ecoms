@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'app/entities/product/product.model';
-import { ProductService } from 'app/entities/product/service/product.service';
 
 @Component({
-  selector: 'jhi-panier',
-  templateUrl: './panier.component.html',
-  styleUrls: ['./panier.component.scss'],
+  selector: 'jhi-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.scss'],
 })
-export class PanierComponent implements OnInit {
+export class CartComponent implements OnInit {
   products: Product[];
   totalAmount = 0.0;
 
-  constructor(private productService: ProductService) {
+  constructor() {
     // donothing
   }
 
   ngOnInit(): void {
     this.totalAmount = 0.0;
+
     /*
     let cart: Array<number>;
     let tmp: any;

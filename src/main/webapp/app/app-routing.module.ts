@@ -32,7 +32,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         },
         {
           path: 'cart',
-          loadChildren: () => import('./panier/panier.module').then(m => m.PanierModule),
+          loadChildren: () => import('./cart/cart.module').then(m => m.CartModule),
         },
         ...LAYOUT_ROUTES,
       ],
