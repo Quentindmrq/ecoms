@@ -14,6 +14,7 @@ import om.cgi.formation.jhipster.ecom.domain.Product;
 import om.cgi.formation.jhipster.ecom.domain.enumeration.Game;
 import om.cgi.formation.jhipster.ecom.domain.enumeration.ProductType;
 import om.cgi.formation.jhipster.ecom.repository.ProductRepository;
+import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +107,7 @@ class ProductResourceIT {
     }
 
     @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     @Transactional
     void createProduct() throws Exception {
         int databaseSizeBeforeCreate = productRepository.findAll().size();
@@ -127,6 +129,7 @@ class ProductResourceIT {
     }
 
     @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     @Transactional
     void createProductWithExistingId() throws Exception {
         // Create the Product with an existing ID
@@ -138,6 +141,34 @@ class ProductResourceIT {
         restProductMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(product)))
             .andExpect(status().isBadRequest());
+
+        // Validate the Product in the database
+        List<Product> productList = productRepository.findAll();
+        assertThat(productList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    void createProductUnAuthentificated() throws Exception {
+        int databaseSizeBeforeCreate = productRepository.findAll().size();
+        // Create the Product
+        restProductMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(product)))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    void createProductWithExistingIdUnAuthentificated() throws Exception {
+        // Create the Product with an existing ID
+        product.setId(1L);
+
+        int databaseSizeBeforeCreate = productRepository.findAll().size();
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restProductMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(product)))
+            .andExpect(status().isForbidden());
 
         // Validate the Product in the database
         List<Product> productList = productRepository.findAll();
@@ -217,6 +248,36 @@ class ProductResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(updatedProduct))
             )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+    @Transactional
+    void putNewProductAdmin() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        int databaseSizeBeforeUpdate = productRepository.findAll().size();
+
+        // Update the product
+        Product updatedProduct = productRepository.findById(product.getId()).get();
+        // Disconnect from session so that the updates on updatedProduct are not directly saved in db
+        em.detach(updatedProduct);
+        updatedProduct
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .logo(UPDATED_LOGO)
+            .price(UPDATED_PRICE)
+            .game(UPDATED_GAME)
+            .productType(UPDATED_PRODUCT_TYPE);
+
+        restProductMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedProduct.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedProduct))
+            )
             .andExpect(status().isOk());
 
         // Validate the Product in the database
@@ -234,6 +295,27 @@ class ProductResourceIT {
     @Test
     @Transactional
     void putNonExistingProduct() throws Exception {
+        int databaseSizeBeforeUpdate = productRepository.findAll().size();
+        product.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restProductMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, product.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(product))
+            )
+            .andExpect(status().isForbidden());
+
+        // Validate the Product in the database
+        List<Product> productList = productRepository.findAll();
+        assertThat(productList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+    @Transactional
+    void putNonExistingProductAdmin() throws Exception {
         int databaseSizeBeforeUpdate = productRepository.findAll().size();
         product.setId(count.incrementAndGet());
 
@@ -264,6 +346,27 @@ class ProductResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(product))
             )
+            .andExpect(status().isForbidden());
+
+        // Validate the Product in the database
+        List<Product> productList = productRepository.findAll();
+        assertThat(productList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+    @Transactional
+    void putWithIdMismatchProductAdmin() throws Exception {
+        int databaseSizeBeforeUpdate = productRepository.findAll().size();
+        product.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProductMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(product))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Product in the database
@@ -280,6 +383,23 @@ class ProductResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restProductMockMvc
             .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(product)))
+            .andExpect(status().isForbidden());
+
+        // Validate the Product in the database
+        List<Product> productList = productRepository.findAll();
+        assertThat(productList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+    @Transactional
+    void putWithMissingIdPathParamProductAdmin() throws Exception {
+        int databaseSizeBeforeUpdate = productRepository.findAll().size();
+        product.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProductMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(product)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Product in the database
@@ -288,6 +408,7 @@ class ProductResourceIT {
     }
 
     @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     @Transactional
     void partialUpdateProductWithPatch() throws Exception {
         // Initialize the database
@@ -322,6 +443,7 @@ class ProductResourceIT {
     }
 
     @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     @Transactional
     void fullUpdateProductWithPatch() throws Exception {
         // Initialize the database
@@ -374,7 +496,7 @@ class ProductResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(product))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the Product in the database
         List<Product> productList = productRepository.findAll();
@@ -394,7 +516,7 @@ class ProductResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(product))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the Product in the database
         List<Product> productList = productRepository.findAll();
@@ -410,7 +532,7 @@ class ProductResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restProductMockMvc
             .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(product)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isForbidden());
 
         // Validate the Product in the database
         List<Product> productList = productRepository.findAll();
@@ -418,6 +540,7 @@ class ProductResourceIT {
     }
 
     @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     @Transactional
     void deleteProduct() throws Exception {
         // Initialize the database

@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import om.cgi.formation.jhipster.ecom.IntegrationTest;
 import om.cgi.formation.jhipster.ecom.domain.Order;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
+import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,7 @@ class OrderResourceIT {
     }
 
     @Test
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     @Transactional
     void getOrder() throws Exception {
         // Initialize the database
@@ -172,13 +174,7 @@ class OrderResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(updatedOrder))
             )
-            .andExpect(status().isOk());
-
-        // Validate the Order in the database
-        List<Order> orderList = orderRepository.findAll();
-        assertThat(orderList).hasSize(databaseSizeBeforeUpdate);
-        Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getPurchaseDate()).isEqualTo(UPDATED_PURCHASE_DATE);
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -194,7 +190,7 @@ class OrderResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(order))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -214,7 +210,7 @@ class OrderResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(order))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -230,7 +226,7 @@ class OrderResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOrderMockMvc
             .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(order)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -257,13 +253,11 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrder))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeUpdate);
-        Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getPurchaseDate()).isEqualTo(UPDATED_PURCHASE_DATE);
     }
 
     @Test
@@ -286,13 +280,11 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrder))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeUpdate);
-        Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getPurchaseDate()).isEqualTo(UPDATED_PURCHASE_DATE);
     }
 
     @Test
@@ -308,7 +300,7 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(order))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -328,7 +320,7 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(order))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -344,7 +336,7 @@ class OrderResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOrderMockMvc
             .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(order)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isForbidden());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -362,10 +354,10 @@ class OrderResourceIT {
         // Delete the order
         restOrderMockMvc
             .perform(delete(ENTITY_API_URL_ID, order.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isForbidden());
 
         // Validate the database contains one less item
         List<Order> orderList = orderRepository.findAll();
-        assertThat(orderList).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(orderList).hasSize(databaseSizeBeforeDelete);
     }
 }

@@ -167,13 +167,11 @@ class OrderLineResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(updatedOrderLine))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
         assertThat(orderLineList).hasSize(databaseSizeBeforeUpdate);
-        OrderLine testOrderLine = orderLineList.get(orderLineList.size() - 1);
-        assertThat(testOrderLine.getQuantity()).isEqualTo(UPDATED_QUANTITY);
     }
 
     @Test
@@ -189,7 +187,7 @@ class OrderLineResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(orderLine))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -209,7 +207,7 @@ class OrderLineResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(orderLine))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -225,7 +223,7 @@ class OrderLineResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOrderLineMockMvc
             .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(orderLine)))
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -252,13 +250,11 @@ class OrderLineResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrderLine))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
         assertThat(orderLineList).hasSize(databaseSizeBeforeUpdate);
-        OrderLine testOrderLine = orderLineList.get(orderLineList.size() - 1);
-        assertThat(testOrderLine.getQuantity()).isEqualTo(UPDATED_QUANTITY);
     }
 
     @Test
@@ -281,13 +277,11 @@ class OrderLineResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrderLine))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
         assertThat(orderLineList).hasSize(databaseSizeBeforeUpdate);
-        OrderLine testOrderLine = orderLineList.get(orderLineList.size() - 1);
-        assertThat(testOrderLine.getQuantity()).isEqualTo(UPDATED_QUANTITY);
     }
 
     @Test
@@ -303,7 +297,7 @@ class OrderLineResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(orderLine))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -323,7 +317,7 @@ class OrderLineResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(orderLine))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -341,7 +335,7 @@ class OrderLineResourceIT {
             .perform(
                 patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(orderLine))
             )
-            .andExpect(status().isMethodNotAllowed());
+            .andExpect(status().isForbidden());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -359,10 +353,10 @@ class OrderLineResourceIT {
         // Delete the orderLine
         restOrderLineMockMvc
             .perform(delete(ENTITY_API_URL_ID, orderLine.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isForbidden());
 
         // Validate the database contains one less item
         List<OrderLine> orderLineList = orderLineRepository.findAll();
-        assertThat(orderLineList).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(orderLineList).hasSize(databaseSizeBeforeDelete);
     }
 }
