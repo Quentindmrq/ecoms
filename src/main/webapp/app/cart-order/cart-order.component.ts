@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Address } from 'app/entities/address/address.model';
 
 @Component({
   selector: 'jhi-cart-order',
@@ -6,12 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cart-order.component.scss'],
 })
 export class CartOrderComponent implements OnInit {
-  private tmp = 0;
+  model: Address;
   constructor() {
     //donothing
   }
 
   ngOnInit(): void {
-    this.tmp = 0;
+    this.model = new Address();
+  }
+
+  onSubmit(): void {
+    //TODO -- envoyer a l api
+    window.console.debug(this.model);
   }
 }

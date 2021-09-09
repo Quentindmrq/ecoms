@@ -11,10 +11,10 @@
       <p>{{ item.product.price | currency: 'EUR' }}</p>
     </div>
   </div>
+  <button (click)="discard()">discard</button>
+  <button mat-stroked-button (click)="validate()">Validate</button>
 </div>
 
 <ng-template #emptyCartBlock>
   <h3>Your cart is empty !</h3>
 </ng-template>
-<button (click)="discard()">discard</button>
-<button mat-stroked-button (click)="validate()">Validate</button>
