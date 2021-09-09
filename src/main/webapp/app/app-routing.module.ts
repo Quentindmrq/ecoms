@@ -36,7 +36,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         },
         {
           path: 'cartOrder',
-          loadChildren: () => import('./cart-order/cart-order.module').then(m => m.CartOrderModule),
+          loadChildren: () => import('./shopping-tunnel/cart-order/cart-order.module').then(m => m.CartOrderModule),
         },
         ...LAYOUT_ROUTES,
       ],
