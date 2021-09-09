@@ -1,32 +1,70 @@
-<p>Enter your information</p>
-<form (ngSubmit)="onSubmit()">
-  <div class="form-group col-md-5">
-    <label for="first-name"> First name</label>
-    <input id="first-name" class="form-control" name="first-name" required [(ngModel)]="model.firstName" />
+<div class="container-fluid">
+  <form>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="fill">
+          <mat-label for="first-name">First name</mat-label>
+          <input matInput placeholder="ex. Jean" id="first-name" formControlName="first-name" required />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="fill">
+          <mat-label for="last-name">Last name</mat-label>
+          <input matInput placeholder="ex. Dupont" id="last-name" formControlName="last-name" required />
+        </mat-form-field>
+      </div>
+    </div>
 
-    <label for="last-name"> Last name</label>
-    <input id="last-name" class="form-control" name="last-name" required [(ngModel)]="model.lastName" />
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field appearance="fill">
+          <mat-label for="adress1">Adress 1</mat-label>
+          <input matInput id="adress1" formControlName="adress1" required />
+        </mat-form-field>
+      </div>
+    </div>
 
-    <label for="country"> Country</label>
-    <select id="country" class="form-control" name="country" required [(ngModel)]="model.country">
-      <option value=""></option>
-      <option value="FR">France</option>
-    </select>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field appearance="fill">
+          <mat-label for="adress2">Adress 2</mat-label>
+          <input matInput id="adress2" formControlName="adress2" />
+        </mat-form-field>
+      </div>
+    </div>
 
-    <label for="adress1"> Adress 1</label>
-    <input id="adress1" class="form-control" name="adress1" required [(ngModel)]="model.address1" />
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Country</mat-label>
+          <mat-select id="country" formControlName="country" required>
+            <mat-option value="" selected>None</mat-option>
+            <mat-option value="FR">France</mat-option>
+            <mat-option value="EN">England</mat-option>
+            <mat-option value="IT">Italia</mat-option>
+            <mat-option value="ES">Espana</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="fill">
+          <mat-label for="postal-code">Postal code</mat-label>
+          <input matInput id="postal-code" formControlName="postal-code" required />
+        </mat-form-field>
+      </div>
+      <div class="col-md-5">
+        <mat-form-field appearance="fill">
+          <mat-label for="city">City</mat-label>
+          <input matInput id="city" formControlName="city" required />
+        </mat-form-field>
+      </div>
+    </div>
 
-    <label for="adress2"> Adress 2</label>
-    <input id="adress2" class="form-control" name="adress2" [(ngModel)]="model.address2" />
-
-    <label for="postal-code"> Postal code</label>
-    <input id="postal-code" class="form-control" name="postal-code" required [(ngModel)]="model.postalCode" />
-
-    <label for="city"> City</label>
-    <input id="city" class="form-control" name="city" required [(ngModel)]="model.city" />
-
-    <br />
-
-    <button mat-stroked-button type="submit" class="btn btn-success">validate</button>
-  </div>
-</form>
+    <div class="row">
+      <div class="col-md-10"></div>
+      <div class="col-md-2">
+        <button mat-raised-button color="accent" matStepperNext>Next</button>
+      </div>
+    </div>
+  </form>
+</div>
