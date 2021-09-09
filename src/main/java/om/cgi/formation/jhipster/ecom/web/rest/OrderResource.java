@@ -168,6 +168,11 @@ public class OrderResource {
     @GetMapping("/orders/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable Long id) {
         log.debug("REST request to get Order : {}", id);
+        List<String> auth = userService.getAuthorities();
+        if (auth.contains(AuthoritiesConstants.ADMIN)) {
+            Optional<Order> order = orderRepository.findOneById(id);
+            return ResponseUtil.wrapOrNotFound(order);
+        }
         Optional<Order> order = orderRepository.findOneByIdIfOwnerIsCurrentUser(id);
         return ResponseUtil.wrapOrNotFound(order);
     }
