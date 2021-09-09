@@ -13,5 +13,6 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "ecoms2021mauq" #Must be unique in Heroku
+          heroku_app_name: "ecoms2021mauqV2" #Must be unique in Heroku
           heroku_email: "quentin.demarque@etu.univ-grenoble-alpes.fr"
+          region: "eu"
