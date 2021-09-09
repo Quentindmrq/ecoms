@@ -54,7 +54,7 @@
 
   <div *jhiHasAnyAuthority="'ROLE_ADMIN'">
     <!-- *ngIf="account !== null"> -->
-    <button mat-button [matMenuTriggerFor]="testMenu" (onClick)="testCL()">
+    <button mat-button [matMenuTriggerFor]="testMenu">
       <span>
         <fa-icon icon="users-cog"></fa-icon>
         <span jhiTranslate="global.menu.admin.main">Administration</span>
@@ -94,7 +94,7 @@
 
   <div *ngIf="languages && languages.length > 1">
     <!-- *ngIf="account !== null"> -->
-    <button mat-button [matMenuTriggerFor]="testMenu" (onClick)="testCL()">
+    <button mat-button [matMenuTriggerFor]="testMenu">
       <span>
         <fa-icon icon="flag"></fa-icon>
         <span jhiTranslate="global.menu.language">Language</span>
@@ -109,7 +109,7 @@
 
   <div *jhiHasAnyAuthority="'ROLE_ADMIN'">
     <!-- *ngIf="account !== null"> -->
-    <button mat-button [matMenuTriggerFor]="testMenu" (onClick)="testCL()">
+    <button mat-button [matMenuTriggerFor]="testMenu">
       <span *ngIf="!account?.imageUrl">
         <fa-icon icon="user"></fa-icon>
         <span jhiTranslate="global.menu.account.main">Account</span>
