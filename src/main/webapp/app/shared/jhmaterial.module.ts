@@ -20,6 +20,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgModule } from '@angular/core';
 
@@ -48,6 +49,7 @@ import { NgModule } from '@angular/core';
     MatRadioModule,
     MatListModule,
     MatIconModule,
+    MatToolbarModule,
   ],
   exports: [
     MatButtonModule,
@@ -73,6 +75,7 @@ import { NgModule } from '@angular/core';
     MatRadioModule,
     MatListModule,
     MatIconModule,
+    MatToolbarModule,
   ],
 })
 export class JhMaterialModule {}
