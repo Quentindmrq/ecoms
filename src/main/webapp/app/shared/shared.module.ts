@@ -14,9 +14,10 @@ import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
 import { ProductComponent } from './product/product.component';
 import { ProductListComponent } from './product-list/product-list.component';
+import { JhMaterialModule } from './jhmaterial.module';
 
 @NgModule({
-  imports: [SharedLibsModule],
+  imports: [SharedLibsModule, JhMaterialModule],
   declarations: [
     FindLanguageFromKeyPipe,
     TranslateDirective,
@@ -47,6 +48,7 @@ import { ProductListComponent } from './product-list/product-list.component';
     ItemCountComponent,
     ProductComponent,
     ProductListComponent,
+    JhMaterialModule,
   ],
 })
 export class SharedModule {}
