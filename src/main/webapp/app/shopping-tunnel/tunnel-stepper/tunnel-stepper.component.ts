@@ -14,13 +14,8 @@ export class TunnelStepperComponent {
 
   constructor(private _formBuilder: FormBuilder, private cartService: CartService) {}
 
-  //ngOnInit(): void {
-  // this.formGroupStep1 = this._formBuilder.group({
-  //   firstCtrl: ['', Validators.required],
-  // });
-
-  // this.formGroupStep2 = this._formBuilder.group({
-  //   secondCtrl: ['', Validators.required],
-  // });
-  //}
+  ngOnInit(): void {
+    this.formGroupStep1 = this._formBuilder.group({});
+    this.formGroupStep2 = this._formBuilder.group({});
+  }
 }

@@ -58,6 +58,7 @@ import { NgModule } from '@angular/core';
     MatToolbarModule,
     MatBadgeModule,
     MatSortModule,
+    MatStepperModule,
   ],
   exports: [
     MatButtonModule,
@@ -88,6 +89,7 @@ import { NgModule } from '@angular/core';
     MatToolbarModule,
     MatBadgeModule,
     MatSortModule,
+    MatStepperModule,
   ],
 })
 export class JhMaterialModule {}
