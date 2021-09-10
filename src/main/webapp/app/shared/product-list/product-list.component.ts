@@ -105,4 +105,10 @@ export class ProductListComponent implements OnInit {
     }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
+
+  addToCart(stock: Stock): void {
+    if (stock.product) {
+      this.cartService.addToCart(stock.product);
+    }
+  }
 }
