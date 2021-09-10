@@ -27,6 +27,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgModule } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import { NgModule } from '@angular/core';
     MatBadgeModule,
     MatSortModule,
     MatStepperModule,
+    MatTableModule,
   ],
   exports: [
     MatButtonModule,
@@ -90,6 +92,7 @@ import { NgModule } from '@angular/core';
     MatBadgeModule,
     MatSortModule,
     MatStepperModule,
+    MatTableModule,
   ],
 })
 export class JhMaterialModule {}
