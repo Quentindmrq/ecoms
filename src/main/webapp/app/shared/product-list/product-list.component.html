@@ -24,7 +24,9 @@
     <!-- description buy -->
     <ng-container matColumnDef=" ">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let stock">buy</td>
+      <td mat-cell *matCellDef="let stock">
+        <button mat-flat-button color="accent" (click)="addToCart(stock)">+ Add to cart !</button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
