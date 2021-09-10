@@ -23,7 +23,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatStepperModule } from '@angular/material/stepper';
 import { NgModule } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   imports: [
@@ -50,6 +52,8 @@ import { NgModule } from '@angular/core';
     MatRadioModule,
     MatListModule,
     MatIconModule,
+    MatStepperModule,
+    MatTableModule,
     MatToolbarModule,
     MatBadgeModule,
   ],
@@ -77,6 +81,8 @@ import { NgModule } from '@angular/core';
     MatRadioModule,
     MatListModule,
     MatIconModule,
+    MatStepperModule,
+    MatTableModule,
     MatToolbarModule,
     MatBadgeModule,
   ],

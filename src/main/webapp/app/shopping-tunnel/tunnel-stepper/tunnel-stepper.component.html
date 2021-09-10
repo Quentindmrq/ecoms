@@ -1,3 +1,17 @@
-<p>tunnel-stepper works!</p>
-<jhi-cart-order></jhi-cart-order>
-<jhi-bank-data></jhi-bank-data>
+<mat-stepper [linear]="true" #stepper>
+  <mat-step [stepControl]="formGroupStep1">
+    <ng-template matStepLabel>Billing address</ng-template>
+    <form [formGroup]="formGroupStep1">
+      <jhi-cart-order></jhi-cart-order>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="formGroupStep2">
+    <ng-template matStepLabel>Payment</ng-template>
+    <form [formGroup]="formGroupStep2">
+      <jhi-bank-data></jhi-bank-data>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done !</ng-template>
+  </mat-step>
+</mat-stepper>
