@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormGroupDirective } from '@angular/forms';
 import { Address } from 'app/entities/address/address.model';
 
 @Component({
@@ -7,13 +8,19 @@ import { Address } from 'app/entities/address/address.model';
   styleUrls: ['./cart-order.component.scss'],
 })
 export class CartOrderComponent implements OnInit {
+  formGroup: FormGroup;
+
   model: Address;
-  constructor() {
+
+  constructor(private ctrlContainer: FormGroupDirective, private fb: FormBuilder) {
     //donothing
   }
 
   ngOnInit(): void {
     this.model = new Address();
+    this.formGroup = this.ctrlContainer.form;
+
+    //Todo - controle
   }
 
   onSubmit(): void {

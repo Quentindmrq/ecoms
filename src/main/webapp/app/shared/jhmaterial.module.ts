@@ -21,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatStepperModule } from '@angular/material/stepper';
 import { NgModule } from '@angular/core';
 
 @NgModule({
@@ -48,6 +49,7 @@ import { NgModule } from '@angular/core';
     MatRadioModule,
     MatListModule,
     MatIconModule,
+    MatStepperModule,
   ],
   exports: [
     MatButtonModule,
@@ -73,6 +75,7 @@ import { NgModule } from '@angular/core';
     MatRadioModule,
     MatListModule,
     MatIconModule,
+    MatStepperModule,
   ],
 })
 export class JhMaterialModule {}
