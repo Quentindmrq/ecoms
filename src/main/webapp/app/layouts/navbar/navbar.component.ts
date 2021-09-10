@@ -9,6 +9,7 @@ import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
+import { CartService } from 'app/cart/cart.service';
 
 @Component({
   selector: 'jhi-navbar',
@@ -29,6 +30,7 @@ export class NavbarComponent implements OnInit {
     private sessionStorageService: SessionStorageService,
     private accountService: AccountService,
     private profileService: ProfileService,
+    private cartService: CartService,
     private router: Router
   ) {
     if (VERSION) {
@@ -69,5 +71,9 @@ export class NavbarComponent implements OnInit {
 
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
+
+  get cartItemsNumber(): number {
+    return this.cartService.numberOfItems;
   }
 }

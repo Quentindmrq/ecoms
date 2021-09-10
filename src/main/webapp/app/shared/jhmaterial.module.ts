@@ -22,6 +22,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
 import { NgModule } from '@angular/core';
 
 @NgModule({
@@ -50,6 +51,7 @@ import { NgModule } from '@angular/core';
     MatListModule,
     MatIconModule,
     MatToolbarModule,
+    MatBadgeModule,
   ],
   exports: [
     MatButtonModule,
@@ -76,6 +78,7 @@ import { NgModule } from '@angular/core';
     MatListModule,
     MatIconModule,
     MatToolbarModule,
+    MatBadgeModule,
   ],
 })
 export class JhMaterialModule {}

@@ -28,6 +28,10 @@ export class CartService {
     return this.shoppingCart;
   }
 
+  get numberOfItems(): number {
+    return this.shoppingCart.getValue().length;
+  }
+
   // TODO finir ajout quantité
   addToCart(product: Product /*, quantity: number*/): void {
     this.shoppingCart.next([...this.shoppingCart.getValue(), { product, quantity: 1 }]);
