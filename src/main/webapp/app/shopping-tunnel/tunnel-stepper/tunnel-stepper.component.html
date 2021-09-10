@@ -4,11 +4,30 @@
     <form [formGroup]="formGroupStep1">
       <jhi-cart-order></jhi-cart-order>
     </form>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+          <button mat-raised-button color="accent" matStepperNext>Next</button>
+        </div>
+      </div>
+    </div>
   </mat-step>
   <mat-step [stepControl]="formGroupStep2">
     <ng-template matStepLabel>Payment</ng-template>
     <form [formGroup]="formGroupStep2">
       <jhi-bank-data></jhi-bank-data>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8"></div>
+          <div class="col-md-2">
+            <button mat-stroked-button color="accent" matStepperPrevious>Back</button>
+          </div>
+          <div class="col-md-2">
+            <button mat-raised-button color="accent" matStepperNext>Next</button>
+          </div>
+        </div>
+      </div>
     </form>
   </mat-step>
   <mat-step>
