@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormGroupDirective, FormBuilder } from '@angular/forms';
+import { FormGroup, FormGroupDirective, FormBuilder, Validators } from '@angular/forms';
 import { Address } from 'app/entities/address/address.model';
 
 @Component({
@@ -8,15 +8,16 @@ import { Address } from 'app/entities/address/address.model';
   styleUrls: ['./bank-data.component.scss'],
 })
 export class BankDataComponent {
-  formGroup: FormGroup;
+  formGroupStep2: FormGroup;
 
-  constructor(private ctrlContainer: FormGroupDirective, private fb: FormBuilder) {
+  constructor(private fb: FormBuilder) {
     //donothing
   }
 
   ngOnInit(): void {
-    this.formGroup = this.ctrlContainer.form;
-
+    this.formGroupStep2 = this.fb.group({
+      firstCtrl: ['', Validators.required],
+    });
     //Todo - controle
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Address } from 'app/entities/address/address.model';
 
 @Component({
@@ -8,18 +8,19 @@ import { Address } from 'app/entities/address/address.model';
   styleUrls: ['./cart-order.component.scss'],
 })
 export class CartOrderComponent implements OnInit {
-  formGroup: FormGroup;
+  formGroupStep1: FormGroup;
 
   model: Address;
 
-  constructor(private ctrlContainer: FormGroupDirective, private fb: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder) {
     //donothing
   }
 
   ngOnInit(): void {
+    this.formGroupStep1 = this._formBuilder.group({
+      firstCtrl: ['', Validators.required],
+    });
     this.model = new Address();
-    this.formGroup = this.ctrlContainer.form;
-
     //Todo - controle
   }
 
