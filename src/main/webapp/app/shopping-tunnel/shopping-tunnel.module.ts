@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import { CartModule } from 'app/cart/cart.module';
-import { SharedModule } from 'app/shared/shared.module';
+import { ShoppingTunnelRoutingModule } from './shopping-tunnel-routing.module';
+import { ShoppingTunnelComponent } from './shopping-tunnel.component';
 import { TunnelStepperComponent } from './tunnel-stepper/tunnel-stepper.component';
-import { BankDataComponent } from './bank-data/bank-data.component';
 import { CartOrderComponent } from './cart-order/cart-order.component';
+import { BankDataComponent } from './bank-data/bank-data.component';
+import { SharedModule } from 'app/shared/shared.module';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { SHOPPING_TUNNEL_ROUTE } from './shopping-tunnel.route';
 
 @NgModule({
-  declarations: [TunnelStepperComponent, BankDataComponent, CartOrderComponent],
-  imports: [CartModule, FormsModule, SharedModule, RouterModule.forChild([SHOPPING_TUNNEL_ROUTE])],
+  declarations: [ShoppingTunnelComponent, TunnelStepperComponent, CartOrderComponent, BankDataComponent],
+  imports: [CommonModule, ShoppingTunnelRoutingModule, SharedModule, FormsModule],
 })
 export class ShoppingTunnelModule {}

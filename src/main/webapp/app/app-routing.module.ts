@@ -38,6 +38,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           path: 'shopping-tunnel',
           loadChildren: () => import('./shopping-tunnel/shopping-tunnel.module').then(m => m.ShoppingTunnelModule),
         },
+
         ...LAYOUT_ROUTES,
       ],
       { enableTracing: DEBUG_INFO_ENABLED }
