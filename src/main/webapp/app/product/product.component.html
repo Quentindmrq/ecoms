@@ -1,2 +1,18 @@
-<p>product works!</p>
-{{ productId }}
+<div *ngIf="loading">
+  <mat-spinner> </mat-spinner>
+</div>
+
+<div *ngIf="error">
+  {{ error | json }}
+</div>
+
+<mat-card *ngIf="!loading && stock?.product">
+  <mat-card-title>
+    {{ stock?.product?.name }}
+  </mat-card-title>
+
+  <mat-card-content> </mat-card-content>
+  <mat-card-actions class="buttonBox">
+    <button mat-flat-button color="accent" (click)="addToCart()">Add to cart</button>
+  </mat-card-actions>
+</mat-card>
