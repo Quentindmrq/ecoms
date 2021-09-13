@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
+import javax.validation.constraints.Size;
 import om.cgi.formation.jhipster.ecom.IntegrationTest;
 import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.repository.StockRepository;
@@ -183,8 +184,6 @@ class StockResourceIT {
     void putNewStock() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
-
-        int databaseSizeBeforeUpdate = stockRepository.findAll().size();
 
         // Update the stock
         Stock updatedStock = stockRepository.findById(stock.getId()).get();
@@ -445,8 +444,6 @@ class StockResourceIT {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
 
-        int databaseSizeBeforeDelete = stockRepository.findAll().size();
-
         // Delete the stock
         restStockMockMvc
             .perform(delete(ENTITY_API_URL_ID, stock.getId()).accept(MediaType.APPLICATION_JSON))
@@ -470,5 +467,30 @@ class StockResourceIT {
         // Validate the database contains one less item
         List<Stock> stockList = stockRepository.findAll();
         assertThat(stockList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void getPageStock() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc
+            .perform(get(ENTITY_API_URL_ID, stock.getId()).param("page", "2").param("size", "5"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+    }
+
+    @Test
+    @Transactional
+    public void getPageStockWithInvalidSize() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc
+            .perform(get(ENTITY_API_URL_ID, stock.getId()).param("page", "1").param("lastName", "0"))
+            .andExpect(status().isBadRequest());
     }
 }

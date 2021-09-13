@@ -1,8 +1,8 @@
 package om.cgi.formation.jhipster.ecom.web.rest;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import om.cgi.formation.jhipster.ecom.domain.Stock;
@@ -11,9 +11,21 @@ import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -136,14 +148,22 @@ public class StockResource {
     }
 
     /**
-     * {@code GET  /stocks} : get all the stocks.
-     *
+     * {@code GET  /stocks} : get all the stocks in a page, default is page 1 of size 5.
+     * @param page the number of the page you want
+     * @param size the size of the page
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of stocks in body.
      */
     @GetMapping("/stocks")
-    public List<Stock> getAllStocks() {
+    public Page<Stock> getAllStocksPageInBody(
+        @RequestParam(required = false, value = "page", defaultValue = "1") int page,
+        @RequestParam(required = false, value = "size", defaultValue = "5") int size
+    ) {
+        if (size <= 0) {
+            throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
+        }
+        Pageable pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size));
         log.debug("REST request to get all Stocks");
-        return stockRepository.findAll();
+        return stockRepository.findAll(pageRequested);
     }
 
     /**
@@ -174,4 +194,33 @@ public class StockResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    /**
+     * {@code Patch  /stocksInCart/:id} : a new item has been added a cart.
+     *
+     * @param id of the stock that just got added to the cart.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} if it worked {@code 404 (Not Found)}.
+     */
+    @PatchMapping("/addStocksInCart/{id}/{amount}")
+    public ResponseEntity<Stock> patchEntryInBasket(@PathVariable Long id, @PathVariable long amount) {
+        log.debug("REST request to patch Stock because of a cart entry : {}", id);
+        if (!stockRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+        Optional<Stock> stock = stockRepository.findById(id);
+        if (stock == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+
+        int currStock = stock.get().getStock();
+        if (currStock == 0) {
+            throw new BadRequestAlertException("the stock is empty", ENTITY_NAME, "stockIsZero");
+        }
+        stock.get().stock(currStock + Math.toIntExact(amount));
+        deleteAfterTimeout(id, amount);
+
+        return ResponseUtil.wrapOrNotFound(stock);
+    }
+
+    private void deleteAfterTimeout(long id, long amount) {}
 }
