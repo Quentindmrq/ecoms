@@ -153,8 +153,8 @@ class StockResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(stock.getId().intValue())))
-            .andExpect(jsonPath("$.[*].stock").value(hasItem(DEFAULT_STOCK)));
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(stock.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].stock").value(hasItem(DEFAULT_STOCK)));
     }
 
     @Test
@@ -477,7 +477,7 @@ class StockResourceIT {
 
         // Get the stock
         restStockMockMvc
-            .perform(get(ENTITY_API_URL_ID, stock.getId()).param("page", "2").param("size", "5"))
+            .perform(get(ENTITY_API_URL, stock.getId()).queryParam("page", "2").queryParam("size", "5"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
@@ -490,7 +490,7 @@ class StockResourceIT {
 
         // Get the stock
         restStockMockMvc
-            .perform(get(ENTITY_API_URL_ID, stock.getId()).param("page", "1").param("lastName", "0"))
+            .perform(get(ENTITY_API_URL, stock.getId()).queryParam("page", "1").queryParam("size", "0"))
             .andExpect(status().isBadRequest());
     }
 }
