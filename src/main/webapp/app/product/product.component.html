@@ -6,13 +6,35 @@
   {{ error | json }}
 </div>
 
-<mat-card *ngIf="!loading && stock?.product">
-  <mat-card-title>
-    {{ stock?.product?.name }}
-  </mat-card-title>
+<mat-card *ngIf="!loading && stock?.product" style="width: 50%">
+  <mat-card-title-group>
+    <img mat-card-sm-image />
 
-  <mat-card-content> </mat-card-content>
+    <mat-card-title>
+      {{ stock?.product?.name }}
+    </mat-card-title>
+
+    <mat-card-subtitle>{{ stock?.product?.productType }} - {{ stock?.product?.game }}</mat-card-subtitle>
+  </mat-card-title-group>
+
+  <mat-card-content>
+    {{ stock?.product?.description }}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5"></div>
+      </div>
+    </div>
+  </mat-card-content>
+
   <mat-card-actions class="buttonBox">
-    <button mat-flat-button color="accent" (click)="addToCart()">Add to cart</button>
+    <button mat-flat-button color="accent" (click)="addToCart()">
+      <mat-icon>add_shopping_cart</mat-icon>
+      {{ stock?.product?.price | currency: 'EUR' }}
+    </button>
   </mat-card-actions>
+</mat-card>
+
+<mat-card *ngIf="!loading && !stock?.product">
+  <mat-card-title>Error !</mat-card-title>
+  <mat-card-subtitle>Product not found.</mat-card-subtitle>
 </mat-card>
