@@ -6,8 +6,10 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IStock, getStockIdentifier } from '../stock.model';
+import { PagableResponse } from 'app/entities/common/pagablehttpresponse.model';
 
 export type EntityResponseType = HttpResponse<IStock>;
+export type PagableEntityResponseType = HttpResponse<PagableResponse<IStock>>;
 export type EntityArrayResponseType = HttpResponse<IStock[]>;
 
 @Injectable({ providedIn: 'root' })
@@ -32,9 +34,9 @@ export class StockService {
     return this.http.get<IStock>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<PagableEntityResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IStock[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<PagableResponse<IStock>>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
