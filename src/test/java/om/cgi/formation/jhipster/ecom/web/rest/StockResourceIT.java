@@ -471,7 +471,7 @@ class StockResourceIT {
 
     @Test
     @Transactional
-    public void getPageStock() throws Exception {
+    void getPageStock() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
 
@@ -484,7 +484,7 @@ class StockResourceIT {
 
     @Test
     @Transactional
-    public void getPageStockWithInvalidSize() throws Exception {
+    void getPageStockWithInvalidSize() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
 

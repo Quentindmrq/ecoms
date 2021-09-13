@@ -1,6 +1,5 @@
 package om.cgi.formation.jhipster.ecom.web.rest;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
@@ -121,11 +120,11 @@ public class StockResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, stock.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idIsinvalid");
         }
 
         if (!stockRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+            throw new BadRequestAlertException("did not found Entity", ENTITY_NAME, "idnotfound");
         }
 
         Optional<Stock> result = stockRepository
@@ -156,7 +155,7 @@ public class StockResource {
     @GetMapping("/stocks")
     public Page<Stock> getAllStocksPageInBody(
         @RequestParam(required = false, value = "page", defaultValue = "1") int page,
-        @RequestParam(required = false, value = "size", defaultValue = "5") int size
+        @RequestParam(required = false, value = "size", defaultValue = "11") int size
     ) {
         if (size <= 0) {
             throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
@@ -205,22 +204,37 @@ public class StockResource {
     public ResponseEntity<Stock> patchEntryInBasket(@PathVariable Long id, @PathVariable long amount) {
         log.debug("REST request to patch Stock because of a cart entry : {}", id);
         if (!stockRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
         }
         Optional<Stock> stock = stockRepository.findById(id);
-        if (stock == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        if (stock.isEmpty()) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idisnull");
         }
 
         int currStock = stock.get().getStock();
         if (currStock == 0) {
             throw new BadRequestAlertException("the stock is empty", ENTITY_NAME, "stockIsZero");
         }
-        stock.get().stock(currStock + Math.toIntExact(amount));
-        deleteAfterTimeout(id, amount);
+        if (currStock < amount) {
+            throw new BadRequestAlertException("the amount is too high", ENTITY_NAME, "stock < amount");
+        }
+        stock.get().stock(currStock - Math.toIntExact(amount));
+
+        new Thread(
+            () -> {
+                try {
+                    this.wait(10000);
+                } catch (InterruptedException e) {}
+                deleteAfterTimeout(stock.get(), amount);
+            }
+        )
+            .start();
 
         return ResponseUtil.wrapOrNotFound(stock);
     }
 
-    private void deleteAfterTimeout(long id, long amount) {}
+    private void deleteAfterTimeout(Stock stock, long amount) {
+        int currStock = stock.getStock();
+        stock.stock(currStock);
+    }
 }
