@@ -219,22 +219,6 @@ public class StockResource {
             throw new BadRequestAlertException("the amount is too high", ENTITY_NAME, "stock < amount");
         }
         stock.get().stock(currStock - Math.toIntExact(amount));
-
-        new Thread(
-            () -> {
-                try {
-                    this.wait(10000);
-                } catch (InterruptedException e) {}
-                deleteAfterTimeout(stock.get(), amount);
-            }
-        )
-            .start();
-
         return ResponseUtil.wrapOrNotFound(stock);
-    }
-
-    private void deleteAfterTimeout(Stock stock, long amount) {
-        int currStock = stock.getStock();
-        stock.stock(currStock);
     }
 }

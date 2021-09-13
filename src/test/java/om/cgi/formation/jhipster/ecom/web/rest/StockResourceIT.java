@@ -493,4 +493,24 @@ class StockResourceIT {
             .perform(get(ENTITY_API_URL, stock.getId()).queryParam("page", "1").queryParam("size", "0"))
             .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @Transactional
+    void getPageStockWithInvalidStock() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+        Integer querystock = stock.getStock() + 10;
+
+        // Get the stock
+        restStockMockMvc
+            .perform(get(ENTITY_API_URL, stock.getId()).queryParam("page", "1").queryParam("size", querystock.toString()))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void addToCartBasic() throws Exception {
+        stockRepository.saveAndFlush(stock);
+        restStockMockMvc.perform(patch("/addStocksInCart/{id}/{amount}", stock.getId(), 1)).andExpect(status().isOk());
+    }
 }
