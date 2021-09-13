@@ -56,6 +56,7 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatToolbarModule,
     MatBadgeModule,
+    MatInputModule,
   ],
   exports: [
     MatButtonModule,
@@ -85,6 +86,7 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatToolbarModule,
     MatBadgeModule,
+    MatInputModule,
   ],
 })
 export class JhMaterialModule {}

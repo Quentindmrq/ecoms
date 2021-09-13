@@ -1,1 +1,103 @@
-<jhi-tunnel-stepper></jhi-tunnel-stepper>
+tedcfuh
+<mat-stepper [linear]="true" #stepper>
+  <mat-step [stepControl]="form1">
+    <ng-template matStepLabel>Billing address</ng-template>
+    <form [formGroup]="form1">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field appearance="fill">
+              <mat-label for="first-name">First name</mat-label>
+              <input matInput placeholder="ex. Jean" id="first-name" formControlName="firstName" required />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="fill">
+              <mat-label for="last-name">Last name</mat-label>
+              <input matInput placeholder="ex. Dupont" id="last-name" formControlName="lastName" required />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label for="adress1">Adress 1</mat-label>
+              <input matInput id="adress1" formControlName="address1" required />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <mat-form-field appearance="fill">
+              <mat-label for="adress2">Adress 2</mat-label>
+              <input matInput id="adress2" formControlName="address2" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field appearance="fill">
+              <mat-label>Country</mat-label>
+              <mat-select id="country" formControlName="country" required>
+                <mat-option value="" selected>None</mat-option>
+                <mat-option value="FR">France</mat-option>
+                <mat-option value="EN">England</mat-option>
+                <mat-option value="IT">Italia</mat-option>
+                <mat-option value="ES">Espana</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field appearance="fill">
+              <mat-label for="postal-code">Postal code</mat-label>
+              <input matInput id="postal-code" formControlName="postalCode" required />
+            </mat-form-field>
+          </div>
+          <div class="col-md-5">
+            <mat-form-field appearance="fill">
+              <mat-label for="city">City</mat-label>
+              <input matInput id="city" formControlName="city" required />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-10"></div>
+          <div class="col-md-2">
+            <button mat-raised-button color="accent" matStepperNext>Next</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="form2">
+    <ng-template matStepLabel>Payment</ng-template>
+    <form [formGroup]="form2">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <mat-form-field appearance="fill"> </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8"></div>
+          <div class="col-md-2">
+            <button mat-stroked-button color="accent" matStepperPrevious>Back</button>
+          </div>
+          <div class="col-md-2">
+            <button mat-raised-button color="accent" matStepperNext>Next</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done !</ng-template>
+  </mat-step>
+</mat-stepper>
