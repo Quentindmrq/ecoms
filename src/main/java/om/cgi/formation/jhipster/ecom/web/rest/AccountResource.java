@@ -10,7 +10,6 @@ import om.cgi.formation.jhipster.ecom.service.MailService;
 import om.cgi.formation.jhipster.ecom.service.UserService;
 import om.cgi.formation.jhipster.ecom.service.dto.AdminUserDTO;
 import om.cgi.formation.jhipster.ecom.service.dto.PasswordChangeDTO;
-import om.cgi.formation.jhipster.ecom.service.dto.UserDTO;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.*;
 import om.cgi.formation.jhipster.ecom.web.rest.vm.KeyAndPasswordVM;
 import om.cgi.formation.jhipster.ecom.web.rest.vm.ManagedUserVM;
@@ -62,8 +61,6 @@ public class AccountResource {
         if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
-        //mailService.sendActivationEmail(user);
     }
 
     /**
