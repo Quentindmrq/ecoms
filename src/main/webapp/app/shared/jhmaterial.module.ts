@@ -60,6 +60,7 @@ import { MatTableModule } from '@angular/material/table';
     MatSortModule,
     MatStepperModule,
     MatTableModule,
+    MatInputModule,
   ],
   exports: [
     MatButtonModule,
@@ -92,6 +93,7 @@ import { MatTableModule } from '@angular/material/table';
     MatSortModule,
     MatStepperModule,
     MatTableModule,
+    MatInputModule,
   ],
 })
 export class JhMaterialModule {}
