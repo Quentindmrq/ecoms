@@ -1,20 +1,44 @@
-<h1>Your cart :</h1>
-<!-- Vérifie si le panier est vide, si oui -> emptyCartBlock, sinon affiche le panier -->
-<div class="container-fluid" *ngIf="cartItems.length > 0; else emptyCartBlock">
-  <div class="row" *ngFor="let item of cartItems">
-    <div class="col-md-3">LOGO.jpg</div>
-    <div class="col-md-7">
-      <h4>{{ item.product.name }}</h4>
-      <p>{{ item.product.description }}</p>
-    </div>
-    <div class="col-md-2">
-      <p>{{ item.product.price | currency: 'EUR' }}</p>
-    </div>
-  </div>
-  <button (click)="discard()">discard</button>
-  <button mat-stroked-button (click)="validate()">Validate</button>
-</div>
+<mat-card>
+  <mat-card-title>
+    <h1>Your cart :</h1>
+  </mat-card-title>
+  <mat-card-content>
+    <!-- Vérifie si le panier est vide, si oui -> emptyCartBlock, sinon affiche le panier -->
+    <div class="container-fluid" *ngIf="cartItems.length > 0; else emptyCartBlock">
+      <mat-card class="cartItem" *ngFor="let item of cartItems">
+        <mat-card-title>
+          <h4>{{ item.product.name }}</h4>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="container-fluid row">
+            <div class="col-md-3">LOGO.jpg</div>
+            <div class="col-md-7">
+              <p>{{ item.product.description }}</p>
+              <div>
+                <button mat-icon-button color="accent" (click)="removeOneFromCart(item.product)">
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+                {{ item.quantity }}
+                <button mat-icon-button color="accent" (click)="addToCart(item.product)">
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+                <button mat-stroked-button color="accent" (click)="deleteFromCart(item.product)">Delete</button>
+              </div>
+            </div>
 
-<ng-template #emptyCartBlock>
-  <h3>Your cart is empty !</h3>
-</ng-template>
+            <div class="col-md-2">
+              <p>{{ item.product.price | currency: 'EUR' }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <button mat-flat-button color="accent" (click)="discard()">Discard</button>
+      <button mat-flat-button color="accent" (click)="validate()">Validate</button>
+    </div>
+
+    <ng-template #emptyCartBlock>
+      <h3>Your cart is empty !</h3>
+    </ng-template>
+  </mat-card-content>
+</mat-card>

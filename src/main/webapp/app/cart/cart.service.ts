@@ -29,15 +29,39 @@ export class CartService {
   }
 
   get numberOfItems(): number {
-    return this.shoppingCart.getValue().length;
+    return this.shoppingCart.getValue().reduce((acc, cur) => acc + cur.quantity, 0);
   }
 
-  // TODO finir ajout quantité
-  addToCart(product: Product /*, quantity: number*/): void {
-    this.shoppingCart.next([...this.shoppingCart.getValue(), { product, quantity: 1 }]);
+  addToCart(product: Product, quantity = 1): void {
+    const cartArray = this.shoppingCart.getValue().slice();
+    const alreadyInId = cartArray.findIndex(stock => product.id === stock.product.id);
+    if (alreadyInId < 0) {
+      this.shoppingCart.next([...this.shoppingCart.getValue(), { product, quantity }]);
+      return;
+    }
+
+    cartArray[alreadyInId].quantity += quantity;
+
+    this.shoppingCart.next([...cartArray]);
   }
 
-  removeFromCart(product: Product): void {
-    // TODO
+  removeOneFromCart(product: Product): void {
+    const cartArray = this.shoppingCart.getValue().slice();
+    const alreadyInId = cartArray.findIndex(stock => product.id === stock.product.id);
+    if (alreadyInId < 0) {
+      return;
+    } else if (cartArray[alreadyInId].quantity <= 1) {
+      this.deleteFromCart(product);
+      return;
+    }
+
+    cartArray[alreadyInId].quantity = cartArray[alreadyInId].quantity - 1;
+
+    this.shoppingCart.next([...cartArray]);
+  }
+
+  deleteFromCart(product: Product): void {
+    const cartArrayFiltered = this.shoppingCart.getValue().filter(stock => product.id === stock.product.id);
+    this.shoppingCart.next([...cartArrayFiltered]);
   }
 }
