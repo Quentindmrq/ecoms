@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import om.cgi.formation.jhipster.ecom.domain.Order;
+import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
+import om.cgi.formation.jhipster.ecom.repository.UserRepository;
 import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import om.cgi.formation.jhipster.ecom.service.UserService;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
@@ -38,9 +40,12 @@ public class OrderResource {
 
     private final UserService userService;
 
-    public OrderResource(OrderRepository orderRepository, UserService userService) {
+    private final UserRepository userRepository;
+
+    public OrderResource(OrderRepository orderRepository, UserService userService, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -56,6 +61,14 @@ public class OrderResource {
         if (order.getId() != null) {
             throw new BadRequestAlertException("A new order cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        Optional<User> optUser = this.userRepository.findOneByLogin(order.getOwner().getLogin());
+        if (optUser.isPresent()) {
+            order.setOwner(optUser.get());
+        }
+
+        // TODO Add Order.id to all OrderLines from order
+
         Order result = orderRepository.save(order);
         return ResponseEntity
             .created(new URI("/api/orders/" + result.getId()))
