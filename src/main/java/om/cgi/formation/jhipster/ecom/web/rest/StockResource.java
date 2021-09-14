@@ -200,15 +200,15 @@ public class StockResource {
      * @param id of the stock that just got added to the cart.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} if it worked {@code 404 (Not Found)}.
      */
-    @PatchMapping("/addStocksInCart/{id}/{amount}")
-    public ResponseEntity<Stock> patchEntryInBasket(@PathVariable Long id, @PathVariable long amount) {
+    @PatchMapping("/addStocksInCart/{id}")
+    public ResponseEntity<Stock> patchEntryInBasket(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
         log.debug("REST request to patch Stock because of a cart entry : {}", id);
         if (!stockRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
         }
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idisnull");
+            throw new BadRequestAlertException("id is not valid", ENTITY_NAME, "idisnull");
         }
 
         int currStock = stock.get().getStock();

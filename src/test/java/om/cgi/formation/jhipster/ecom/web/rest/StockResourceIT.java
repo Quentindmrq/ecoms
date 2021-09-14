@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
-import javax.validation.constraints.Size;
 import om.cgi.formation.jhipster.ecom.IntegrationTest;
 import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.repository.StockRepository;
@@ -36,6 +35,7 @@ class StockResourceIT {
 
     private static final String ENTITY_API_URL = "/api/stocks";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+    private static final String CART_API_URL = "/api/addStocksInCart/{id}";
 
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
@@ -117,7 +117,6 @@ class StockResourceIT {
     @Test
     @Transactional
     void createStock() throws Exception {
-        int databaseSizeBeforeCreate = stockRepository.findAll().size();
         // Create the Stock
         restStockMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(stock)))
@@ -489,9 +488,7 @@ class StockResourceIT {
         stockRepository.saveAndFlush(stock);
 
         // Get the stock
-        restStockMockMvc
-            .perform(get(ENTITY_API_URL, stock.getId()).queryParam("page", "1").queryParam("size", "0"))
-            .andExpect(status().isBadRequest());
+        restStockMockMvc.perform(get(ENTITY_API_URL).queryParam("page", "1").queryParam("size", "0")).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -499,11 +496,11 @@ class StockResourceIT {
     void getPageStockWithInvalidStock() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
-        Integer querystock = stock.getStock() + 10;
+        Integer querystock = stock.getStock() + 10000;
 
         // Get the stock
         restStockMockMvc
-            .perform(get(ENTITY_API_URL, stock.getId()).queryParam("page", "1").queryParam("size", querystock.toString()))
+            .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
             .andExpect(status().isBadRequest());
     }
 
@@ -511,6 +508,6 @@ class StockResourceIT {
     @Transactional
     void addToCartBasic() throws Exception {
         stockRepository.saveAndFlush(stock);
-        restStockMockMvc.perform(patch("/addStocksInCart/{id}/{amount}", stock.getId(), 1)).andExpect(status().isOk());
+        restStockMockMvc.perform(patch(CART_API_URL, stock.getId()).queryParam("amount", "1")).andExpect(status().isOk());
     }
 }
