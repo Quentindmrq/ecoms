@@ -12,7 +12,6 @@ import { FormatMediumDatePipe } from './date/format-medium-date.pipe';
 import { SortByDirective } from './sort/sort-by.directive';
 import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
-import { ProductComponent } from './product/product.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { JhMaterialModule } from './jhmaterial.module';
 
@@ -30,7 +29,6 @@ import { JhMaterialModule } from './jhmaterial.module';
     SortByDirective,
     SortDirective,
     ItemCountComponent,
-    ProductComponent,
     ProductListComponent,
   ],
   exports: [
@@ -46,7 +44,6 @@ import { JhMaterialModule } from './jhmaterial.module';
     SortByDirective,
     SortDirective,
     ItemCountComponent,
-    ProductComponent,
     ProductListComponent,
     JhMaterialModule,
   ],
