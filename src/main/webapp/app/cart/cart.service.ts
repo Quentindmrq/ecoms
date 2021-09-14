@@ -61,7 +61,7 @@ export class CartService {
   }
 
   deleteFromCart(product: Product): void {
-    const cartArrayFiltered = this.shoppingCart.getValue().filter(stock => product.id === stock.product.id);
+    const cartArrayFiltered = this.shoppingCart.getValue().filter(stock => product.id !== stock.product.id);
     this.shoppingCart.next([...cartArrayFiltered]);
   }
 }
