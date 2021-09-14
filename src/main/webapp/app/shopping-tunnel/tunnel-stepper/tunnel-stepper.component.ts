@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CartService } from 'app/cart/cart.service';
+import { BankDataComponent } from '../bank-data/bank-data.component';
+import { CartOrderComponent } from '../cart-order/cart-order.component';
 
 @Component({
   selector: 'jhi-tunnel-stepper',
@@ -9,18 +11,17 @@ import { CartService } from 'app/cart/cart.service';
 })
 export class TunnelStepperComponent {
   // implements OnInit {
-  formGroupStep1: FormGroup;
-  formGroupStep2: FormGroup;
+  form1: FormGroup;
+  form2: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, private cartService: CartService) {}
+  @ViewChild('stepOne') stepOneComponent: CartOrderComponent;
+  @ViewChild('stepTwo') stepTwoComponent: BankDataComponent;
 
-  ngOnInit(): void {
-    this.formGroupStep1 = this._formBuilder.group({
-      firstCtrl: ['', Validators.required],
-    });
+  constructor(private cartService: CartService, private cdr: ChangeDetectorRef) {}
 
-    this.formGroupStep2 = this._formBuilder.group({
-      secondCtrl: ['', Validators.required],
-    });
+  ngAfterViewInit(): void {
+    this.form1 = this.stepOneComponent.formGroupStep1;
+    this.form2 = this.stepTwoComponent.formGroupStep2;
+    this.cdr.detectChanges();
   }
 }
