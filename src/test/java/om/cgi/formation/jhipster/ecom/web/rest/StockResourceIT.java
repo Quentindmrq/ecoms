@@ -493,7 +493,7 @@ class StockResourceIT {
 
     @Test
     @Transactional
-    void getPageStockWithInvalidStock() throws Exception {
+    void addCartWithTooMuchAmount() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
         Integer querystock = stock.getStock() + 10000;
@@ -509,5 +509,21 @@ class StockResourceIT {
     void addToCartBasic() throws Exception {
         stockRepository.saveAndFlush(stock);
         restStockMockMvc.perform(patch(CART_API_URL, stock.getId()).queryParam("amount", "1")).andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void addCartEmptyStock() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+        Integer querystock = stock.getStock();
+
+        // take the whole stock
+        restStockMockMvc.perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
+
+        //stock should be empty
+        restStockMockMvc
+            .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
+            .andExpect(status().isBadRequest());
     }
 }
