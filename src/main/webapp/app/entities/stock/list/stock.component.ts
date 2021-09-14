@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IStock } from '../stock.model';
 import { StockService } from '../service/stock.service';
 import { StockDeleteDialogComponent } from '../delete/stock-delete-dialog.component';
-import { PagableResponse } from 'app/entities/common/pagablehttpresponse.model';
+import { PageableResponse } from 'app/entities/common/pageablehttpresponse.model';
 
 @Component({
   selector: 'jhi-stock',
@@ -21,7 +21,7 @@ export class StockComponent implements OnInit {
     this.isLoading = true;
 
     this.stockService.query().subscribe(
-      (res: HttpResponse<PagableResponse<IStock>>) => {
+      (res: HttpResponse<PageableResponse<IStock>>) => {
         this.isLoading = false;
         this.stocks = res.body?.content ?? [];
       },
