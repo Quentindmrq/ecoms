@@ -35,6 +35,7 @@ class StockResourceIT {
 
     private static final String ENTITY_API_URL = "/api/stocks";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+    private static final String CART_API_URL = "/api/addStocksInCart/{id}";
 
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
@@ -116,7 +117,6 @@ class StockResourceIT {
     @Test
     @Transactional
     void createStock() throws Exception {
-        int databaseSizeBeforeCreate = stockRepository.findAll().size();
         // Create the Stock
         restStockMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(stock)))
@@ -152,8 +152,8 @@ class StockResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(stock.getId().intValue())))
-            .andExpect(jsonPath("$.[*].stock").value(hasItem(DEFAULT_STOCK)));
+            .andExpect(jsonPath("$.content.[*].id").value(hasItem(stock.getId().intValue())))
+            .andExpect(jsonPath("$.content.[*].stock").value(hasItem(DEFAULT_STOCK)));
     }
 
     @Test
@@ -183,8 +183,6 @@ class StockResourceIT {
     void putNewStock() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
-
-        int databaseSizeBeforeUpdate = stockRepository.findAll().size();
 
         // Update the stock
         Stock updatedStock = stockRepository.findById(stock.getId()).get();
@@ -445,8 +443,6 @@ class StockResourceIT {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
 
-        int databaseSizeBeforeDelete = stockRepository.findAll().size();
-
         // Delete the stock
         restStockMockMvc
             .perform(delete(ENTITY_API_URL_ID, stock.getId()).accept(MediaType.APPLICATION_JSON))
@@ -470,5 +466,64 @@ class StockResourceIT {
         // Validate the database contains one less item
         List<Stock> stockList = stockRepository.findAll();
         assertThat(stockList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    void getPageStock() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc
+            .perform(get(ENTITY_API_URL, stock.getId()).queryParam("page", "2").queryParam("size", "5"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+    }
+
+    @Test
+    @Transactional
+    void getPageStockWithInvalidSize() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc.perform(get(ENTITY_API_URL).queryParam("page", "1").queryParam("size", "0")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void addCartWithTooMuchAmount() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+        Integer querystock = stock.getStock() + 10000;
+
+        // Get the stock
+        restStockMockMvc
+            .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void addToCartBasic() throws Exception {
+        stockRepository.saveAndFlush(stock);
+        restStockMockMvc.perform(patch(CART_API_URL, stock.getId()).queryParam("amount", "1")).andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void addCartEmptyStock() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+        Integer querystock = stock.getStock();
+
+        // take the whole stock
+        restStockMockMvc.perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
+
+        //stock should be empty
+        restStockMockMvc
+            .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
+            .andExpect(status().isBadRequest());
     }
 }
