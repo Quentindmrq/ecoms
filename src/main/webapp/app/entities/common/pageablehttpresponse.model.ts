@@ -17,7 +17,7 @@ export interface IPeagable {
 
 export interface PageableResponse<T> {
   content: T[];
-  pageable: IPeagable;
+  pageable?: IPeagable;
   totalPages?: number;
   totalElements?: number;
   last?: boolean;

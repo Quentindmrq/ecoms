@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from 'app/entities/product/product.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -20,7 +19,7 @@ export class CartService {
   }
   */
 
-  constructor(private http: HttpClient) {
+  constructor() {
     // donothing
   }
 

@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { ProductService } from '../service/product.service';
 
 import { ProductComponent } from './product.component';
+import { JhMaterialModule } from 'app/shared/jhmaterial.module';
 
 describe('Component Tests', () => {
   describe('Product Management Component', () => {
@@ -15,7 +16,7 @@ describe('Component Tests', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule],
+        imports: [HttpClientTestingModule, JhMaterialModule],
         declarations: [ProductComponent],
       })
         .overrideTemplate(ProductComponent, '')

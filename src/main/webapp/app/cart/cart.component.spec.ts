@@ -1,4 +1,13 @@
+import { APP_BASE_HREF } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { AppRoutingModule } from 'app/app-routing.module';
+import { ErrorComponent } from 'app/layouts/error/error.component';
+import { NavbarComponent } from 'app/layouts/navbar/navbar.component';
+import { HasAnyAuthorityDirective } from 'app/shared/auth/has-any-authority.directive';
+import { JhMaterialModule } from 'app/shared/jhmaterial.module';
+import { FindLanguageFromKeyPipe } from 'app/shared/language/find-language-from-key.pipe';
 
 import { CartComponent } from './cart.component';
 
@@ -8,7 +17,9 @@ describe('CartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CartComponent],
+      declarations: [CartComponent, NavbarComponent, ErrorComponent, HasAnyAuthorityDirective, FindLanguageFromKeyPipe],
+      imports: [JhMaterialModule, AppRoutingModule, HttpClientModule, FlexLayoutModule],
+      providers: [{ provide: APP_BASE_HREF, useValue: '/' }],
     }).compileComponents();
   });
 

@@ -1,4 +1,9 @@
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JhMaterialModule } from 'app/shared/jhmaterial.module';
 
 import { ShoppingTunnelComponent } from './shopping-tunnel.component';
 
@@ -9,6 +14,7 @@ describe('ShoppingTunnelComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ShoppingTunnelComponent],
+      imports: [JhMaterialModule, BrowserAnimationsModule, ReactiveFormsModule, HttpClientModule, FormsModule, FlexLayoutModule],
     }).compileComponents();
   });
 
