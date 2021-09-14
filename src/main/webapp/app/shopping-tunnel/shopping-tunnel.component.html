@@ -1,4 +1,3 @@
-tedcfuh
 <mat-stepper [linear]="true" #stepper>
   <mat-step [stepControl]="form1">
     <ng-template matStepLabel>Billing address</ng-template>
@@ -42,7 +41,7 @@ tedcfuh
             <mat-form-field appearance="fill">
               <mat-label>Country</mat-label>
               <mat-select id="country" formControlName="country" required>
-                <mat-option value="" selected>None</mat-option>
+                <mat-option value="" selected></mat-option>
                 <mat-option value="FR">France</mat-option>
                 <mat-option value="EN">England</mat-option>
                 <mat-option value="IT">Italia</mat-option>
@@ -79,8 +78,50 @@ tedcfuh
     <form [formGroup]="form2">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-12">
-            <mat-form-field appearance="fill"> </mat-form-field>
+          <div class="col-md-9">
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label for="cardName">Name on the card</mat-label>
+              <input matInput id="cardName" formControlName="cardName" required />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-9">
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label for="cardNumber">Card Number</mat-label>
+              <input matInput id="cardNumber" formControlName="cardNumber" required />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <mat-form-field appearance="fill">
+              <mat-label>Month</mat-label>
+              <mat-select id="cardExpirationMonth" formControlName="cardExpirationMonth" required>
+                <mat-option value="" selected></mat-option>
+                <span *ngFor="let i of this.months">
+                  <mat-option value="{{ i }}">{{ i }}</mat-option>
+                </span>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-2">
+            <mat-form-field appearance="fill">
+              <mat-label>Year</mat-label>
+              <mat-select id="cardExpirationYear" formControlName="cardExpirationYear" required>
+                <mat-option value="" selected></mat-option>
+                <span *ngFor="let i of this.years">
+                  <mat-option value="{{ i }}">{{ i }}</mat-option>
+                </span>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-2"></div>
+          <div class="col-md-3">
+            <mat-form-field appearance="fill">
+              <mat-label for="cardValidationCode">CVC</mat-label>
+              <input matInput id="cardValidationCode" formControlName="cardValidationCode" required />
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -99,5 +140,6 @@ tedcfuh
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Done !</ng-template>
+    <div>Payment done !<br />Your product will be sent by email.</div>
   </mat-step>
 </mat-stepper>

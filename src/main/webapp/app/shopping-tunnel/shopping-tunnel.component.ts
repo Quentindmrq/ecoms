@@ -14,21 +14,36 @@ export class ShoppingTunnelComponent implements OnInit {
 
   model: Address;
 
+  months: number[];
+  years: number[];
+
   constructor(private cartService: CartService, private _formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    const now = new Date();
+    this.months = new Array<number>();
+    this.years = new Array<number>();
+    for (let i = 0; i < 12; i++) {
+      this.months.push(i + 1);
+      this.years.push(now.getFullYear() + i);
+    }
+
     this.form1 = this._formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       address1: ['', Validators.required],
-      address2: ['', Validators.required],
+      address2: [''],
       country: ['', Validators.required],
       postalCode: ['', Validators.required],
       city: ['', Validators.required],
     });
 
     this.form2 = this._formBuilder.group({
-      firstCtrl: ['', Validators.required],
+      cardName: ['', Validators.required],
+      cardNumber: ['', Validators.required],
+      cardExpirationMonth: ['', Validators.required],
+      cardExpirationYear: ['', Validators.required],
+      cardValidationCode: ['', Validators.required],
     });
 
     this.model = new Address();
