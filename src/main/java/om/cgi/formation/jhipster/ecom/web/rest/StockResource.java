@@ -1,14 +1,9 @@
 package om.cgi.formation.jhipster.ecom.web.rest;
 
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import javax.persistence.LockModeType;
 import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.repository.StockRepository;
@@ -47,7 +42,7 @@ public class StockResource {
 
     private static final String ENTITY_NAME = "stock";
 
-    private Set<Thread> threadbag;
+    private static final String NO_ENTITY = "Entity not found";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -104,7 +99,7 @@ public class StockResource {
         }
 
         if (!stockRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+            throw new BadRequestAlertException(NO_ENTITY, ENTITY_NAME, "idnotfound");
         }
 
         Stock result = stockRepository.save(stock);
@@ -170,7 +165,8 @@ public class StockResource {
     @GetMapping("/stocks")
     public Page<Stock> getAllStocksPageInBody(
         @RequestParam(required = false, value = "page", defaultValue = "1") int page,
-        @RequestParam(required = false, value = "size", defaultValue = "5") int size
+        @RequestParam(required = false, value = "size", defaultValue = "5") int size,
+        @RequestParam(required = false, value = "sorting", defaultValue = "id") String sort
     ) {
         if (size <= 0) {
             throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
@@ -223,7 +219,7 @@ public class StockResource {
     public ResponseEntity<Stock> patchEntryInCart(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
         log.debug("REST request to patch Stock because of a cart entry : {}", id);
         if (!stockRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
+            throw new BadRequestAlertException(NO_ENTITY, ENTITY_NAME, "notfound");
         }
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {
@@ -249,9 +245,9 @@ public class StockResource {
     @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping("/deleteStocksInCart/{id}")
     public ResponseEntity<Stock> patchOutOfCart(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
-        log.debug("REST request to patch Stock because of a cart entry : {}", id);
+        log.debug("REST request to patch Stock because of a cart deletion : {}", id);
         if (!stockRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
+            throw new BadRequestAlertException(NO_ENTITY, ENTITY_NAME, "notfound");
         }
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {
@@ -270,9 +266,9 @@ public class StockResource {
     @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping("/finalbuy/{id}")
     public ResponseEntity<Stock> finalbuy(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
-        log.debug("REST request to patch Stock because of a cart entry : {}", id);
+        log.debug("REST request to patch Stock because of a purchase: {}", id);
         if (!stockRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
+            throw new BadRequestAlertException(NO_ENTITY, ENTITY_NAME, "notfound");
         }
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {

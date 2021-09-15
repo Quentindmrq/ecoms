@@ -5,7 +5,6 @@ import om.cgi.formation.jhipster.ecom.security.jwt.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -32,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final SecurityProblemSupport problemSupport;
 
-    private final String API_ALL = "/api/**";
+    private static final String API_ALL = "/api/**";
 
     public SecurityConfiguration(
         TokenProvider tokenProvider,
@@ -106,6 +105,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/stocks/**").permitAll()
             .antMatchers(HttpMethod.PATCH, "/api/addStocksInCart/{id}").permitAll()
             .antMatchers(HttpMethod.PATCH, "/api/finalbuy/{id}").authenticated()
+            .antMatchers(HttpMethod.PATCH, "/api/deleteStocksInCart/{id}").authenticated()
             .antMatchers(HttpMethod.POST, "/api/orders").authenticated()
             .antMatchers(HttpMethod.POST, "/api/order-lines").authenticated()
             .antMatchers("/api/addresses").authenticated()
