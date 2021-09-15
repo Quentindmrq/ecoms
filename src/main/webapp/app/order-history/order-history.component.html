@@ -1,1 +1,35 @@
 <p>order-history works!</p>
+<mat-accordion class="example-headers-align" multi>
+  <mat-expansion-panel *ngFor="let order of orders">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Order purchased on {{ order.purchaseDate ? order.purchaseDate.format('DD/MM/YYYY') : 'N/A' }} </mat-panel-title>
+      <mat-panel-description>
+        Total price :
+        <p>Commande Number : {{ order.id }}</p>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="container-fluid">
+      <div *ngFor="let orderLine of order.orderLines; let lastItem = last">
+        <div class="row productBox">
+          <div class="col-md-3">
+            <img mat-card-sm-image alt="product image" />
+          </div>
+          <div class="col-md-4">
+            <div class="row">
+              <h3>
+                {{ orderLine?.product?.name }}
+              </h3>
+            </div>
+            <div class="row">
+              <small> {{ orderLine?.product?.productType }} - {{ orderLine?.product?.game }} </small>
+            </div>
+          </div>
+          <div class="col-md-1 buttonBox">
+            <button mat-flat-button color="accent" routerLink="/product/{{ orderLine?.product?.id }}">Go to product</button>
+          </div>
+        </div>
+        <mat-divider *ngIf="!lastItem" inset></mat-divider>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
