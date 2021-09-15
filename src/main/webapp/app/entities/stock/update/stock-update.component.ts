@@ -22,6 +22,7 @@ export class StockUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     stock: [],
+    version: [],
     product: [],
   });
 
@@ -81,6 +82,7 @@ export class StockUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: stock.id,
       stock: stock.stock,
+      version: stock.version,
       product: stock.product,
     });
 
@@ -102,6 +104,7 @@ export class StockUpdateComponent implements OnInit {
       ...new Stock(),
       id: this.editForm.get(['id'])!.value,
       stock: this.editForm.get(['stock'])!.value,
+      version: this.editForm.get(['version'])!.value,
       product: this.editForm.get(['product'])!.value,
     };
   }
