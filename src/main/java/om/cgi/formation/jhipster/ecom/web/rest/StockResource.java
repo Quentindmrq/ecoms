@@ -192,8 +192,6 @@ public class StockResource {
         }
         pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size), pageSort);
 
-        //pageRequested. pageRequested.getSort().and(Sort.by("product.game"));
-
         //verify the asked game does exists
         //an invalid one will return the generic page
         if (EnumUtils.isValidEnum(Game.class, game)) {
