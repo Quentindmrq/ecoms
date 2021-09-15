@@ -23,6 +23,7 @@ describe('Service Tests', () => {
       elemDefault = {
         id: 0,
         stock: 0,
+        version: 0,
       };
     });
 
@@ -59,6 +60,7 @@ describe('Service Tests', () => {
           {
             id: 1,
             stock: 1,
+            version: 1,
           },
           elemDefault
         );
@@ -76,6 +78,7 @@ describe('Service Tests', () => {
         const patchObject = Object.assign(
           {
             stock: 1,
+            version: 1,
           },
           new Stock()
         );
@@ -96,6 +99,7 @@ describe('Service Tests', () => {
           {
             id: 1,
             stock: 1,
+            version: 1,
           },
           elemDefault
         );
@@ -151,7 +155,7 @@ describe('Service Tests', () => {
         });
 
         it('should add only unique Stock to an array', () => {
-          const stockArray: IStock[] = [{ id: 123 }, { id: 456 }, { id: 62991 }];
+          const stockArray: IStock[] = [{ id: 123 }, { id: 456 }, { id: 92861 }];
           const stockCollection: IStock[] = [{ id: 123 }];
           expectedResult = service.addStockToCollectionIfMissing(stockCollection, ...stockArray);
           expect(expectedResult).toHaveLength(3);

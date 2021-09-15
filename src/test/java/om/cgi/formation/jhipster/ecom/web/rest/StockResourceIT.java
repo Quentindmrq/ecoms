@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
@@ -36,6 +37,8 @@ class StockResourceIT {
     private static final String ENTITY_API_URL = "/api/stocks";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
     private static final String CART_API_URL = "/api/addStocksInCart/{id}";
+    private static final String BUY_API_URL = "/api/finalbuy/{id}";
+    private static final String CART_API_URL_DELETE = "/api/deleteStocksInCart/{id}";
 
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
@@ -149,7 +152,7 @@ class StockResourceIT {
 
         // Get all the stockList
         restStockMockMvc
-            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
+            .perform(get(ENTITY_API_URL + "?sort=id"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.content.[*].id").value(hasItem(stock.getId().intValue())))
@@ -513,17 +516,95 @@ class StockResourceIT {
 
     @Test
     @Transactional
-    void addCartEmptyStock() throws Exception {
+    void deletefromCartBasic() throws Exception {
+        stockRepository.saveAndFlush(stock);
+        restStockMockMvc.perform(patch(CART_API_URL_DELETE, stock.getId()).queryParam("amount", "1")).andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void buyStock() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+        Integer beforestock = stock.getStock();
+
+        // take the whole stock
+        restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", "10")).andExpect(status().isOk());
+
+        //chek that stock was bought
+        Optional<Stock> newstock = stockRepository.findById(stock.getId());
+        assertThat(newstock.isPresent()).isTrue();
+        assertThat(beforestock == (newstock.get().getStock() + 10)).isTrue();
+    }
+
+    @Test
+    @Transactional
+    void buyEmptyStock() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
         Integer querystock = stock.getStock();
 
         // take the whole stock
-        restStockMockMvc.perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
+        restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
 
         //stock should be empty
         restStockMockMvc
             .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void deletefromCartBasicbadid() throws Exception {
+        stockRepository.saveAndFlush(stock);
+        restStockMockMvc
+            .perform(patch(CART_API_URL_DELETE, stock.getId() + 1514).queryParam("amount", "1"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void buybadid() throws Exception {
+        stockRepository.saveAndFlush(stock);
+        restStockMockMvc.perform(patch(BUY_API_URL, stock.getId() + 1514).queryParam("amount", "1")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void addtoCartBasicbadid() throws Exception {
+        stockRepository.saveAndFlush(stock);
+        restStockMockMvc.perform(patch(CART_API_URL, stock.getId() + 1514).queryParam("amount", "1")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void getascending() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc.perform(get(ENTITY_API_URL).queryParam("page", "1").queryParam("way", "up")).andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void getGame() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc.perform(get(ENTITY_API_URL).queryParam("game", "OVERWATCH")).andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void getGameAndType() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc
+            .perform(get(ENTITY_API_URL).queryParam("game", "OVERWATCH").queryParam("type", "INTING"))
+            .andExpect(status().isOk());
     }
 }
