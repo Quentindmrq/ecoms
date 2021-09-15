@@ -3,12 +3,25 @@
   align-items: center;
 }
 
+.exampleAlign {
+  align-items: center;
+}
+
 .productBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.textContentBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .buttonBox {
-  align-items: center;
+  display: flex;
+  align-items: flex-end;
 }
