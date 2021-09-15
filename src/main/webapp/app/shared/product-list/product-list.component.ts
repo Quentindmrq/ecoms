@@ -1,9 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { StockService } from 'app/entities/stock/service/stock.service';
-import { Stock } from 'app/entities/stock/stock.model';
+import { IStock, Stock } from 'app/entities/stock/stock.model';
 import { CartService } from 'app/cart/cart.service';
-import { Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
+import { PageableResponse } from 'app/entities/common/pageablehttpresponse.model';
+import { Product } from 'app/entities/product/product.model';
+import { isBreakOrContinueStatement } from 'typescript';
 
 @Component({
   selector: 'jhi-product-list',
@@ -11,10 +14,13 @@ import { Sort } from '@angular/material/sort';
   styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
+  @ViewChild(MatSort) sort: MatSort;
   @Input() public req?: Record<string, unknown>;
   @Input() public title?: string;
+
+  pageInfo: PageableResponse<IStock> | null;
   page: number;
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<Stock>;
   loadingPages: boolean;
   error?: any;
   displayedColumns: string[] = ['name', 'price', 'description', 'stock', ' '];
@@ -28,9 +34,10 @@ export class ProductListComponent implements OnInit {
     this.products = [];
     this.stockService.query(this.request).subscribe(
       stockRes => {
+        this.pageInfo = stockRes.body;
         if (stockRes.body?.content) {
           this.products.push(...stockRes.body.content);
-          this.dataSource = new MatTableDataSource(this.products);
+          this.updateDataSource();
         }
         this.loadingPages = false;
       },
@@ -47,9 +54,10 @@ export class ProductListComponent implements OnInit {
 
     this.stockService.query(this.request).subscribe(
       stockRes => {
+        this.pageInfo = stockRes.body;
         if (stockRes.body?.content) {
           this.products.push(...stockRes.body.content);
-          this.dataSource = new MatTableDataSource(this.products);
+          this.updateDataSource();
         }
         this.loadingPages = false;
       },
@@ -60,49 +68,30 @@ export class ProductListComponent implements OnInit {
     );
   }
 
-  private get request(): Record<string, unknown> {
-    const newReq: Record<string, unknown> = { ...this.req, page: this.page };
-    return newReq;
-  }
-
   addToCart(stock: Stock): void {
     if (stock.product) {
       this.cartService.addToCart(stock.product);
     }
   }
 
-  sortData(sort: Sort): void {
-    const data = this.products.slice();
-    if (!sort.active || sort.direction === '') {
-      this.dataSource = new MatTableDataSource(data);
-      return;
-    }
-
-    this.dataSource = new MatTableDataSource(
-      data.sort((a, b) => {
-        const isAsc = sort.direction === 'asc';
-
-        switch (sort.active) {
-          case 'name':
-            return this.compare(a.product?.name, b.product?.name, isAsc);
-          case 'price':
-            return this.compare(a.product?.price, b.product?.price, isAsc);
-          case 'stock':
-            return this.compare(a.stock, b.stock, isAsc);
-          default:
-            return 0;
-        }
-      })
-    );
+  private get request(): Record<string, unknown> {
+    const newReq: Record<string, unknown> = { ...this.req, page: this.page };
+    return newReq;
   }
-
-  compare(a: number | string | null | undefined, b: number | string | null | undefined, isAsc: boolean): number {
-    if (!a) {
-      return -1;
-    }
-    if (!b) {
-      return 1;
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  private updateDataSource(): void {
+    this.dataSource = new MatTableDataSource(this.products);
+    this.dataSource.sortingDataAccessor = (data: Stock, sortHeaderId: string): string | number => {
+      switch (sortHeaderId) {
+        case 'price':
+          return data.product?.price ? data.product.price : 'N/A';
+        case 'name':
+          return data.product?.name ? data.product.name : 'N/A';
+        case 'stock':
+          return data.stock ? data.stock : 'N/A';
+        default:
+          return 'N/A';
+      }
+    };
+    this.dataSource.sort = this.sort;
   }
 }
