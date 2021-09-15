@@ -36,7 +36,7 @@ export class CartComponent implements OnInit {
   }
 
   discard(): void {
-    window.console.debug('cart-discard');
+    return this.cartService.discard();
   }
 
   validate(): void {

@@ -61,4 +61,8 @@ export class CartService {
     const cartArrayFiltered = this.shoppingCart.getValue().filter(stock => product.id !== stock.product.id);
     this.shoppingCart.next([...cartArrayFiltered]);
   }
+
+  discard(): void {
+    this.shoppingCart.next([]);
+  }
 }
