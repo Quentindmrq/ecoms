@@ -171,6 +171,7 @@ public class StockResource {
     public Page<Stock> getAllStocksPageInBody(
         @RequestParam(required = false, value = "page", defaultValue = "1") int page,
         @RequestParam(required = false, value = "size", defaultValue = "5") int size
+
     ) {
         if (size <= 0) {
             throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
@@ -218,6 +219,7 @@ public class StockResource {
      * @param id of the stock that just got added to the cart.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} if it worked {@code 404 (Not Found)}.
      */
+
     @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping("/addStocksInCart/{id}")
     public ResponseEntity<Stock> patchEntryInCart(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
