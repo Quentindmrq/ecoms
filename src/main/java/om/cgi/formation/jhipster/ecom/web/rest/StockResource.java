@@ -214,6 +214,7 @@ public class StockResource {
      * @param id of the stock that just got added to the cart.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} if it worked {@code 404 (Not Found)}.
      */
+
     @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping("/addStocksInCart/{id}")
     public ResponseEntity<Stock> patchEntryInCart(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
