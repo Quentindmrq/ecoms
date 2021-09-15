@@ -607,4 +607,5 @@ class StockResourceIT {
             .perform(get(ENTITY_API_URL).queryParam("game", "OVERWATCH").queryParam("type", "INTING"))
             .andExpect(status().isOk());
     }
+
 }
