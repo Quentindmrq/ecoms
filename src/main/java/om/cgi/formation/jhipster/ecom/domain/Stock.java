@@ -24,6 +24,10 @@ public class Stock implements Serializable {
     @Column(name = "stock")
     private Integer stock;
 
+    @Version
+    @Column(name = "version")
+    private Integer version;
+
     @JsonIgnoreProperties(value = { "stock" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
@@ -54,6 +58,19 @@ public class Stock implements Serializable {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public Integer getVersion() {
+        return this.version;
+    }
+
+    public Stock version(Integer version) {
+        this.version = version;
+        return this;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public Product getProduct() {
@@ -94,6 +111,7 @@ public class Stock implements Serializable {
         return "Stock{" +
             "id=" + getId() +
             ", stock=" + getStock() +
+            ", version=" + getVersion() +
             "}";
     }
 }

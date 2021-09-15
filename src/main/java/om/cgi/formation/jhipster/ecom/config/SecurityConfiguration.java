@@ -32,6 +32,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final SecurityProblemSupport problemSupport;
 
+    private final String API_ALL = "/api/**";
+
     public SecurityConfiguration(
         TokenProvider tokenProvider,
         CorsFilter corsFilter,
@@ -103,6 +105,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.PATCH,"/api/stocks/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/stocks/**").permitAll()
             .antMatchers(HttpMethod.PATCH, "/api/addStocksInCart/{id}").permitAll()
+            .antMatchers(HttpMethod.PATCH, "/api/finalbuy/{id}").authenticated()
             .antMatchers(HttpMethod.POST, "/api/orders").authenticated()
             .antMatchers(HttpMethod.POST, "/api/order-lines").authenticated()
             .antMatchers("/api/addresses").authenticated()
@@ -111,11 +114,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/users").authenticated()
             .antMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/users/**").authenticated()
-            .antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers(HttpMethod.PUT, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers(HttpMethod.PATCH, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers(HttpMethod.POST, "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers("/api/**").authenticated()
+            .antMatchers(HttpMethod.DELETE, API_ALL).hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.PUT, API_ALL).hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.PATCH, API_ALL).hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.POST, API_ALL).hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(API_ALL).authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/health/**").permitAll()
             .antMatchers("/management/info").permitAll()

@@ -1,9 +1,15 @@
 package om.cgi.formation.jhipster.ecom.web.rest;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import javax.persistence.LockModeType;
 import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.repository.StockRepository;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
@@ -13,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +47,8 @@ public class StockResource {
 
     private static final String ENTITY_NAME = "stock";
 
+    private Set<Thread> threadbag;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -56,13 +65,16 @@ public class StockResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new stock, or with status {@code 400 (Bad Request)} if the stock has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @Lock(LockModeType.OPTIMISTIC)
     @PostMapping("/stocks")
     public ResponseEntity<Stock> createStock(@RequestBody Stock stock) throws URISyntaxException {
         log.debug("REST request to save Stock : {}", stock);
         if (stock.getId() != null) {
             throw new BadRequestAlertException("A new stock cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         Stock result = stockRepository.save(stock);
+
         return ResponseEntity
             .created(new URI("/api/stocks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -79,6 +91,7 @@ public class StockResource {
      * or with status {@code 500 (Internal Server Error)} if the stock couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @Lock(LockModeType.OPTIMISTIC)
     @PutMapping("/stocks/{id}")
     public ResponseEntity<Stock> updateStock(@PathVariable(value = "id", required = false) final Long id, @RequestBody Stock stock)
         throws URISyntaxException {
@@ -112,6 +125,7 @@ public class StockResource {
      * or with status {@code 500 (Internal Server Error)} if the stock couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping(value = "/stocks/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<Stock> partialUpdateStock(@PathVariable(value = "id", required = false) final Long id, @RequestBody Stock stock)
         throws URISyntaxException {
@@ -152,10 +166,11 @@ public class StockResource {
      * @param size the size of the page
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of stocks in body.
      */
+    @Lock(LockModeType.OPTIMISTIC)
     @GetMapping("/stocks")
     public Page<Stock> getAllStocksPageInBody(
         @RequestParam(required = false, value = "page", defaultValue = "1") int page,
-        @RequestParam(required = false, value = "size", defaultValue = "11") int size
+        @RequestParam(required = false, value = "size", defaultValue = "5") int size
     ) {
         if (size <= 0) {
             throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
@@ -171,6 +186,7 @@ public class StockResource {
      * @param id the id of the stock to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the stock, or with status {@code 404 (Not Found)}.
      */
+    @Lock(LockModeType.OPTIMISTIC)
     @GetMapping("/stocks/{id}")
     public ResponseEntity<Stock> getStock(@PathVariable Long id) {
         log.debug("REST request to get Stock : {}", id);
@@ -184,8 +200,9 @@ public class StockResource {
      * @param id the id of the stock to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
+    @Lock(LockModeType.OPTIMISTIC)
     @DeleteMapping("/stocks/{id}")
-    public ResponseEntity<Void> deleteStock(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteStock(@PathVariable("id") Long id) {
         log.debug("REST request to delete Stock : {}", id);
         stockRepository.deleteById(id);
         return ResponseEntity
@@ -196,12 +213,14 @@ public class StockResource {
 
     /**
      * {@code Patch  /stocksInCart/:id} : a new item has been added a cart.
+     * for now it doesn't do anything th stock is decremented when the order is paid
      *
      * @param id of the stock that just got added to the cart.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} if it worked {@code 404 (Not Found)}.
      */
+    @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping("/addStocksInCart/{id}")
-    public ResponseEntity<Stock> patchEntryInBasket(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
+    public ResponseEntity<Stock> patchEntryInCart(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
         log.debug("REST request to patch Stock because of a cart entry : {}", id);
         if (!stockRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
@@ -218,6 +237,50 @@ public class StockResource {
         if (currStock < amount) {
             throw new BadRequestAlertException("the amount is too high", ENTITY_NAME, "stock < amount");
         }
+        return ResponseUtil.wrapOrNotFound(stock);
+    }
+
+    /**
+     * for now it doesn't do anything th stock is decremented when the order is paid
+     * @param id
+     * @param amount
+     * @return
+     */
+    @Lock(LockModeType.OPTIMISTIC)
+    @PatchMapping("/deleteStocksInCart/{id}")
+    public ResponseEntity<Stock> patchOutOfCart(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
+        log.debug("REST request to patch Stock because of a cart entry : {}", id);
+        if (!stockRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
+        }
+        Optional<Stock> stock = stockRepository.findById(id);
+        if (stock.isEmpty()) {
+            throw new BadRequestAlertException("id is not valid", ENTITY_NAME, "idisnull");
+        }
+
+        return ResponseUtil.wrapOrNotFound(stock);
+    }
+
+    /**
+     *
+     * @param id the id of the sock
+     * @param amount the amount bought
+     * @return
+     */
+    @Lock(LockModeType.OPTIMISTIC)
+    @PatchMapping("/finalbuy/{id}")
+    public ResponseEntity<Stock> finalbuy(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
+        log.debug("REST request to patch Stock because of a cart entry : {}", id);
+        if (!stockRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
+        }
+        Optional<Stock> stock = stockRepository.findById(id);
+        if (stock.isEmpty()) {
+            throw new BadRequestAlertException("id is not valid", ENTITY_NAME, "idisnull");
+        }
+
+        int currStock = stock.get().getStock();
+
         stock.get().stock(currStock - Math.toIntExact(amount));
         return ResponseUtil.wrapOrNotFound(stock);
     }

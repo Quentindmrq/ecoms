@@ -19,6 +19,11 @@
         </div>
 
         <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.stock.version" for="field_version">Version</label>
+          <input type="number" class="form-control" name="version" id="field_version" data-cy="version" formControlName="version" />
+        </div>
+
+        <div class="form-group">
           <label class="form-control-label" jhiTranslate="servicesenligneApp.stock.product" for="field_product">Product</label>
           <select class="form-control" id="field_product" data-cy="product" name="product" formControlName="product">
             <option [ngValue]="null"></option>
