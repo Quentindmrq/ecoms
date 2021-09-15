@@ -14,6 +14,7 @@ import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { JhMaterialModule } from './jhmaterial.module';
+import { SelectProductCategoriesComponent } from './select-product-categories/select-product-categories.component';
 
 @NgModule({
   imports: [SharedLibsModule, JhMaterialModule],
@@ -30,6 +31,7 @@ import { JhMaterialModule } from './jhmaterial.module';
     SortDirective,
     ItemCountComponent,
     ProductListComponent,
+    SelectProductCategoriesComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -45,6 +47,7 @@ import { JhMaterialModule } from './jhmaterial.module';
     SortDirective,
     ItemCountComponent,
     ProductListComponent,
+    SelectProductCategoriesComponent,
     JhMaterialModule,
   ],
 })

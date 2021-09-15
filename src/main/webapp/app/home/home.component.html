@@ -1,1 +1,8 @@
-<jhi-product-list></jhi-product-list>
+<jhi-select-product-categories></jhi-select-product-categories>
+{{ selectedGames }}
+<jhi-product-list
+  *ngFor="let productType of productTypeToShow"
+  [req]="{ game: selectedGames, type: productType }"
+  [productType]="productType"
+  [games]="selectedGames"
+></jhi-product-list>

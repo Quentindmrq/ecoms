@@ -7,6 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { PageableResponse } from 'app/entities/common/pageablehttpresponse.model';
 import { Product } from 'app/entities/product/product.model';
 import { isBreakOrContinueStatement } from 'typescript';
+import { ProductType } from 'app/entities/enumerations/product-type.model';
+import { Game } from 'app/entities/enumerations/game.model';
 
 @Component({
   selector: 'jhi-product-list',
@@ -16,7 +18,8 @@ import { isBreakOrContinueStatement } from 'typescript';
 export class ProductListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @Input() public req?: Record<string, unknown>;
-  @Input() public title?: string;
+  @Input() public productType?: ProductType;
+  @Input() public games?: Game | null;
 
   pageInfo: PageableResponse<IStock> | null;
   page: number;
@@ -46,6 +49,28 @@ export class ProductListComponent implements OnInit {
         this.loadingPages = false;
       }
     );
+  }
+
+  ngOnChanges(changes: any): void {
+    if (changes.games) {
+      this.page = 1;
+      this.loadingPages = true;
+      this.products = [];
+      this.stockService.query(this.request).subscribe(
+        stockRes => {
+          this.pageInfo = stockRes.body;
+          if (stockRes.body?.content) {
+            this.products.push(...stockRes.body.content);
+            this.updateDataSource();
+          }
+          this.loadingPages = false;
+        },
+        error => {
+          this.error = error;
+          this.loadingPages = false;
+        }
+      );
+    }
   }
 
   loadNewPage(): void {
