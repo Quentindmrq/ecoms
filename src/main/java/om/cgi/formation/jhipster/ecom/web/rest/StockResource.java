@@ -6,14 +6,18 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.LockModeType;
 import om.cgi.formation.jhipster.ecom.domain.Stock;
+import om.cgi.formation.jhipster.ecom.domain.enumeration.Game;
+import om.cgi.formation.jhipster.ecom.domain.enumeration.ProductType;
 import om.cgi.formation.jhipster.ecom.repository.StockRepository;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
+import org.apache.commons.lang3.EnumUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -159,6 +163,10 @@ public class StockResource {
      * {@code GET  /stocks} : get all the stocks in a page, default is page 1 of size 5.
      * @param page the number of the page you want
      * @param size the size of the page
+     * @param sort
+     * @param way by default top down but any other word will make it down to top
+     * @param game the game we want, all by default
+     * @param type the type of services, all by default
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of stocks in body.
      */
     @Lock(LockModeType.OPTIMISTIC)
@@ -166,12 +174,35 @@ public class StockResource {
     public Page<Stock> getAllStocksPageInBody(
         @RequestParam(required = false, value = "page", defaultValue = "1") int page,
         @RequestParam(required = false, value = "size", defaultValue = "5") int size,
-        @RequestParam(required = false, value = "sorting", defaultValue = "id") String sort
+        @RequestParam(required = false, value = "sort", defaultValue = "stock") String sort,
+        @RequestParam(required = false, value = "way", defaultValue = "descending") String way,
+        @RequestParam(required = false, value = "game", defaultValue = "none") String game,
+        @RequestParam(required = false, value = "type", defaultValue = "none") String type
     ) {
         if (size <= 0) {
             throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
         }
-        Pageable pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size));
+        Pageable pageRequested;
+        Sort pageSort;
+
+        if (way.equals("descending")) {
+            pageSort = Sort.by(sort).descending();
+        } else {
+            pageSort = Sort.by(sort);
+        }
+        pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size), pageSort);
+
+        //verify the asked game does exists
+        //an invalid one will return the generic page
+        if (EnumUtils.isValidEnum(Game.class, game)) {
+            //verify the asked type exists
+            //an invalid one will return all types
+            if (EnumUtils.isValidEnum(ProductType.class, type)) {
+                return stockRepository.findallbygameandtype(Game.valueOf(game), ProductType.valueOf(type), pageRequested);
+            }
+            return stockRepository.findallbygame(Game.valueOf(game), pageRequested);
+        }
+
         log.debug("REST request to get all Stocks");
         return stockRepository.findAll(pageRequested);
     }

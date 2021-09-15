@@ -152,7 +152,7 @@ class StockResourceIT {
 
         // Get all the stockList
         restStockMockMvc
-            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
+            .perform(get(ENTITY_API_URL + "?sort=id"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.content.[*].id").value(hasItem(stock.getId().intValue())))
@@ -575,4 +575,37 @@ class StockResourceIT {
         stockRepository.saveAndFlush(stock);
         restStockMockMvc.perform(patch(CART_API_URL, stock.getId() + 1514).queryParam("amount", "1")).andExpect(status().isBadRequest());
     }
+
+    @Test
+    @Transactional
+    void getascending() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc.perform(get(ENTITY_API_URL).queryParam("page", "1").queryParam("way", "up")).andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void getGame() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc.perform(get(ENTITY_API_URL).queryParam("game", "OVERWATCH")).andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void getGameAndType() throws Exception {
+        // Initialize the database
+        stockRepository.saveAndFlush(stock);
+
+        // Get the stock
+        restStockMockMvc
+            .perform(get(ENTITY_API_URL).queryParam("game", "OVERWATCH").queryParam("type", "INTING"))
+            .andExpect(status().isOk());
+    }
+
 }
