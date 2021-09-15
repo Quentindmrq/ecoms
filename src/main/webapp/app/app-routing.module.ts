@@ -48,6 +48,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           loadChildren: () => import('./order-history/order-history.module').then(m => m.OrderHistoryModule),
         },
 
+        { path: 'game/:game', loadChildren: () => import('./game/game.module').then(m => m.GameModule) },
         ...LAYOUT_ROUTES,
       ],
       { enableTracing: DEBUG_INFO_ENABLED }

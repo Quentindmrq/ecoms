@@ -15,7 +15,7 @@ export class SelectProductCategoriesComponent implements OnInit {
   productTypes: ProductType[];
 
   constructor(private selectProductCategoriesServ: SelectProductCategoriesService) {
-    //todo
+    // TODO
   }
 
   ngOnInit(): void {
@@ -23,10 +23,14 @@ export class SelectProductCategoriesComponent implements OnInit {
     this.selectProductCategoriesServ.selectedProductTypes.subscribe(productTypes => (this.productTypes = productTypes));
   }
 
-  updateGames(values: Game | null): void {
-    this.selectProductCategoriesServ.updateGames(values);
+  updateGames(values: Game): void {
+    this.selectProductCategoriesServ.updateGame(values);
   }
-  updateProductTypes(values: ProductType[]): void {
-    this.selectProductCategoriesServ.updateProductType(values);
+  updateProductTypes(productType: ProductType): void {
+    if (this.productTypes.includes(productType)) {
+      this.selectProductCategoriesServ.removeProductType(productType);
+      return;
+    }
+    this.selectProductCategoriesServ.updateProductType(productType);
   }
 }

@@ -7,21 +7,28 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class SelectProductCategoriesService {
-  private selectedGamesBH = new BehaviorSubject<Game | null>(null);
+  private selectedGamesBH = new BehaviorSubject<Game>(Game.LEAGUE_OF_LEGENDS);
   private selectedProductTypesBH = new BehaviorSubject<ProductType[]>([]);
 
   constructor() {
     // donothing
   }
 
-  updateGames(games: Game | null): void {
+  updateGame(games: Game): void {
     this.selectedGamesBH.next(games);
+    this.resetProductType();
   }
-  updateProductType(productTypes: ProductType[]): void {
-    this.selectedProductTypesBH.next(productTypes);
+  updateProductType(productType: ProductType): void {
+    this.selectedProductTypesBH.next([productType]);
+  }
+  resetProductType(): void {
+    this.selectedProductTypesBH.next([]);
+  }
+  removeProductType(productType: ProductType): void {
+    this.selectedProductTypesBH.next([...this.selectedProductTypesBH.getValue().filter(pt => pt !== productType)]);
   }
 
-  get selectedGames(): Observable<Game | null> {
+  get selectedGames(): Observable<Game> {
     return this.selectedGamesBH;
   }
   get selectedProductTypes(): Observable<ProductType[]> {

@@ -1,12 +1,10 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { StockService } from 'app/entities/stock/service/stock.service';
 import { IStock, Stock } from 'app/entities/stock/stock.model';
 import { CartService } from 'app/cart/cart.service';
 import { MatSort } from '@angular/material/sort';
 import { PageableResponse } from 'app/entities/common/pageablehttpresponse.model';
-import { Product } from 'app/entities/product/product.model';
-import { isBreakOrContinueStatement } from 'typescript';
 import { ProductType } from 'app/entities/enumerations/product-type.model';
 import { Game } from 'app/entities/enumerations/game.model';
 
@@ -15,11 +13,11 @@ import { Game } from 'app/entities/enumerations/game.model';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnChanges {
   @ViewChild(MatSort) sort: MatSort;
   @Input() public req?: Record<string, unknown>;
   @Input() public productType?: ProductType;
-  @Input() public games?: Game | null;
+  @Input() public game?: Game;
 
   pageInfo: PageableResponse<IStock> | null;
   page: number;
@@ -31,36 +29,17 @@ export class ProductListComponent implements OnInit {
 
   constructor(private stockService: StockService, private cartService: CartService) {}
 
-  ngOnInit(): void {
-    this.page = 1;
-    this.loadingPages = true;
-    this.products = [];
-    this.stockService.query(this.request).subscribe(
-      stockRes => {
-        this.pageInfo = stockRes.body;
-        if (stockRes.body?.content) {
-          this.products.push(...stockRes.body.content);
-          this.updateDataSource();
-        }
-        this.loadingPages = false;
-      },
-      error => {
-        this.error = error;
-        this.loadingPages = false;
-      }
-    );
-  }
-
   ngOnChanges(changes: any): void {
-    if (changes.games) {
+    if (changes.game) {
       this.page = 1;
       this.loadingPages = true;
       this.products = [];
+
       this.stockService.query(this.request).subscribe(
         stockRes => {
           this.pageInfo = stockRes.body;
           if (stockRes.body?.content) {
-            this.products.push(...stockRes.body.content);
+            this.products = stockRes.body.content;
             this.updateDataSource();
           }
           this.loadingPages = false;
@@ -100,7 +79,7 @@ export class ProductListComponent implements OnInit {
   }
 
   private get request(): Record<string, unknown> {
-    const newReq: Record<string, unknown> = { ...this.req, page: this.page };
+    const newReq: Record<string, unknown> = { ...this.req, page: this.page, game: this.game, type: this.productType };
     return newReq;
   }
   private updateDataSource(): void {
