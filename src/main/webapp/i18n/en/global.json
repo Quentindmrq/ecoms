@@ -143,5 +143,17 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "This is your footer"
+  "footer": "This is your footer",
+  "games": {
+    "LEAGUE_OF_LEGENDS": "League of Legends",
+    "OVERWATCH": "Overwatch",
+    "N/A": "N/A"
+  },
+  "productType": {
+    "GAME_ACCOUNT": "Game account",
+    "BOOSTING": "Boosting",
+    "COACHING": "Coaching",
+    "INTING": "Inting",
+    "N/A": "N/A"
+  }
 }

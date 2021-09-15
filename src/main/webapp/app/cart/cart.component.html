@@ -6,12 +6,12 @@
     <!-- Vérifie si le panier est vide, si oui -> emptyCartBlock, sinon affiche le panier -->
     <div class="container-fluid" *ngIf="cartItems.length > 0; else emptyCartBlock">
       <mat-card class="cartItem" *ngFor="let item of cartItems">
-        <mat-card-title>
-          <h4>{{ item.product.name }}</h4>
+        <mat-card-title routerLink="/product/{{ item.product.id }}">
+          <a>{{ item.product.name }}</a>
         </mat-card-title>
         <mat-card-content>
           <div class="container-fluid row">
-            <div class="col-md-3">LOGO.jpg</div>
+            <img src="{{ item.product.logo }}" alt="Logo {{ item.product.name }}" routerLink="/product/{{ item.product.id }}" />
             <div class="col-md-7">
               <p>{{ item.product.description }}</p>
               <div>
@@ -27,14 +27,23 @@
             </div>
 
             <div class="col-md-2">
-              <p>{{ item.product.price | currency: 'EUR' }}</p>
+              <p>{{ (item.product.price ? item.product.price * item.quantity : 'NA') | currency: 'EUR' }}</p>
             </div>
           </div>
         </mat-card-content>
       </mat-card>
 
-      <button mat-flat-button color="accent" (click)="discard()">Discard</button>
-      <button mat-flat-button color="accent" (click)="validate()">Validate</button>
+      <mat-card-actions>
+        <div class="container-fluid">
+          <div class="row buttonBox">
+            <p>Total Price : {{ totalPrice | currency: 'EUR' }}</p>
+          </div>
+          <div class="row buttonBox">
+            <button mat-stroked-button style="margin-right: 5px" color="accent" (click)="discard()">Discard</button>
+            <button mat-flat-button color="accent" (click)="validate()">Validate</button>
+          </div>
+        </div>
+      </mat-card-actions>
     </div>
 
     <ng-template #emptyCartBlock>
