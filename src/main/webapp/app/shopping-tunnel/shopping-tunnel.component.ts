@@ -5,13 +5,11 @@ import { CartService } from 'app/cart/cart.service';
 import { AccountService } from 'app/core/auth/account.service';
 import { Address } from 'app/entities/address/address.model';
 import { AddressService } from 'app/entities/address/service/address.service';
-import { ContactDetails } from 'app/entities/contact-details/contact-details.model';
 import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { OrderLineService } from 'app/entities/order-line/service/order-line.service';
 import { Order } from 'app/entities/order/order.model';
 import { OrderService } from 'app/entities/order/service/order.service';
 import { UserService } from 'app/entities/user/user.service';
-import { Dayjs } from 'dayjs';
 
 @Component({
   selector: 'jhi-shopping-tunnel',
@@ -96,7 +94,7 @@ export class ShoppingTunnelComponent implements OnInit {
       login = accountRes?.login;
     });
 
-    const order = new Order(undefined, true, undefined, undefined, orderLines, new User(undefined, login), this.address);
+    const order = new Order(undefined, true, undefined, this.cartService.totalPrice, orderLines, new User(undefined, login), this.address);
 
     let creation: Order | null;
     this.orderService.create(order).subscribe(
