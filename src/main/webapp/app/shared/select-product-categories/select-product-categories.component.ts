@@ -10,7 +10,7 @@ import { SelectProductCategoriesService } from './select-product-categories.serv
 })
 export class SelectProductCategoriesComponent implements OnInit {
   public Games = Game;
-  games: Game | null;
+  games: Game;
   public ProductTypes = ProductType;
   productTypes: ProductType[];
 

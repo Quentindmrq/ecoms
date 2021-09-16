@@ -1,24 +1,31 @@
+@use '~@angular/material' as mat;
+@use 'sass:map';
 @import '~@angular/material/theming';
+@import 'src/main/webapp/content/scss/styles.scss';
 
 @include mat-core();
 
-$app-primary: mat-palette($mat-purple);
-$app-accent: mat-palette($mat-green, A200, A100, A400);
+$color-config: mat.get-color-config($my-theme);
 
-$app-theme: mat-dark-theme($app-primary, $app-accent);
+$primary-palette: map.get($color-config, 'primary');
+$accent-palette: map.get($color-config, 'accent');
+$warn-palette: map.get($color-config, 'warn');
+$is-dark-theme: map.get($color-config, 'is-dark');
+
+$app-theme: mat-dark-theme($primary-palette, $accent-palette, $warn-palette);
 
 @mixin mix-app-theme($app-theme) {
   $primary: map-get($app-theme, primary);
   $accent: map-get($app-theme, accent);
+  $warn: map-get($app-theme, warn);
 
-  .mat-button-toggle {
+  /*.mat-button-toggle {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
-  }
+  }*/
 
-  .mat-button-toggle-checked {
-    background-color: mat-color($accent);
-    color: mat-color($accent, default-contrast);
+  .testAccent {
+    color: mat-color($accent);
   }
 }
 

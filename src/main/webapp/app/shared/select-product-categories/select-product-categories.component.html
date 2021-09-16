@@ -1,8 +1,14 @@
 <mat-button-toggle-group name="games" [ngModel]="games" (change)="updateGames($event.value)" aria-label="games">
-  <mat-button-toggle *ngFor="let enum of Games | keyvalue" value="{{ enum.value }}">{{ enum.value }}</mat-button-toggle>
+  <mat-button-toggle *ngFor="let enum of Games | keyvalue" value="{{ enum.value }}">
+    <div [ngClass]="{ testAccent: games === enum.value }">
+      {{ enum.value }}
+    </div>
+  </mat-button-toggle>
 </mat-button-toggle-group>
 <mat-button-toggle-group name="productTypes" color="accent" [ngModel]="productTypes" aria-label="productTypes" multiple>
-  <mat-button-toggle *ngFor="let enum of ProductTypes | keyvalue" (change)="updateProductTypes($event.value)" value="{{ enum.value }}">{{
-    enum.value
-  }}</mat-button-toggle>
+  <mat-button-toggle *ngFor="let enum of ProductTypes | keyvalue" (change)="updateProductTypes($event.value)" value="{{ enum.value }}">
+    <div [ngClass]="{ testAccent: productTypes.includes(enum.value) }">
+      {{ enum.value }}
+    </div>
+  </mat-button-toggle>
 </mat-button-toggle-group>
