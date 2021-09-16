@@ -23,7 +23,7 @@ public class ContactDetails implements Serializable {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     @JoinColumn(unique = true)
     private Address address;
 

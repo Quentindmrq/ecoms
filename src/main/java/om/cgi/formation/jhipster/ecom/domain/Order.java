@@ -27,15 +27,15 @@ public class Order implements Serializable {
     @Column(name = "purchase_date")
     private ZonedDateTime purchaseDate;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "order" }, allowSetters = true)
     private Set<OrderLine> orderLines = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     private ContactDetails contactDetails;
 
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     @JsonIgnoreProperties(
         value = { "login", "firstName", "lastName", "email", "activated", "langKey", "imageUrl", "resetDate" },
         allowSetters = true
