@@ -16,7 +16,6 @@ import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import om.cgi.formation.jhipster.ecom.service.UserService;
 import om.cgi.formation.jhipster.ecom.service.dto.AdminUserDTO;
 import om.cgi.formation.jhipster.ecom.service.dto.PasswordChangeDTO;
-import om.cgi.formation.jhipster.ecom.service.dto.UserDTO;
 import om.cgi.formation.jhipster.ecom.web.rest.vm.KeyAndPasswordVM;
 import om.cgi.formation.jhipster.ecom.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.RandomStringUtils;
