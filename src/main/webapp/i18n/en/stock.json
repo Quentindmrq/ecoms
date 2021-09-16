@@ -19,6 +19,7 @@
       },
       "id": "ID",
       "stock": "Stock",
+      "version": "Version",
       "product": "Product"
     }
   }
