@@ -198,7 +198,7 @@ class StockResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(updatedStock))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isForbidden());
     }
 
     @Test
