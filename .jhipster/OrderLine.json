@@ -8,11 +8,10 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "product",
       "otherEntityRelationshipName": "orderLine",
-      "relationshipName": "product",
-      "ownerSide": true
+      "relationshipName": "product"
     },
     {
       "relationshipType": "many-to-one",
