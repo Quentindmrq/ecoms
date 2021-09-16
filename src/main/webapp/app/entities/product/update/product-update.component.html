@@ -63,6 +63,65 @@
             <option value="INTING">{{ 'servicesenligneApp.ProductType.INTING' | translate }}</option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.product.region" for="field_region">Region</label>
+          <select class="form-control" name="region" formControlName="region" id="field_region" data-cy="region">
+            <option [ngValue]="null">{{ 'servicesenligneApp.Region.null' | translate }}</option>
+            <option value="EUW">{{ 'servicesenligneApp.Region.EUW' | translate }}</option>
+            <option value="NA">{{ 'servicesenligneApp.Region.NA' | translate }}</option>
+            <option value="KR">{{ 'servicesenligneApp.Region.KR' | translate }}</option>
+            <option value="EUNE">{{ 'servicesenligneApp.Region.EUNE' | translate }}</option>
+            <option value="OCE">{{ 'servicesenligneApp.Region.OCE' | translate }}</option>
+            <option value="JP">{{ 'servicesenligneApp.Region.JP' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.product.accountLevel" for="field_accountLevel"
+            >Account Level</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="accountLevel"
+            id="field_accountLevel"
+            data-cy="accountLevel"
+            formControlName="accountLevel"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.product.accountRank" for="field_accountRank"
+            >Account Rank</label
+          >
+          <select class="form-control" name="accountRank" formControlName="accountRank" id="field_accountRank" data-cy="accountRank">
+            <option [ngValue]="null">{{ 'servicesenligneApp.Rank.null' | translate }}</option>
+            <option value="IRON">{{ 'servicesenligneApp.Rank.IRON' | translate }}</option>
+            <option value="BRONZE">{{ 'servicesenligneApp.Rank.BRONZE' | translate }}</option>
+            <option value="SILVER">{{ 'servicesenligneApp.Rank.SILVER' | translate }}</option>
+            <option value="GOLD">{{ 'servicesenligneApp.Rank.GOLD' | translate }}</option>
+            <option value="PLATINUM">{{ 'servicesenligneApp.Rank.PLATINUM' | translate }}</option>
+            <option value="DIAMOND">{{ 'servicesenligneApp.Rank.DIAMOND' | translate }}</option>
+            <option value="MASTER">{{ 'servicesenligneApp.Rank.MASTER' | translate }}</option>
+            <option value="CHALLENGER">{{ 'servicesenligneApp.Rank.CHALLENGER' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.product.targetRank" for="field_targetRank">Target Rank</label>
+          <select class="form-control" name="targetRank" formControlName="targetRank" id="field_targetRank" data-cy="targetRank">
+            <option [ngValue]="null">{{ 'servicesenligneApp.Rank.null' | translate }}</option>
+            <option value="IRON">{{ 'servicesenligneApp.Rank.IRON' | translate }}</option>
+            <option value="BRONZE">{{ 'servicesenligneApp.Rank.BRONZE' | translate }}</option>
+            <option value="SILVER">{{ 'servicesenligneApp.Rank.SILVER' | translate }}</option>
+            <option value="GOLD">{{ 'servicesenligneApp.Rank.GOLD' | translate }}</option>
+            <option value="PLATINUM">{{ 'servicesenligneApp.Rank.PLATINUM' | translate }}</option>
+            <option value="DIAMOND">{{ 'servicesenligneApp.Rank.DIAMOND' | translate }}</option>
+            <option value="MASTER">{{ 'servicesenligneApp.Rank.MASTER' | translate }}</option>
+            <option value="CHALLENGER">{{ 'servicesenligneApp.Rank.CHALLENGER' | translate }}</option>
+          </select>
+        </div>
       </div>
 
       <div>

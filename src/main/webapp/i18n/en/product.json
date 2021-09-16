@@ -24,6 +24,10 @@
       "price": "Price",
       "game": "Game",
       "productType": "Product Type",
+      "region": "Region",
+      "accountLevel": "Account Level",
+      "accountRank": "Account Rank",
+      "targetRank": "Target Rank",
       "stock": "Stock"
     }
   }

@@ -24,13 +24,12 @@ public class OrderLine implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @ManyToOne
     @JsonIgnoreProperties(value = { "stock" }, allowSetters = true)
-    @ManyToOne(targetEntity = Product.class, fetch = FetchType.EAGER)
-    @JoinColumn(unique = true)
     private Product product;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "orderLines" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "orderLines", "billingAddress" }, allowSetters = true)
     private Order order;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

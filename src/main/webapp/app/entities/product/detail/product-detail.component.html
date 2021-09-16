@@ -38,6 +38,22 @@
         <dd>
           <span jhiTranslate="{{ 'servicesenligneApp.ProductType.' + product.productType }}">{{ product.productType }}</span>
         </dd>
+        <dt><span jhiTranslate="servicesenligneApp.product.region">Region</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'servicesenligneApp.Region.' + product.region }}">{{ product.region }}</span>
+        </dd>
+        <dt><span jhiTranslate="servicesenligneApp.product.accountLevel">Account Level</span></dt>
+        <dd>
+          <span>{{ product.accountLevel }}</span>
+        </dd>
+        <dt><span jhiTranslate="servicesenligneApp.product.accountRank">Account Rank</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'servicesenligneApp.Rank.' + product.accountRank }}">{{ product.accountRank }}</span>
+        </dd>
+        <dt><span jhiTranslate="servicesenligneApp.product.targetRank">Target Rank</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'servicesenligneApp.Rank.' + product.targetRank }}">{{ product.targetRank }}</span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

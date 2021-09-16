@@ -33,9 +33,11 @@
       <thead>
         <tr>
           <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.order.purchased">Purchased</span></th>
           <th scope="col"><span jhiTranslate="servicesenligneApp.order.purchaseDate">Purchase Date</span></th>
-          <th scope="col"><span jhiTranslate="servicesenligneApp.order.contactDetails">Contact Details</span></th>
           <th scope="col"><span jhiTranslate="servicesenligneApp.order.owner">Owner</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.order.purchasePrice">Purchase Price</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.order.billingAddress">Billing Address</span></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -44,10 +46,12 @@
           <td>
             <a [routerLink]="['/order', order.id, 'view']">{{ order.id }}</a>
           </td>
+          <td>{{ order.purchased }}</td>
           <td>{{ order.purchaseDate | formatMediumDatetime }}</td>
+          <td>{{ order.purchasePrice }}</td>
           <td>
-            <div *ngIf="order.contactDetails">
-              <a [routerLink]="['/contact-details', order.contactDetails?.id, 'view']">{{ order.contactDetails?.id }}</a>
+            <div *ngIf="order.billingAddress">
+              <a [routerLink]="['/address', order.billingAddress?.id, 'view']">{{ order.billingAddress?.id }}</a>
             </div>
           </td>
           <td>

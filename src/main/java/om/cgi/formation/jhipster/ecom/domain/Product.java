@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import om.cgi.formation.jhipster.ecom.domain.enumeration.Game;
 import om.cgi.formation.jhipster.ecom.domain.enumeration.ProductType;
+import om.cgi.formation.jhipster.ecom.domain.enumeration.Rank;
+import om.cgi.formation.jhipster.ecom.domain.enumeration.Region;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -42,6 +44,21 @@ public class Product implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "product_type")
     private ProductType productType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "region")
+    private Region region;
+
+    @Column(name = "account_level")
+    private Integer accountLevel;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_rank")
+    private Rank accountRank;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "target_rank")
+    private Rank targetRank;
 
     @JsonIgnoreProperties(value = { "product" }, allowSetters = true)
     @OneToOne(mappedBy = "product")
@@ -139,6 +156,58 @@ public class Product implements Serializable {
         this.productType = productType;
     }
 
+    public Region getRegion() {
+        return this.region;
+    }
+
+    public Product region(Region region) {
+        this.region = region;
+        return this;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
+    }
+
+    public Integer getAccountLevel() {
+        return this.accountLevel;
+    }
+
+    public Product accountLevel(Integer accountLevel) {
+        this.accountLevel = accountLevel;
+        return this;
+    }
+
+    public void setAccountLevel(Integer accountLevel) {
+        this.accountLevel = accountLevel;
+    }
+
+    public Rank getAccountRank() {
+        return this.accountRank;
+    }
+
+    public Product accountRank(Rank accountRank) {
+        this.accountRank = accountRank;
+        return this;
+    }
+
+    public void setAccountRank(Rank accountRank) {
+        this.accountRank = accountRank;
+    }
+
+    public Rank getTargetRank() {
+        return this.targetRank;
+    }
+
+    public Product targetRank(Rank targetRank) {
+        this.targetRank = targetRank;
+        return this;
+    }
+
+    public void setTargetRank(Rank targetRank) {
+        this.targetRank = targetRank;
+    }
+
     public Stock getStock() {
         return this.stock;
     }
@@ -188,6 +257,10 @@ public class Product implements Serializable {
             ", price=" + getPrice() +
             ", game='" + getGame() + "'" +
             ", productType='" + getProductType() + "'" +
+            ", region='" + getRegion() + "'" +
+            ", accountLevel=" + getAccountLevel() +
+            ", accountRank='" + getAccountRank() + "'" +
+            ", targetRank='" + getTargetRank() + "'" +
             "}";
     }
 }

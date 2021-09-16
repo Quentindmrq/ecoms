@@ -39,6 +39,10 @@
           <th scope="col"><span jhiTranslate="servicesenligneApp.product.price">Price</span></th>
           <th scope="col"><span jhiTranslate="servicesenligneApp.product.game">Game</span></th>
           <th scope="col"><span jhiTranslate="servicesenligneApp.product.productType">Product Type</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.product.region">Region</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.product.accountLevel">Account Level</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.product.accountRank">Account Rank</span></th>
+          <th scope="col"><span jhiTranslate="servicesenligneApp.product.targetRank">Target Rank</span></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -53,6 +57,10 @@
           <td>{{ product.price }}</td>
           <td jhiTranslate="{{ 'servicesenligneApp.Game.' + product.game }}">{{ product.game }}</td>
           <td jhiTranslate="{{ 'servicesenligneApp.ProductType.' + product.productType }}">{{ product.productType }}</td>
+          <td jhiTranslate="{{ 'servicesenligneApp.Region.' + product.region }}">{{ product.region }}</td>
+          <td>{{ product.accountLevel }}</td>
+          <td jhiTranslate="{{ 'servicesenligneApp.Rank.' + product.accountRank }}">{{ product.accountRank }}</td>
+          <td jhiTranslate="{{ 'servicesenligneApp.Rank.' + product.targetRank }}">{{ product.targetRank }}</td>
           <td class="text-right">
             <div class="btn-group">
               <button

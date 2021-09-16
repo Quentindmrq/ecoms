@@ -44,22 +44,23 @@ describe('Component Tests', () => {
     });
 
     describe('ngOnInit', () => {
-      it('Should call product query and add missing value', () => {
+      it('Should call Product query and add missing value', () => {
         const orderLine: IOrderLine = { id: 456 };
         const product: IProduct = { id: 63374 };
         orderLine.product = product;
 
         const productCollection: IProduct[] = [{ id: 30020 }];
         jest.spyOn(productService, 'query').mockReturnValue(of(new HttpResponse({ body: productCollection })));
-        const expectedCollection: IProduct[] = [product, ...productCollection];
+        const additionalProducts = [product];
+        const expectedCollection: IProduct[] = [...additionalProducts, ...productCollection];
         jest.spyOn(productService, 'addProductToCollectionIfMissing').mockReturnValue(expectedCollection);
 
         activatedRoute.data = of({ orderLine });
         comp.ngOnInit();
 
         expect(productService.query).toHaveBeenCalled();
-        expect(productService.addProductToCollectionIfMissing).toHaveBeenCalledWith(productCollection, product);
-        expect(comp.productsCollection).toEqual(expectedCollection);
+        expect(productService.addProductToCollectionIfMissing).toHaveBeenCalledWith(productCollection, ...additionalProducts);
+        expect(comp.productsSharedCollection).toEqual(expectedCollection);
       });
 
       it('Should call Order query and add missing value', () => {
@@ -92,7 +93,7 @@ describe('Component Tests', () => {
         comp.ngOnInit();
 
         expect(comp.editForm.value).toEqual(expect.objectContaining(orderLine));
-        expect(comp.productsCollection).toContain(product);
+        expect(comp.productsSharedCollection).toContain(product);
         expect(comp.ordersSharedCollection).toContain(order);
       });
     });

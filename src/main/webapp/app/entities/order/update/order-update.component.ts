@@ -10,10 +10,10 @@ import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import { IOrder, Order } from '../order.model';
 import { OrderService } from '../service/order.service';
-import { IContactDetails } from 'app/entities/contact-details/contact-details.model';
-import { ContactDetailsService } from 'app/entities/contact-details/service/contact-details.service';
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
+import { IAddress } from 'app/entities/address/address.model';
+import { AddressService } from 'app/entities/address/service/address.service';
 
 @Component({
   selector: 'jhi-order-update',
@@ -22,20 +22,22 @@ import { UserService } from 'app/entities/user/user.service';
 export class OrderUpdateComponent implements OnInit {
   isSaving = false;
 
-  contactDetailsSharedCollection: IContactDetails[] = [];
   usersSharedCollection: IUser[] = [];
+  addressesSharedCollection: IAddress[] = [];
 
   editForm = this.fb.group({
     id: [],
+    purchased: [],
     purchaseDate: [],
-    contactDetails: [],
     owner: [],
+    purchasePrice: [],
+    billingAddress: [],
   });
 
   constructor(
     protected orderService: OrderService,
-    protected contactDetailsService: ContactDetailsService,
     protected userService: UserService,
+    protected addressService: AddressService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
   ) {}
@@ -67,7 +69,7 @@ export class OrderUpdateComponent implements OnInit {
     }
   }
 
-  trackContactDetailsById(index: number, item: IContactDetails): number {
+  trackAddressById(index: number, item: IAddress): number {
     return item.id!;
   }
 
@@ -97,28 +99,30 @@ export class OrderUpdateComponent implements OnInit {
   protected updateForm(order: IOrder): void {
     this.editForm.patchValue({
       id: order.id,
+      purchased: order.purchased,
       purchaseDate: order.purchaseDate ? order.purchaseDate.format(DATE_TIME_FORMAT) : null,
-      contactDetails: order.contactDetails,
       owner: order.owner,
+      purchasePrice: order.purchasePrice,
+      billingAddress: order.billingAddress,
     });
 
-    this.contactDetailsSharedCollection = this.contactDetailsService.addContactDetailsToCollectionIfMissing(
-      this.contactDetailsSharedCollection,
-      order.contactDetails
+    this.addressesSharedCollection = this.addressService.addAddressToCollectionIfMissing(
+      this.addressesSharedCollection,
+      order.billingAddress
     );
     this.usersSharedCollection = this.userService.addUserToCollectionIfMissing(this.usersSharedCollection, order.owner);
   }
 
   protected loadRelationshipsOptions(): void {
-    this.contactDetailsService
+    this.addressService
       .query()
-      .pipe(map((res: HttpResponse<IContactDetails[]>) => res.body ?? []))
+      .pipe(map((res: HttpResponse<IAddress[]>) => res.body ?? []))
       .pipe(
-        map((contactDetails: IContactDetails[]) =>
-          this.contactDetailsService.addContactDetailsToCollectionIfMissing(contactDetails, this.editForm.get('contactDetails')!.value)
+        map((addresses: IAddress[]) =>
+          this.addressService.addAddressToCollectionIfMissing(addresses, this.editForm.get('billingAddress')!.value)
         )
       )
-      .subscribe((contactDetails: IContactDetails[]) => (this.contactDetailsSharedCollection = contactDetails));
+      .subscribe((addresses: IAddress[]) => (this.addressesSharedCollection = addresses));
 
     this.userService
       .query()
@@ -131,11 +135,13 @@ export class OrderUpdateComponent implements OnInit {
     return {
       ...new Order(),
       id: this.editForm.get(['id'])!.value,
+      purchased: this.editForm.get(['purchased'])!.value,
       purchaseDate: this.editForm.get(['purchaseDate'])!.value
         ? dayjs(this.editForm.get(['purchaseDate'])!.value, DATE_TIME_FORMAT)
         : undefined,
-      contactDetails: this.editForm.get(['contactDetails'])!.value,
       owner: this.editForm.get(['owner'])!.value,
+      purchasePrice: this.editForm.get(['purchasePrice'])!.value,
+      billingAddress: this.editForm.get(['billingAddress'])!.value,
     };
   }
 }

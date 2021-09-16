@@ -18,10 +18,12 @@
         "title": "Order"
       },
       "id": "ID",
+      "purchased": "Purchased",
       "purchaseDate": "Purchase Date",
+      "purchasePrice": "Purchase Price",
       "orderLines": "Order Lines",
-      "contactDetails": "Contact Details",
-      "owner": "Owner"
+      "owner": "Owner",
+      "billingAddress": "Billing Address"
     }
   }
 }

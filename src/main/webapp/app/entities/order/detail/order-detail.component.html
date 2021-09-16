@@ -14,19 +14,25 @@
         <dd>
           <span>{{ order.id }}</span>
         </dd>
+        <dt><span jhiTranslate="servicesenligneApp.order.purchased">Purchased</span></dt>
+        <dd>
+          <span>{{ order.purchased }}</span>
+        </dd>
         <dt><span jhiTranslate="servicesenligneApp.order.purchaseDate">Purchase Date</span></dt>
         <dd>
           <span>{{ order.purchaseDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="servicesenligneApp.order.contactDetails">Contact Details</span></dt>
+        <dt><span jhiTranslate="servicesenligneApp.order.purchasePrice">Purchase Price</span></dt>
         <dd>
-          <div *ngIf="order.contactDetails">
-            <a [routerLink]="['/contact-details', order.contactDetails?.id, 'view']">{{ order.contactDetails?.id }}</a>
-          </div>
+          <span>{{ order.purchasePrice }}</span>
         </dd>
         <dt><span jhiTranslate="servicesenligneApp.order.owner">Owner</span></dt>
+        <dt><span jhiTranslate="servicesenligneApp.order.billingAddress">Billing Address</span></dt>
         <dd>
           <span>{{ order.owner?.login }}</span>
+          <div *ngIf="order.billingAddress">
+            <a [routerLink]="['/address', order.billingAddress?.id, 'view']">{{ order.billingAddress?.id }}</a>
+          </div>
         </dd>
       </dl>
 

@@ -25,7 +25,7 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "address",
       "otherEntityRelationshipName": "order",
-      "relationshipName": "contactDetails"
+      "relationshipName": "billingAddress"
     }
   ],
   "entityTableName": "jhi_order",

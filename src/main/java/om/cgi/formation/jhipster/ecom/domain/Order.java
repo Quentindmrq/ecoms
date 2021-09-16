@@ -24,16 +24,22 @@ public class Order implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @Column(name = "purchased")
+    private Boolean purchased;
+
     @Column(name = "purchase_date")
     private ZonedDateTime purchaseDate;
+
+    @Column(name = "purchase_price")
+    private Float purchasePrice;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "order" }, allowSetters = true)
     private Set<OrderLine> orderLines = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-    private ContactDetails contactDetails;
+    @ManyToOne
+    private Address billingAddress;
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     @JsonIgnoreProperties(
@@ -56,6 +62,19 @@ public class Order implements Serializable {
         return this;
     }
 
+    public Boolean getPurchased() {
+        return this.purchased;
+    }
+
+    public Order purchased(Boolean purchased) {
+        this.purchased = purchased;
+        return this;
+    }
+
+    public void setPurchased(Boolean purchased) {
+        this.purchased = purchased;
+    }
+
     public ZonedDateTime getPurchaseDate() {
         return this.purchaseDate;
     }
@@ -67,6 +86,19 @@ public class Order implements Serializable {
 
     public void setPurchaseDate(ZonedDateTime purchaseDate) {
         this.purchaseDate = purchaseDate;
+    }
+
+    public Float getPurchasePrice() {
+        return this.purchasePrice;
+    }
+
+    public Order purchasePrice(Float purchasePrice) {
+        this.purchasePrice = purchasePrice;
+        return this;
+    }
+
+    public void setPurchasePrice(Float purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 
     public Set<OrderLine> getOrderLines() {
@@ -100,17 +132,17 @@ public class Order implements Serializable {
         this.orderLines = orderLines;
     }
 
-    public ContactDetails getContactDetails() {
-        return this.contactDetails;
+    public Address getBillingAddress() {
+        return this.billingAddress;
     }
 
-    public Order contactDetails(ContactDetails contactDetails) {
-        this.setContactDetails(contactDetails);
+    public Order billingAddress(Address address) {
+        this.setBillingAddress(address);
         return this;
     }
 
-    public void setContactDetails(ContactDetails contactDetails) {
-        this.contactDetails = contactDetails;
+    public void setBillingAddress(Address address) {
+        this.billingAddress = address;
     }
 
     public User getOwner() {
@@ -150,7 +182,9 @@ public class Order implements Serializable {
     public String toString() {
         return "Order{" +
             "id=" + getId() +
+            ", purchased='" + getPurchased() + "'" +
             ", purchaseDate='" + getPurchaseDate() + "'" +
+            ", purchasePrice=" + getPurchasePrice() +
             "}";
     }
 }
