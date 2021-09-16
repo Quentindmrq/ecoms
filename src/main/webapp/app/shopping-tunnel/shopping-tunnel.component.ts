@@ -96,13 +96,7 @@ export class ShoppingTunnelComponent implements OnInit {
       login = accountRes?.login;
     });
 
-    const order = new Order(
-      undefined,
-      undefined,
-      orderLines,
-      new ContactDetails(undefined, null, this.address),
-      new User(undefined, login)
-    );
+    const order = new Order(undefined, true, undefined, undefined, orderLines, new User(undefined, login), this.address);
 
     let creation: Order | null;
     this.orderService.create(order).subscribe(
