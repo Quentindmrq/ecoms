@@ -26,7 +26,13 @@
     <mat-icon matBadge="{{ cartItemsNumber }}" matBadgeColor="accent">shopping_cart</mat-icon>
   </button>
 
-  <button mat-button routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }" routerLink="/order-history">
+  <button
+    mat-button
+    *jhiHasAnyAuthority="'ROLE_USER'"
+    routerLinkActive="activeButton"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLink="/order-history"
+  >
     <span jhiTranslate="global.menu.entities.orderHistory">Order History</span>
   </button>
 
