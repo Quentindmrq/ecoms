@@ -1,6 +1,12 @@
 <div class="row buttonBox">
   <div *ngFor="let enum of Games | keyvalue">
-    <button mat-stroked-button *ngIf="games !== enum.value" (click)="updateGames(enum.value)" value="{{ enum.value }}">
+    <button
+      mat-stroked-button
+      *ngIf="games !== enum.value"
+      (click)="updateGames(enum.value)"
+      value="{{ enum.value }}"
+      jhiTranslate="servicesenligneApp.Game.{{ enum.key }}"
+    >
       {{ enum.value }}
     </button>
     <button
@@ -9,6 +15,7 @@
       (click)="updateGames(enum.value)"
       value="{{ enum.value }}"
       class="mat-elevation-z8 selectedButton"
+      jhiTranslate="servicesenligneApp.Game.{{ enum.key }}"
     >
       {{ enum.value }}
     </button>
@@ -16,7 +23,13 @@
 </div>
 <div class="row buttonBox">
   <div *ngFor="let enum of ProductTypes | keyvalue">
-    <button mat-stroked-button *ngIf="!productTypes.includes(enum.value)" (click)="updateProductTypes(enum.value)" value="{{ enum.value }}">
+    <button
+      mat-stroked-button
+      *ngIf="!productTypes.includes(enum.value)"
+      jhiTranslate="servicesenligneApp.ProductType.{{ enum.key }}"
+      (click)="updateProductTypes(enum.value)"
+      value="{{ enum.value }}"
+    >
       {{ enum.value }}
     </button>
     <button
@@ -24,6 +37,7 @@
       *ngIf="productTypes.includes(enum.value)"
       (click)="updateProductTypes(enum.value)"
       value="{{ enum.value }}"
+      jhiTranslate="servicesenligneApp.ProductType.{{ enum.key }}"
       class="mat-elevation-z8 selectedButton"
     >
       {{ enum.value }}

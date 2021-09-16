@@ -5,19 +5,10 @@
 
 @include mat-core();
 
-$color-config: mat.get-color-config($my-theme);
-
-$primary-palette: map.get($color-config, 'primary');
-$accent-palette: map.get($color-config, 'accent');
-$warn-palette: map.get($color-config, 'warn');
-$is-dark-theme: map.get($color-config, 'is-dark');
-
-$app-theme: mat-dark-theme($primary-palette, $accent-palette, $warn-palette);
+$app-theme: mat-dark-theme($my-theme);
 
 @mixin mix-app-theme($app-theme) {
-  $primary: map-get($app-theme, primary);
   $accent: map-get($app-theme, accent);
-  $warn: map-get($app-theme, warn);
 
   .selectedButton {
     color: mat-color($accent);

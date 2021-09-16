@@ -15,7 +15,7 @@
         routerLinkActive="activeButton"
         [routerLinkActiveOptions]="{ exact: true }"
       >
-        <span jhiTranslate="{{ 'servicesenligneApp.Game.' + game.key }}">Games</span>
+        <span jhiTranslate="servicesenligneApp.Game.{{ game.key }}">{{ game.key }}</span>
       </button>
     </mat-menu>
   </div>
