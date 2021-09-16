@@ -8,11 +8,11 @@
     -->
     <changeSet id="20210907081522-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="contact_details_id"
+        <addForeignKeyConstraint baseColumnNames="billing_address_id"
                                  baseTableName="jhi_order"
-                                 constraintName="fk_jhi_order__contact_details_id"
+                                 constraintName="fk_jhi_order__billing_address_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="contact_details"/>
+				 referencedTableName="address"/>
 
         <addForeignKeyConstraint baseColumnNames="owner_id"
                                  baseTableName="jhi_order"

@@ -23,6 +23,10 @@ export class ProductUpdateComponent implements OnInit {
     price: [],
     game: [],
     productType: [],
+    region: [],
+    accountLevel: [],
+    accountRank: [],
+    targetRank: [],
   });
 
   constructor(protected productService: ProductService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
@@ -75,6 +79,10 @@ export class ProductUpdateComponent implements OnInit {
       price: product.price,
       game: product.game,
       productType: product.productType,
+      region: product.region,
+      accountLevel: product.accountLevel,
+      accountRank: product.accountRank,
+      targetRank: product.targetRank,
     });
   }
 
@@ -88,6 +96,10 @@ export class ProductUpdateComponent implements OnInit {
       price: this.editForm.get(['price'])!.value,
       game: this.editForm.get(['game'])!.value,
       productType: this.editForm.get(['productType'])!.value,
+      region: this.editForm.get(['region'])!.value,
+      accountLevel: this.editForm.get(['accountLevel'])!.value,
+      accountRank: this.editForm.get(['accountRank'])!.value,
+      targetRank: this.editForm.get(['targetRank'])!.value,
     };
   }
 }

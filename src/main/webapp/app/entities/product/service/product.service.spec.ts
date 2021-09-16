@@ -3,6 +3,8 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { Game } from 'app/entities/enumerations/game.model';
 import { ProductType } from 'app/entities/enumerations/product-type.model';
+import { Region } from 'app/entities/enumerations/region.model';
+import { Rank } from 'app/entities/enumerations/rank.model';
 import { IProduct, Product } from '../product.model';
 
 import { ProductService } from './product.service';
@@ -30,6 +32,10 @@ describe('Service Tests', () => {
         price: 0,
         game: Game.LEAGUE_OF_LEGENDS,
         productType: ProductType.GAME_ACCOUNT,
+        region: Region.EUW,
+        accountLevel: 0,
+        accountRank: Rank.IRON,
+        targetRank: Rank.IRON,
       };
     });
 
@@ -71,6 +77,10 @@ describe('Service Tests', () => {
             price: 1,
             game: 'BBBBBB',
             productType: 'BBBBBB',
+            region: 'BBBBBB',
+            accountLevel: 1,
+            accountRank: 'BBBBBB',
+            targetRank: 'BBBBBB',
           },
           elemDefault
         );
@@ -91,6 +101,9 @@ describe('Service Tests', () => {
             logo: 'BBBBBB',
             game: 'BBBBBB',
             productType: 'BBBBBB',
+            region: 'BBBBBB',
+            accountLevel: 1,
+            targetRank: 'BBBBBB',
           },
           new Product()
         );
@@ -116,6 +129,10 @@ describe('Service Tests', () => {
             price: 1,
             game: 'BBBBBB',
             productType: 'BBBBBB',
+            region: 'BBBBBB',
+            accountLevel: 1,
+            accountRank: 'BBBBBB',
+            targetRank: 'BBBBBB',
           },
           elemDefault
         );
@@ -167,7 +184,7 @@ describe('Service Tests', () => {
         });
 
         it('should add only unique Product to an array', () => {
-          const productArray: IProduct[] = [{ id: 123 }, { id: 456 }, { id: 51217 }];
+          const productArray: IProduct[] = [{ id: 123 }, { id: 456 }, { id: 19650 }];
           const productCollection: IProduct[] = [{ id: 123 }];
           expectedResult = service.addProductToCollectionIfMissing(productCollection, ...productArray);
           expect(expectedResult).toHaveLength(3);

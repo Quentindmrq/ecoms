@@ -18,7 +18,7 @@
                 <constraints nullable="true" />
             </column>
             <column name="product_id" type="bigint">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_order_line__product_id" />
+                <constraints nullable="true" />
             </column>
             <column name="order_id" type="bigint">
                 <constraints nullable="true" />

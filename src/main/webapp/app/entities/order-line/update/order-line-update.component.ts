@@ -19,7 +19,7 @@ import { OrderService } from 'app/entities/order/service/order.service';
 export class OrderLineUpdateComponent implements OnInit {
   isSaving = false;
 
-  productsCollection: IProduct[] = [];
+  productsSharedCollection: IProduct[] = [];
   ordersSharedCollection: IOrder[] = [];
 
   editForm = this.fb.group({
@@ -94,18 +94,18 @@ export class OrderLineUpdateComponent implements OnInit {
       order: orderLine.order,
     });
 
-    this.productsCollection = this.productService.addProductToCollectionIfMissing(this.productsCollection, orderLine.product);
+    this.productsSharedCollection = this.productService.addProductToCollectionIfMissing(this.productsSharedCollection, orderLine.product);
     this.ordersSharedCollection = this.orderService.addOrderToCollectionIfMissing(this.ordersSharedCollection, orderLine.order);
   }
 
   protected loadRelationshipsOptions(): void {
     this.productService
-      .query({ filter: 'orderline-is-null' })
+      .query()
       .pipe(map((res: HttpResponse<IProduct[]>) => res.body ?? []))
       .pipe(
         map((products: IProduct[]) => this.productService.addProductToCollectionIfMissing(products, this.editForm.get('product')!.value))
       )
-      .subscribe((products: IProduct[]) => (this.productsCollection = products));
+      .subscribe((products: IProduct[]) => (this.productsSharedCollection = products));
 
     this.orderService
       .query()
