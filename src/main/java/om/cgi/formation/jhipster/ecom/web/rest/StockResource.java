@@ -177,7 +177,8 @@ public class StockResource {
         @RequestParam(required = false, value = "sort", defaultValue = "stock") String sort,
         @RequestParam(required = false, value = "way", defaultValue = "descending") String way,
         @RequestParam(required = false, value = "game", defaultValue = "none") String game,
-        @RequestParam(required = false, value = "type", defaultValue = "none") String type    ) {
+        @RequestParam(required = false, value = "type", defaultValue = "none") String type
+    ) {
         if (size <= 0) {
             throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
         }
@@ -244,12 +245,6 @@ public class StockResource {
      * @param id of the stock that just got added to the cart.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} if it worked {@code 404 (Not Found)}.
      */
-    @PatchMapping("/addStocksInCart/{id}")
-    public ResponseEntity<Stock> patchEntryInBasket(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
-        log.debug("REST request to patch Stock because of a cart entry : {}", id);
-        if (!stockRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "notfound");
-
     @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping("/addStocksInCart/{id}")
     public ResponseEntity<Stock> patchEntryInCart(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
