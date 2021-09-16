@@ -3,10 +3,37 @@
     <h1>UberElo</h1>
   </div>
 
+  <div [fxShow]="true" [fxShow.sm]="true" [fxShow.xs]="false">
+    <button mat-button [matMenuTriggerFor]="gamesMenu" routerLinkActive="activeButton">
+      <span jhiTranslate="servicesenligneApp.gameTitle">Games</span>
+    </button>
+    <mat-menu #gamesMenu="matMenu">
+      <button
+        *ngFor="let game of games | keyvalue"
+        mat-menu-item
+        [routerLink]="['/game', game.key.toLowerCase()]"
+        routerLinkActive="activeButton"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span jhiTranslate="servicesenligneApp.Game.{{ game.key }}">{{ game.key }}</span>
+      </button>
+    </mat-menu>
+  </div>
+
   <span class="example-spacer"></span>
 
-  <button mat-icon-button routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }" routerLink="/cart" (click)="cart()">
+  <button mat-icon-button routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }" routerLink="/cart">
     <mat-icon matBadge="{{ cartItemsNumber }}" matBadgeColor="accent">shopping_cart</mat-icon>
+  </button>
+
+  <button
+    mat-button
+    *jhiHasAnyAuthority="'ROLE_USER'"
+    routerLinkActive="activeButton"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLink="/order-history"
+  >
+    <span jhiTranslate="global.menu.entities.orderHistory">Order History</span>
   </button>
 
   <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">

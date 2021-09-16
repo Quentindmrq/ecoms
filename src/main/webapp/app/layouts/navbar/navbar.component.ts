@@ -10,6 +10,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { CartService } from 'app/cart/cart.service';
+import { Game } from 'app/entities/enumerations/game.model';
 
 @Component({
   selector: 'jhi-navbar',
@@ -20,6 +21,7 @@ export class NavbarComponent implements OnInit {
   inProduction?: boolean;
   isNavbarCollapsed = true;
   languages = LANGUAGES;
+  games = Game;
   openAPIEnabled?: boolean;
   version = '';
   account: Account | null = null;
@@ -53,10 +55,6 @@ export class NavbarComponent implements OnInit {
 
   collapseNavbar(): void {
     this.isNavbarCollapsed = true;
-  }
-
-  cart(): void {
-    this.router.navigate(['/cart']);
   }
 
   login(): void {

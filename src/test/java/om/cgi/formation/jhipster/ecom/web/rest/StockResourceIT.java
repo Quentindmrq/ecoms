@@ -541,7 +541,7 @@ class StockResourceIT {
     void buyEmptyStock() throws Exception {
         // Initialize the database
         stockRepository.saveAndFlush(stock);
-        Integer beforestock = stock.getStock();
+        Integer querystock = stock.getStock();
 
         // take the whole stock
         restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
