@@ -2,7 +2,18 @@
   width: 100%;
 }
 
-.mat-row .mat-cell {
+.buttonBox {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+/*.mat-row .mat-cell {
   border-bottom: 1px solid transparent;
   border-top: 1px solid transparent;
   cursor: pointer;
@@ -14,4 +25,4 @@
 
 .demo-row-is-clicked {
   font-weight: bold;
-}
+}*/

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Product } from 'app/entities/product/product.model';
 import { CartItem, CartService } from './cart.service';
 
 @Component({
@@ -14,12 +15,28 @@ export class CartComponent implements OnInit {
     // donothing
   }
 
+  addToCart(product: Product): void {
+    this.cartService.addToCart(product);
+  }
+
+  removeOneFromCart(product: Product): void {
+    this.cartService.removeOneFromCart(product);
+  }
+
+  deleteFromCart(product: Product): void {
+    this.cartService.deleteFromCart(product);
+  }
+
   ngOnInit(): void {
     this.cartService.cart.subscribe(cartItems => (this.cartItems = cartItems));
   }
 
+  get totalPrice(): number {
+    return this.cartService.totalPrice;
+  }
+
   discard(): void {
-    window.console.debug('cart-discard');
+    return this.cartService.discard();
   }
 
   validate(): void {

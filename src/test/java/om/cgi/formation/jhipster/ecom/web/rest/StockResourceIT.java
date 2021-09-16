@@ -39,7 +39,6 @@ class StockResourceIT {
     private static final String CART_API_URL = "/api/addStocksInCart/{id}";
     private static final String BUY_API_URL = "/api/finalbuy/{id}";
     private static final String CART_API_URL_DELETE = "/api/deleteStocksInCart/{id}";
-
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
@@ -546,7 +545,6 @@ class StockResourceIT {
 
         // take the whole stock
         restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
-
         //stock should be empty
         restStockMockMvc
             .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
@@ -607,5 +605,4 @@ class StockResourceIT {
             .perform(get(ENTITY_API_URL).queryParam("game", "OVERWATCH").queryParam("type", "INTING"))
             .andExpect(status().isOk());
     }
-
 }

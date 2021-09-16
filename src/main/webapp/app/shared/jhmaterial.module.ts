@@ -21,13 +21,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatStepperModule } from '@angular/material/stepper';
-import { NgModule } from '@angular/core';
+import { MatSortModule } from '@angular/material/sort';
+import { MatMenuModule } from '@angular/material/menu';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     MatButtonModule,
     MatCheckboxModule,
@@ -56,7 +59,11 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatToolbarModule,
     MatBadgeModule,
+    MatSortModule,
+    MatStepperModule,
+    MatTableModule,
     MatInputModule,
+    MatDividerModule,
   ],
   exports: [
     MatButtonModule,
@@ -86,7 +93,11 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatToolbarModule,
     MatBadgeModule,
+    MatSortModule,
+    MatStepperModule,
+    MatTableModule,
     MatInputModule,
+    MatDividerModule,
   ],
 })
 export class JhMaterialModule {}
