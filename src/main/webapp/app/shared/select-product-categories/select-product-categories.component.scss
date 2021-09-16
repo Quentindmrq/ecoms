@@ -19,15 +19,23 @@ $app-theme: mat-dark-theme($primary-palette, $accent-palette, $warn-palette);
   $accent: map-get($app-theme, accent);
   $warn: map-get($app-theme, warn);
 
-  /*.mat-button-toggle {
-    background-color: mat-color($primary);
-    color: mat-color($primary, default-contrast);
-  }*/
-
-  .testAccent {
+  .selectedButton {
     color: mat-color($accent);
   }
 }
 
 // Include the mixin
 @include mix-app-theme($app-theme);
+
+button {
+  font-size: medium;
+  margin-left: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.buttonBox {
+  margin: 20px;
+}

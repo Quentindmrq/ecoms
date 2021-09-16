@@ -1,14 +1,32 @@
-<mat-button-toggle-group name="games" [ngModel]="games" (change)="updateGames($event.value)" aria-label="games">
-  <mat-button-toggle *ngFor="let enum of Games | keyvalue" value="{{ enum.value }}">
-    <div [ngClass]="{ testAccent: games === enum.value }">
+<div class="row buttonBox">
+  <div *ngFor="let enum of Games | keyvalue">
+    <button mat-stroked-button *ngIf="games !== enum.value" (click)="updateGames(enum.value)" value="{{ enum.value }}">
       {{ enum.value }}
-    </div>
-  </mat-button-toggle>
-</mat-button-toggle-group>
-<mat-button-toggle-group name="productTypes" color="accent" [ngModel]="productTypes" aria-label="productTypes" multiple>
-  <mat-button-toggle *ngFor="let enum of ProductTypes | keyvalue" (change)="updateProductTypes($event.value)" value="{{ enum.value }}">
-    <div [ngClass]="{ testAccent: productTypes.includes(enum.value) }">
+    </button>
+    <button
+      mat-flat-button
+      *ngIf="games === enum.value"
+      (click)="updateGames(enum.value)"
+      value="{{ enum.value }}"
+      class="mat-elevation-z8 selectedButton"
+    >
       {{ enum.value }}
-    </div>
-  </mat-button-toggle>
-</mat-button-toggle-group>
+    </button>
+  </div>
+</div>
+<div class="row buttonBox">
+  <div *ngFor="let enum of ProductTypes | keyvalue">
+    <button mat-stroked-button *ngIf="!productTypes.includes(enum.value)" (click)="updateProductTypes(enum.value)" value="{{ enum.value }}">
+      {{ enum.value }}
+    </button>
+    <button
+      mat-flat-button
+      *ngIf="productTypes.includes(enum.value)"
+      (click)="updateProductTypes(enum.value)"
+      value="{{ enum.value }}"
+      class="mat-elevation-z8 selectedButton"
+    >
+      {{ enum.value }}
+    </button>
+  </div>
+</div>

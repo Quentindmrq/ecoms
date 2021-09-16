@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Game } from 'app/entities/enumerations/game.model';
 import { ProductType } from 'app/entities/enumerations/product-type.model';
 import { SelectProductCategoriesService } from './select-product-categories.service';
@@ -14,7 +15,7 @@ export class SelectProductCategoriesComponent implements OnInit {
   public ProductTypes = ProductType;
   productTypes: ProductType[];
 
-  constructor(private selectProductCategoriesServ: SelectProductCategoriesService) {
+  constructor(private selectProductCategoriesServ: SelectProductCategoriesService, private router: Router) {
     // TODO
   }
 
@@ -23,9 +24,10 @@ export class SelectProductCategoriesComponent implements OnInit {
     this.selectProductCategoriesServ.selectedProductTypes.subscribe(productTypes => (this.productTypes = productTypes));
   }
 
-  updateGames(values: Game): void {
-    this.selectProductCategoriesServ.updateGame(values);
+  updateGames(value: Game): void {
+    this.router.navigate(['/game/' + value.toLocaleLowerCase()]);
   }
+
   updateProductTypes(productType: ProductType): void {
     if (this.productTypes.includes(productType)) {
       this.selectProductCategoriesServ.removeProductType(productType);
