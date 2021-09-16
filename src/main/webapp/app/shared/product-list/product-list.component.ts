@@ -12,7 +12,7 @@ import { CartService } from 'app/cart/cart.service';
 export class ProductListComponent implements OnInit {
   products: Stock[] | null;
   dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['name', 'price', 'description', 'stock', ' '];
+  displayedColumns: string[] = ['Name', 'Price', 'Description', 'Stock', ' '];
 
   constructor(private stockService: StockService, private cartService: CartService) {
     // TODO
@@ -21,7 +21,7 @@ export class ProductListComponent implements OnInit {
   ngOnInit(): void {
     this.stockService.query().subscribe(stockRes => {
       this.products = stockRes.body;
-      if (this.products) {
+      if (this.products != null) {
         this.dataSource = new MatTableDataSource(this.products);
       }
     });
