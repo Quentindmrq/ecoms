@@ -31,8 +31,12 @@ export class CartComponent implements OnInit {
     this.cartService.cart.subscribe(cartItems => (this.cartItems = cartItems));
   }
 
+  get totalPrice(): number {
+    return this.cartService.totalPrice;
+  }
+
   discard(): void {
-    window.console.debug('cart-discard');
+    return this.cartService.discard();
   }
 
   validate(): void {
