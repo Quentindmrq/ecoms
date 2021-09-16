@@ -39,6 +39,7 @@ jobs:
               npm run test
               mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Quentindmrq_ecoms -Dsonar.host.url=https://sonarcloud.io
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
