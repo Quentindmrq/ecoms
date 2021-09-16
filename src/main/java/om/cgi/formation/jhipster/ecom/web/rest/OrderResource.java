@@ -2,12 +2,17 @@ package om.cgi.formation.jhipster.ecom.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import om.cgi.formation.jhipster.ecom.domain.Order;
+import om.cgi.formation.jhipster.ecom.domain.OrderLine;
+import om.cgi.formation.jhipster.ecom.domain.Product;
 import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
+import om.cgi.formation.jhipster.ecom.repository.ProductRepository;
 import om.cgi.formation.jhipster.ecom.repository.UserRepository;
 import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import om.cgi.formation.jhipster.ecom.service.UserService;
@@ -40,12 +45,20 @@ public class OrderResource {
 
     private final UserService userService;
 
+    private final ProductRepository productRepo;
+
     private final UserRepository userRepository;
 
-    public OrderResource(OrderRepository orderRepository, UserService userService, UserRepository userRepository) {
+    public OrderResource(
+        OrderRepository orderRepository,
+        UserService userService,
+        UserRepository userRepository,
+        ProductRepository productRepo
+    ) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.productRepo = productRepo;
     }
 
     /**
@@ -53,10 +66,10 @@ public class OrderResource {
      *
      * @param order the order to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new order, or with status {@code 400 (Bad Request)} if the order has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws Exception
      */
     @PostMapping("/orders")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) throws URISyntaxException {
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) throws Exception {
         log.debug("REST request to save Order : {}", order);
         if (order.getId() != null) {
             throw new BadRequestAlertException("A new order cannot already have an ID", ENTITY_NAME, "idexists");
@@ -65,11 +78,24 @@ public class OrderResource {
         Optional<User> optUser = this.userRepository.findOneByLogin(order.getOwner().getLogin());
         if (optUser.isPresent()) {
             order.setOwner(optUser.get());
+            optUser.get().getorders().add(order);
         }
 
-        // TODO Add Order.id to all OrderLines from order
+        // Iterator<OrderLine> iter = neworder.getOrderLines().iterator();
+        // while (iter.hasNext()) {
+        //     OrderLine ol = iter.next();
+        //     Optional<Product> prod = productRepo.findById(ol.getProduct().getId());
+        //     if (prod.isEmpty()) {
+        //         throw new Exception("ça marche po");
+        //     }
+        // }
 
-        Order result = orderRepository.save(order);
+        order.setPurchaseDate(ZonedDateTime.now());
+
+        // TODO Add Order.id to all OrderLines from order
+        // Set<OrderLine> orderLines = order.getOrderLines();
+
+        Order result = orderRepository.saveAndFlush(order);
         return ResponseEntity
             .created(new URI("/api/orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

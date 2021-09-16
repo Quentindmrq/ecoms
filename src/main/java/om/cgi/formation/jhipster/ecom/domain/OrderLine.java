@@ -25,7 +25,7 @@ public class OrderLine implements Serializable {
     private Integer quantity;
 
     @JsonIgnoreProperties(value = { "stock" }, allowSetters = true)
-    @OneToOne
+    @ManyToOne(targetEntity = Product.class, fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private Product product;
 

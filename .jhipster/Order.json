@@ -2,8 +2,16 @@
   "name": "Order",
   "fields": [
     {
+      "fieldName": "purchased",
+      "fieldType": "Boolean"
+    },
+    {
       "fieldName": "purchaseDate",
       "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "purchasePrice",
+      "fieldType": "Float"
     }
   ],
   "relationships": [
@@ -15,17 +23,9 @@
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "contactDetails",
+      "otherEntityName": "address",
       "otherEntityRelationshipName": "order",
       "relationshipName": "contactDetails"
-    },
-    {
-      "relationshipName": "owner",
-      "otherEntityName": "user",
-      "relationshipType": "many-to-one",
-      "otherEntityField": "login",
-      "ownerSide": true,
-      "otherEntityRelationshipName": "order"
     }
   ],
   "entityTableName": "jhi_order",

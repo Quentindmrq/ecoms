@@ -10,12 +10,14 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import om.cgi.formation.jhipster.ecom.IntegrationTest;
 import om.cgi.formation.jhipster.ecom.domain.Order;
+import om.cgi.formation.jhipster.ecom.domain.OrderLine;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
 import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,8 +96,6 @@ class OrderResourceIT {
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeCreate + 1);
-        Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getPurchaseDate()).isEqualTo(DEFAULT_PURCHASE_DATE);
     }
 
     @Test
@@ -360,4 +360,17 @@ class OrderResourceIT {
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeDelete);
     }
+
+    @Test
+    @Transactional
+    void testpourUgo() throws Exception {
+        OrderLine orderline = new OrderLine();
+        orderline.setQuantity(10);
+        HashSet<OrderLine> hashset = new HashSet<OrderLine>();
+        hashset.add(orderline);
+        order.setOrderLines(hashset);
+
+        orderRepository.saveAndFlush(order);
+    }
 }
+// mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=quentindmrq -Dsonar.host.url=https://sonarcloud.io/

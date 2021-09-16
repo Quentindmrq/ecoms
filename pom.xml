@@ -22,6 +22,10 @@
     <!-- jhipster-needle-distribution-management -->
 
     <properties>
+
+        <sonar.organization>quentindmrq</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
         <java.version>11</java.version>
@@ -87,8 +91,7 @@
         <sonar-maven-plugin.version>3.9.0.2155</sonar-maven-plugin.version>
         <!-- jhipster-needle-maven-property -->
 
-        <sonar.organization>quentindmrq</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
 
     </properties>
 

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from 'app/admin/user-management/user-management.model';
 import { CartService } from 'app/cart/cart.service';
-import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { Address } from 'app/entities/address/address.model';
 import { AddressService } from 'app/entities/address/service/address.service';
@@ -99,10 +98,21 @@ export class ShoppingTunnelComponent implements OnInit {
 
     const order = new Order(
       undefined,
-      new Dayjs(),
+      undefined,
       orderLines,
       new ContactDetails(undefined, null, this.address),
       new User(undefined, login)
+    );
+
+    let creation: Order | null;
+    this.orderService.create(order).subscribe(
+      createRes => {
+        creation = createRes.body;
+        window.console.debug(creation);
+      },
+      error => {
+        this.error = error;
+      }
     );
   }
 }

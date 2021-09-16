@@ -213,6 +213,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return id != null && id.equals(((User) o).id);
     }
 
+    public Collection<Order> getorders() {
+        return this.orders;
+    }
+
+    public void setorders(Collection<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public int hashCode() {
         // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
