@@ -2,11 +2,17 @@ package om.cgi.formation.jhipster.ecom.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import om.cgi.formation.jhipster.ecom.domain.Order;
 import om.cgi.formation.jhipster.ecom.domain.OrderLine;
+import om.cgi.formation.jhipster.ecom.domain.Product;
+import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.repository.OrderLineRepository;
+import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
+import om.cgi.formation.jhipster.ecom.repository.ProductRepository;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +40,18 @@ public class OrderLineResource {
 
     private final OrderLineRepository orderLineRepository;
 
-    public OrderLineResource(OrderLineRepository orderLineRepository) {
+    private final OrderRepository orderRepository;
+
+    private final ProductRepository productRepository;
+
+    public OrderLineResource(
+        OrderLineRepository orderLineRepository,
+        OrderRepository orderRepository,
+        ProductRepository productRepository
+    ) {
         this.orderLineRepository = orderLineRepository;
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
     }
 
     /**
@@ -46,11 +62,39 @@ public class OrderLineResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/order-lines")
-    public ResponseEntity<OrderLine> createOrderLine(@RequestBody OrderLine orderLine) throws URISyntaxException {
+    public ResponseEntity<OrderLine> createOrderLine(
+        @RequestParam(value = "id", required = true) final int orderId,
+        @RequestBody OrderLine orderLine
+    ) throws URISyntaxException {
         log.debug("REST request to save OrderLine : {}", orderLine);
         if (orderLine.getId() != null) {
             throw new BadRequestAlertException("A new orderLine cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        Optional<Order> order = orderRepository.findById((long) orderId);
+
+        if (order.isEmpty()) {
+            throw new BadRequestAlertException("The order doesn't exists", ENTITY_NAME, "order doesn't exists");
+        }
+
+        if (order.get().getPurchased()) {
+            throw new BadRequestAlertException("The order is done", ENTITY_NAME, "already purchased");
+        }
+
+        order.get().getOrderLines().add(orderLine);
+        orderLine.setOrder(order.get());
+        order.get().setPurchaseDate(ZonedDateTime.now());
+
+        Optional<Product> product = productRepository.findById(orderLine.getProduct().getId());
+
+        Stock stock = product.get().getStock();
+
+        //if there isn't enough stock the request wont go throught
+        if (stock.getStock() < orderLine.getQuantity()) {
+            throw new BadRequestAlertException("not enough stock", ENTITY_NAME, "no stock");
+        }
+        stock.setStock(stock.getStock() - orderLine.getQuantity());
+
         OrderLine result = orderLineRepository.save(orderLine);
         return ResponseEntity
             .created(new URI("/api/order-lines/" + result.getId()))

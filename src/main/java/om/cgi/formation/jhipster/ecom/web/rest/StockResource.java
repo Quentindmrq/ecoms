@@ -2,12 +2,19 @@ package om.cgi.formation.jhipster.ecom.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import javax.persistence.LockModeType;
+import om.cgi.formation.jhipster.ecom.domain.Order;
+import om.cgi.formation.jhipster.ecom.domain.OrderLine;
 import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.domain.enumeration.Game;
 import om.cgi.formation.jhipster.ecom.domain.enumeration.ProductType;
+import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
 import om.cgi.formation.jhipster.ecom.repository.StockRepository;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
 import org.apache.commons.lang3.EnumUtils;
@@ -53,8 +60,11 @@ public class StockResource {
 
     private final StockRepository stockRepository;
 
-    public StockResource(StockRepository stockRepository) {
+    private final OrderRepository orderRepository;
+
+    public StockResource(StockRepository stockRepository, OrderRepository orderRepository) {
         this.stockRepository = stockRepository;
+        this.orderRepository = orderRepository;
     }
 
     /**
@@ -203,6 +213,20 @@ public class StockResource {
             return stockRepository.findallbygame(Game.valueOf(game), pageRequested);
         }
 
+        //this part will delete all old orders and not validated
+        List<Order> orders = orderRepository.findAllByPurchasedIsFalse();
+        for (Order order : orders) {
+            if (ChronoUnit.SECONDS.between(ZonedDateTime.now(), order.getPurchaseDate()) >= 45.0) {
+                //before deleting the order we
+                Set<OrderLine> orderl = order.getOrderLines();
+                for (OrderLine ol : orderl) {
+                    Stock stock = ol.getProduct().getStock();
+                    stock.setStock(stock.getStock() + ol.getQuantity());
+                }
+                orders.remove(order);
+            }
+        }
+
         log.debug("REST request to get all Stocks");
         return stockRepository.findAll(pageRequested);
     }
@@ -297,19 +321,18 @@ public class StockResource {
      */
     @Lock(LockModeType.OPTIMISTIC)
     @PatchMapping("/finalbuy/{id}")
-    public ResponseEntity<Stock> finalbuy(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
+    public ResponseEntity<Order> finalbuy(@PathVariable Long id, @RequestParam(required = true, value = "amount") int amount) {
         log.debug("REST request to patch Stock because of a purchase: {}", id);
-        if (!stockRepository.existsById(id)) {
+        if (!orderRepository.existsById(id)) {
             throw new BadRequestAlertException(NO_ENTITY, ENTITY_NAME, "notfound");
         }
-        Optional<Stock> stock = stockRepository.findById(id);
-        if (stock.isEmpty()) {
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isEmpty()) {
             throw new BadRequestAlertException("id is not valid", ENTITY_NAME, "idisnull");
         }
 
-        int currStock = stock.get().getStock();
+        order.get().setPurchased(true);
 
-        stock.get().stock(currStock - Math.toIntExact(amount));
-        return ResponseUtil.wrapOrNotFound(stock);
+        return ResponseUtil.wrapOrNotFound(order);
     }
 }

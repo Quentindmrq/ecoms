@@ -3,13 +3,10 @@ package om.cgi.formation.jhipster.ecom.web.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import om.cgi.formation.jhipster.ecom.domain.Order;
-import om.cgi.formation.jhipster.ecom.domain.OrderLine;
-import om.cgi.formation.jhipster.ecom.domain.Product;
 import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
 import om.cgi.formation.jhipster.ecom.repository.ProductRepository;
@@ -45,20 +42,12 @@ public class OrderResource {
 
     private final UserService userService;
 
-    private final ProductRepository productRepo;
-
     private final UserRepository userRepository;
 
-    public OrderResource(
-        OrderRepository orderRepository,
-        UserService userService,
-        UserRepository userRepository,
-        ProductRepository productRepo
-    ) {
+    public OrderResource(OrderRepository orderRepository, UserService userService, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.userRepository = userRepository;
-        this.productRepo = productRepo;
     }
 
     /**
@@ -81,19 +70,7 @@ public class OrderResource {
             optUser.get().getorders().add(order);
         }
 
-        // Iterator<OrderLine> iter = neworder.getOrderLines().iterator();
-        // while (iter.hasNext()) {
-        //     OrderLine ol = iter.next();
-        //     Optional<Product> prod = productRepo.findById(ol.getProduct().getId());
-        //     if (prod.isEmpty()) {
-        //         throw new Exception("ça marche po");
-        //     }
-        // }
-
         order.setPurchaseDate(ZonedDateTime.now());
-
-        // TODO Add Order.id to all OrderLines from order
-        // Set<OrderLine> orderLines = order.getOrderLines();
 
         Order result = orderRepository.saveAndFlush(order);
         return ResponseEntity
@@ -146,7 +123,7 @@ public class OrderResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/orders/{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<Order> partialUpdateOrder(@PathVariable(value = "id", required = false) final Long id, @RequestBody Order order)
+    public ResponseEntity<Order> partialUpdateOrder(@PathVariable(value = "id", required = true) final Long id, @RequestBody Order order)
         throws URISyntaxException {
         log.debug("REST request to partial update Order partially : {}, {}", id, order);
         if (order.getId() == null) {
@@ -160,18 +137,7 @@ public class OrderResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Order> result = orderRepository
-            .findById(order.getId())
-            .map(
-                existingOrder -> {
-                    if (order.getPurchaseDate() != null) {
-                        existingOrder.setPurchaseDate(order.getPurchaseDate());
-                    }
-
-                    return existingOrder;
-                }
-            )
-            .map(orderRepository::save);
+        Optional<Order> result = orderRepository.findById(order.getId());
 
         return ResponseUtil.wrapOrNotFound(
             result,
