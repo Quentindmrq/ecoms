@@ -1,9 +1,11 @@
 {
   "servicesenligneApp": {
+    "gameTitle": "Games",
     "Game": {
-      "null": "",
-      "LEAGUE_OF_LEGENDS": "LEAGUE_OF_LEGENDS",
-      "OVERWATCH": "OVERWATCH"
+      "null": "N/A",
+      "LEAGUE_OF_LEGENDS": "League of Legends",
+      "OVERWATCH": "Overwatch",
+      "N/A": "N/A"
     }
   }
 }

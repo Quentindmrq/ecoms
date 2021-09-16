@@ -24,11 +24,15 @@
                 </div>
                 <small>
                   <div class="row">
-                    <div jhiTranslate="productType.{{ orderLine?.product?.productType ? orderLine?.product?.productType : 'N/A' }}">
+                    <div
+                      jhiTranslate="servicesenligneApp.ProductType.{{
+                        orderLine?.product?.productType ? orderLine?.product?.productType : 'N/A'
+                      }}"
+                    >
                       {{ orderLine?.product?.productType ? orderLine?.product?.productType : 'N/A' }}
                     </div>
                     &nbsp; - &nbsp;
-                    <div jhiTranslate="games.{{ orderLine?.product?.game ? orderLine?.product?.game : 'N/A' }}">
+                    <div jhiTranslate="servicesenligneApp.Game.{{ orderLine?.product?.game ? orderLine?.product?.game : 'N/A' }}">
                       {{ orderLine?.product?.game ? orderLine?.product?.game : 'N/A' }}
                     </div>
                   </div>
