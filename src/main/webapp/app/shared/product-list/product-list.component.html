@@ -6,7 +6,7 @@
 
   <mat-card-content>
     <!-- product list table -->
-    <table mat-table [dataSource]="dataSource" matSort class="demo-table" aria-label="product-list-table">
+    <table mat-table matSort class="demo-table" [dataSource]="dataSource" aria-label="product list table">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>name</th>

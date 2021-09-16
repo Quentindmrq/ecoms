@@ -13,12 +13,6 @@ export interface CartItem {
 export class CartService {
   private shoppingCart = new BehaviorSubject<CartItem[]>([]);
 
-  /*
-  private get totalAmount() {
-    // TODO
-  }
-  */
-
   constructor() {
     // donothing
   }
@@ -29,6 +23,10 @@ export class CartService {
 
   get numberOfItems(): number {
     return this.shoppingCart.getValue().reduce((acc, cur) => acc + cur.quantity, 0);
+  }
+
+  get totalPrice(): number {
+    return this.shoppingCart.getValue().reduce((acc, cur) => acc + cur.quantity * (cur.product.price ? cur.product.price : 0), 0);
   }
 
   addToCart(product: Product, quantity = 1): void {
@@ -62,5 +60,9 @@ export class CartService {
   deleteFromCart(product: Product): void {
     const cartArrayFiltered = this.shoppingCart.getValue().filter(stock => product.id !== stock.product.id);
     this.shoppingCart.next([...cartArrayFiltered]);
+  }
+
+  discard(): void {
+    this.shoppingCart.next([]);
   }
 }

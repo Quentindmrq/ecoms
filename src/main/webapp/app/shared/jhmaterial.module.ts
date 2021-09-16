@@ -27,6 +27,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -62,6 +63,7 @@ import { MatTableModule } from '@angular/material/table';
     MatStepperModule,
     MatTableModule,
     MatInputModule,
+    MatDividerModule,
   ],
   exports: [
     MatButtonModule,
@@ -95,6 +97,7 @@ import { MatTableModule } from '@angular/material/table';
     MatStepperModule,
     MatTableModule,
     MatInputModule,
+    MatDividerModule,
   ],
 })
 export class JhMaterialModule {}

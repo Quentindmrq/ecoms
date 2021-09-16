@@ -1,0 +1,27 @@
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.exampleAlign {
+  align-items: center;
+}
+
+.productBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.textContentBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonBox {
+  display: flex;
+  align-items: flex-end;
+}

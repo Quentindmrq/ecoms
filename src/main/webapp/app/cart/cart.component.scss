@@ -2,3 +2,12 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.buttonBox {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.discardButton {
+  margin-right: 10px;
+}
