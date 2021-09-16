@@ -1,0 +1,4 @@
+<jhi-select-product-categories></jhi-select-product-categories>
+<div *ngFor="let productType of productTypeToShow" class="productListContainer">
+  <jhi-product-list [productType]="productType" [game]="selectedGame"></jhi-product-list>
+</div>

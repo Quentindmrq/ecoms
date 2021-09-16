@@ -545,6 +545,9 @@ class StockResourceIT {
 
         // take the whole stock
         restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
+
+        // take the whole stock
+        restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
         //stock should be empty
         restStockMockMvc
             .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
@@ -605,5 +608,4 @@ class StockResourceIT {
             .perform(get(ENTITY_API_URL).queryParam("game", "OVERWATCH").queryParam("type", "INTING"))
             .andExpect(status().isOk());
     }
-
 }

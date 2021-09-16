@@ -1,1 +1,5 @@
-<jhi-product-list></jhi-product-list>
+<div *ngFor="let game of Games | keyvalue">
+  <button mat-flat-button color="accent" routerLink="/game/{{ game.key.toLowerCase() }}">
+    {{ game.key }}
+  </button>
+</div>

@@ -8,6 +8,7 @@ import { NavbarComponent } from 'app/layouts/navbar/navbar.component';
 import { HasAnyAuthorityDirective } from 'app/shared/auth/has-any-authority.directive';
 import { JhMaterialModule } from 'app/shared/jhmaterial.module';
 import { FindLanguageFromKeyPipe } from 'app/shared/language/find-language-from-key.pipe';
+import { TranslateDirective } from 'app/shared/language/translate.directive';
 
 import { CartComponent } from './cart.component';
 
@@ -17,7 +18,7 @@ describe('CartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CartComponent, NavbarComponent, ErrorComponent, HasAnyAuthorityDirective, FindLanguageFromKeyPipe],
+      declarations: [CartComponent, NavbarComponent, ErrorComponent, HasAnyAuthorityDirective, FindLanguageFromKeyPipe, TranslateDirective],
       imports: [JhMaterialModule, AppRoutingModule, HttpClientModule, FlexLayoutModule],
       providers: [{ provide: APP_BASE_HREF, useValue: '/' }],
     }).compileComponents();
