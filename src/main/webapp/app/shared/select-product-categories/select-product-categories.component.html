@@ -21,7 +21,7 @@
     </button>
   </div>
 </div>
-<div class="row buttonBox">
+<div *ngIf="selectProductType" class="row buttonBox">
   <div *ngFor="let enum of ProductTypes | keyvalue">
     <button
       mat-stroked-button

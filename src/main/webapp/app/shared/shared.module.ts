@@ -20,7 +20,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ProductItemComponent } from './product-item/product-item.component';
 
 @NgModule({
-  imports: [SharedLibsModule, JhMaterialModule],
+  imports: [SharedLibsModule, JhMaterialModule, FlexLayoutModule],
   declarations: [
     FindLanguageFromKeyPipe,
     TranslateDirective,

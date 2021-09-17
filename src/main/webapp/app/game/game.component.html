@@ -1,4 +1,16 @@
-<jhi-select-product-categories></jhi-select-product-categories>
-<div *ngFor="let productType of productTypeToShow" class="productListContainer">
-  <jhi-product-list [productType]="productType" [game]="selectedGame"></jhi-product-list>
-</div>
+<jhi-select-product-categories [selectProductType]="false"></jhi-select-product-categories>
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Overview">
+    <div *ngFor="let productType of ProductTypes" class="productListContainer">
+      <jhi-product-list [productType]="productType" [game]="selectedGame"></jhi-product-list>
+    </div>
+  </mat-tab>
+  <mat-tab *ngFor="let productType of ProductTypes">
+    <ng-template mat-tab-label>
+      <span jhiTranslate="servicesenligneApp.ProductType.{{ productType }}"> {{ productType }} </span>
+    </ng-template>
+    <div class="productListContainer">
+      <jhi-product-list [productType]="productType" [game]="selectedGame"></jhi-product-list>
+    </div>
+  </mat-tab>
+</mat-tab-group>

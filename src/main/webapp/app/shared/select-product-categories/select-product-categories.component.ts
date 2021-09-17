@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Game } from 'app/entities/enumerations/game.model';
 import { ProductType } from 'app/entities/enumerations/product-type.model';
@@ -10,6 +10,7 @@ import { SelectProductCategoriesService } from './select-product-categories.serv
   styleUrls: ['./select-product-categories.component.scss'],
 })
 export class SelectProductCategoriesComponent implements OnInit {
+  @Input() selectProductType = true;
   public Games = Game;
   games: Game;
   public ProductTypes = ProductType;
