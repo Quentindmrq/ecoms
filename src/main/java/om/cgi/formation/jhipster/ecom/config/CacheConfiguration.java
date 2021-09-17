@@ -50,7 +50,6 @@ public class CacheConfiguration {
             createCache(cm, om.cgi.formation.jhipster.ecom.domain.User.class.getName() + ".authorities");
             createCache(cm, om.cgi.formation.jhipster.ecom.domain.Product.class.getName());
             createCache(cm, om.cgi.formation.jhipster.ecom.domain.Stock.class.getName());
-            createCache(cm, om.cgi.formation.jhipster.ecom.domain.ContactDetails.class.getName());
             createCache(cm, om.cgi.formation.jhipster.ecom.domain.Address.class.getName());
             createCache(cm, om.cgi.formation.jhipster.ecom.domain.Order.class.getName());
             createCache(cm, om.cgi.formation.jhipster.ecom.domain.Order.class.getName() + ".orderLines");

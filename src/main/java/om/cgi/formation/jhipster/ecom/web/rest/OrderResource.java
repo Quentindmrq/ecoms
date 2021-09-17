@@ -9,7 +9,6 @@ import java.util.Optional;
 import om.cgi.formation.jhipster.ecom.domain.Order;
 import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
-import om.cgi.formation.jhipster.ecom.repository.ProductRepository;
 import om.cgi.formation.jhipster.ecom.repository.UserRepository;
 import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import om.cgi.formation.jhipster.ecom.service.UserService;
@@ -191,6 +190,14 @@ public class OrderResource {
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         log.debug("REST request to delete Order : {}", id);
+        Optional<Order> order = orderRepository.findById(id);
+
+        if (order.isEmpty()) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+        order.get().setOwner(null);
+        orderRepository.saveAndFlush(order.get());
+
         orderRepository.deleteById(id);
         return ResponseEntity
             .noContent()

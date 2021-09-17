@@ -147,7 +147,7 @@ public class OrderLineResource {
      * or with status {@code 500 (Internal Server Error)} if the orderLine couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/order-lines/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/order-lines/{id}", consumes = "application/json")
     public ResponseEntity<OrderLine> partialUpdateOrderLine(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody OrderLine orderLine
@@ -164,18 +164,32 @@ public class OrderLineResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<OrderLine> result = orderLineRepository
-            .findById(orderLine.getId())
-            .map(
-                existingOrderLine -> {
-                    if (orderLine.getQuantity() != null) {
-                        existingOrderLine.setQuantity(orderLine.getQuantity());
-                    }
+        Optional<OrderLine> result = orderLineRepository.findById(orderLine.getId());
+        if (result.isEmpty()) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
 
-                    return existingOrderLine;
-                }
-            )
-            .map(orderLineRepository::save);
+        // if we set the quantity to 0 or less the orderline is deleted
+        if (orderLine.getQuantity() <= 0) {
+            deleteOrderLine(id);
+            return ResponseEntity
+                .noContent()
+                .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+                .build();
+        }
+
+        Optional<Product> product = productRepository.findById(result.get().getProduct().getId());
+
+        Stock stock = product.get().getStock();
+
+        //if there isn't enough stock the request wont go throught
+        if (stock.getStock() < orderLine.getQuantity()) {
+            throw new BadRequestAlertException("not enough stock", ENTITY_NAME, "no stock");
+        }
+
+        result.get().setQuantity(orderLine.getQuantity());
+
+        orderLineRepository.saveAndFlush(result.get());
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -216,6 +230,15 @@ public class OrderLineResource {
     @DeleteMapping("/order-lines/{id}")
     public ResponseEntity<Void> deleteOrderLine(@PathVariable Long id) {
         log.debug("REST request to delete OrderLine : {}", id);
+
+        Optional<OrderLine> orderline = orderLineRepository.findById(id);
+        if (orderline.isEmpty()) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+        Order order = orderline.get().getOrder();
+        order.removeOrderLinebyId(id);
+        orderline.get().setOrder(null);
+
         orderLineRepository.deleteById(id);
         return ResponseEntity
             .noContent()
