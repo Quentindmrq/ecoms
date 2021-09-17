@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -213,22 +214,31 @@ public class StockResource {
             return stockRepository.findallbygame(Game.valueOf(game), pageRequested);
         }
 
+        removeOldCart();
+
+        log.debug("REST request to get all Stocks");
+        return stockRepository.findAll(pageRequested);
+    }
+
+    private void removeOldCart() {
         //this part will delete all old orders and not validated
         List<Order> orders = orderRepository.findAllByPurchasedIsFalse();
-        for (Order order : orders) {
-            if (ChronoUnit.SECONDS.between(ZonedDateTime.now(), order.getPurchaseDate()) >= 45.0) {
+        for (Iterator<Order> it = orders.iterator(); it.hasNext();) {
+            Order order = it.next();
+            if (ChronoUnit.SECONDS.between(order.getPurchaseDate(), ZonedDateTime.now()) >= 60) {
                 //before deleting the order we
                 Set<OrderLine> orderl = order.getOrderLines();
                 for (OrderLine ol : orderl) {
                     Stock stock = ol.getProduct().getStock();
                     stock.setStock(stock.getStock() + ol.getQuantity());
                 }
-                orders.remove(order);
+                order.setOwner(null);
+                orderRepository.deleteById(order.getId());
+                it.remove();
+                //orderRepository.saveAndFlush(order);
+
             }
         }
-
-        log.debug("REST request to get all Stocks");
-        return stockRepository.findAll(pageRequested);
     }
 
     /**

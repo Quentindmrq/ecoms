@@ -20,5 +20,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findOneById(long id);
 
+    @Query("select jhiOrder from Order jhiOrder where jhiOrder.purchased = false")
     List<Order> findAllByPurchasedIsFalse();
 }
