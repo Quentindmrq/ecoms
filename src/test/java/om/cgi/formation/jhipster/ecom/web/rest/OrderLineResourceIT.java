@@ -78,18 +78,11 @@ class OrderLineResourceIT {
 
     @Test
     @Transactional
-    void createOrderLine() throws Exception {
-        int databaseSizeBeforeCreate = orderLineRepository.findAll().size();
+    void createOrderLineWithoutOrder() throws Exception {
         // Create the OrderLine
         restOrderLineMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(orderLine)))
-            .andExpect(status().isCreated());
-
-        // Validate the OrderLine in the database
-        List<OrderLine> orderLineList = orderLineRepository.findAll();
-        assertThat(orderLineList).hasSize(databaseSizeBeforeCreate + 1);
-        OrderLine testOrderLine = orderLineList.get(orderLineList.size() - 1);
-        assertThat(testOrderLine.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -223,61 +216,7 @@ class OrderLineResourceIT {
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOrderLineMockMvc
             .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(orderLine)))
-            .andExpect(status().isForbidden());
-
-        // Validate the OrderLine in the database
-        List<OrderLine> orderLineList = orderLineRepository.findAll();
-        assertThat(orderLineList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void partialUpdateOrderLineWithPatch() throws Exception {
-        // Initialize the database
-        orderLineRepository.saveAndFlush(orderLine);
-
-        int databaseSizeBeforeUpdate = orderLineRepository.findAll().size();
-
-        // Update the orderLine using partial update
-        OrderLine partialUpdatedOrderLine = new OrderLine();
-        partialUpdatedOrderLine.setId(orderLine.getId());
-
-        partialUpdatedOrderLine.quantity(UPDATED_QUANTITY);
-
-        restOrderLineMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedOrderLine.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrderLine))
-            )
-            .andExpect(status().isForbidden());
-
-        // Validate the OrderLine in the database
-        List<OrderLine> orderLineList = orderLineRepository.findAll();
-        assertThat(orderLineList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void fullUpdateOrderLineWithPatch() throws Exception {
-        // Initialize the database
-        orderLineRepository.saveAndFlush(orderLine);
-
-        int databaseSizeBeforeUpdate = orderLineRepository.findAll().size();
-
-        // Update the orderLine using partial update
-        OrderLine partialUpdatedOrderLine = new OrderLine();
-        partialUpdatedOrderLine.setId(orderLine.getId());
-
-        partialUpdatedOrderLine.quantity(UPDATED_QUANTITY);
-
-        restOrderLineMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedOrderLine.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrderLine))
-            )
-            .andExpect(status().isForbidden());
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -294,10 +233,10 @@ class OrderLineResourceIT {
         restOrderLineMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, orderLine.getId())
-                    .contentType("application/merge-patch+json")
+                    .contentType("application/json")
                     .content(TestUtil.convertObjectToJsonBytes(orderLine))
             )
-            .andExpect(status().isForbidden());
+            .andExpect(status().isBadRequest());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -314,10 +253,10 @@ class OrderLineResourceIT {
         restOrderLineMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .contentType("application/merge-patch+json")
+                    .contentType("application/json")
                     .content(TestUtil.convertObjectToJsonBytes(orderLine))
             )
-            .andExpect(status().isForbidden());
+            .andExpect(status().isBadRequest());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
@@ -332,31 +271,11 @@ class OrderLineResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOrderLineMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(orderLine))
-            )
-            .andExpect(status().isForbidden());
+            .perform(patch(ENTITY_API_URL).contentType("application/json").content(TestUtil.convertObjectToJsonBytes(orderLine)))
+            .andExpect(status().isMethodNotAllowed());
 
         // Validate the OrderLine in the database
         List<OrderLine> orderLineList = orderLineRepository.findAll();
         assertThat(orderLineList).hasSize(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
-    void deleteOrderLine() throws Exception {
-        // Initialize the database
-        orderLineRepository.saveAndFlush(orderLine);
-
-        int databaseSizeBeforeDelete = orderLineRepository.findAll().size();
-
-        // Delete the orderLine
-        restOrderLineMockMvc
-            .perform(delete(ENTITY_API_URL_ID, orderLine.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-
-        // Validate the database contains one less item
-        List<OrderLine> orderLineList = orderLineRepository.findAll();
-        assertThat(orderLineList).hasSize(databaseSizeBeforeDelete);
     }
 }

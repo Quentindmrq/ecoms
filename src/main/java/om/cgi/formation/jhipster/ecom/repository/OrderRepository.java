@@ -19,4 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findOneByIdIfOwnerIsCurrentUser(long id);
 
     Optional<Order> findOneById(long id);
+
+    @Query("select jhiOrder from Order jhiOrder where jhiOrder.purchased = false")
+    List<Order> findAllByPurchasedIsFalse();
 }
