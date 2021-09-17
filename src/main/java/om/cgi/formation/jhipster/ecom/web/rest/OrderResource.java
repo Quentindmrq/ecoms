@@ -67,6 +67,8 @@ public class OrderResource {
         if (optUser.isPresent()) {
             order.setOwner(optUser.get());
             optUser.get().getorders().add(order);
+        } else {
+            throw new Exception("Unknown user.");
         }
 
         order.setPurchaseDate(ZonedDateTime.now());

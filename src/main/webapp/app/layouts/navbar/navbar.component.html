@@ -3,10 +3,37 @@
     <h1>UberElo</h1>
   </div>
 
+  <div [fxShow]="true" [fxShow.sm]="true" [fxShow.xs]="false">
+    <button mat-button [matMenuTriggerFor]="gamesMenu" routerLinkActive="activeButton">
+      <span jhiTranslate="servicesenligneApp.gameTitle">Games</span>
+    </button>
+    <mat-menu #gamesMenu="matMenu">
+      <button
+        *ngFor="let game of games | keyvalue"
+        mat-menu-item
+        [routerLink]="['/game', game.key.toLowerCase()]"
+        routerLinkActive="activeButton"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span jhiTranslate="{{ 'servicesenligneApp.Game.' + game.key }}">Games</span>
+      </button>
+    </mat-menu>
+  </div>
+
   <span class="example-spacer"></span>
 
-  <button mat-icon-button routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }" routerLink="/cart" (click)="cart()">
+  <button mat-icon-button routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }" routerLink="/cart">
     <mat-icon matBadge="{{ cartItemsNumber }}" matBadgeColor="accent">shopping_cart</mat-icon>
+  </button>
+
+  <button
+    mat-button
+    *jhiHasAnyAuthority="'ROLE_USER'"
+    routerLinkActive="activeButton"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLink="/order-history"
+  >
+    <span jhiTranslate="global.menu.entities.orderHistory">Order History</span>
   </button>
 
   <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">
@@ -15,27 +42,21 @@
     </button>
     <mat-menu #entitiesMenu="matMenu">
       <button mat-menu-item routerLink="product" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.entities.product">Product</span>
       </button>
       <button mat-menu-item routerLink="stock" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.entities.stock">Stock</span>
       </button>
       <button mat-menu-item routerLink="contact-details" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.entities.contactDetails">Contact Details</span>
       </button>
       <button mat-menu-item routerLink="order" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.entities.order">Order</span>
       </button>
       <button mat-menu-item routerLink="order-line" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.entities.orderLine">Order Line</span>
       </button>
       <button mat-menu-item routerLink="address" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.entities.address">Address</span>
       </button>
     </mat-menu>
@@ -44,29 +65,23 @@
   <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">
     <button mat-button [matMenuTriggerFor]="adminMenu" routerLinkActive="activeButton">
       <span>
-        <fa-icon icon="users-cog"></fa-icon>
         <span jhiTranslate="global.menu.admin.main">Administration</span>
       </span>
     </button>
     <mat-menu #adminMenu="matMenu">
       <button mat-menu-item routerLink="admin/user-management" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="users" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.admin.userManagement">User management</span>
       </button>
       <button mat-menu-item routerLink="admin/metrics" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
       </button>
       <button mat-menu-item routerLink="admin/health" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="heart" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.admin.health">Health</span>
       </button>
       <button mat-menu-item routerLink="admin/configuration" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="cogs" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.admin.configuration">Configuration</span>
       </button>
       <button mat-menu-item routerLink="admin/logs" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-        <fa-icon icon="tasks" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.admin.logs">Logs</span>
       </button>
       <button
@@ -76,11 +91,9 @@
         routerLinkActive="activeButton"
         [routerLinkActiveOptions]="{ exact: true }"
       >
-        <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.admin.apidocs">API</span>
       </button>
       <a *ngIf="!inProduction" mat-menu-item target="_tab" href="./h2-console/">
-        <fa-icon icon="database" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.admin.database">Database</span>
       </a>
     </mat-menu>
@@ -90,7 +103,6 @@
     <!-- *ngIf="account !== null"> -->
     <button mat-button [matMenuTriggerFor]="languageMenu">
       <span>
-        <fa-icon icon="flag"></fa-icon>
         <span jhiTranslate="global.menu.language">Language</span>
       </span>
     </button>
@@ -104,7 +116,6 @@
   <div [fxShow]="true" [fxShow.sm]="true" [fxShow.xs]="false">
     <button mat-button [matMenuTriggerFor]="accountMenu" data-cy="accountMenu">
       <span *ngIf="!account?.imageUrl">
-        <fa-icon icon="user"></fa-icon>
         <span jhiTranslate="global.menu.account.main">Account</span>
       </span>
       <span *ngIf="account?.imageUrl">
@@ -120,7 +131,6 @@
         [routerLinkActiveOptions]="{ exact: true }"
         data-cy="settings"
       >
-        <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.account.settings">Settings</span>
       </button>
       <button
@@ -131,15 +141,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         data-cy="passwordItem"
       >
-        <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.account.password">Password</span>
       </button>
       <button mat-menu-item *ngSwitchCase="true" (click)="logout()" id="logout" data-cy="logout">
-        <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.account.logout">Sign out</span>
       </button>
       <button mat-menu-item *ngSwitchCase="false" (click)="login()" id="login" data-cy="login">
-        <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.account.login">Sign in</span>
       </button>
       <button
@@ -150,7 +157,6 @@
         [routerLinkActiveOptions]="{ exact: true }"
         data-cy="register"
       >
-        <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
         <span jhiTranslate="global.menu.account.register">Register</span>
       </button>
     </mat-menu>
@@ -172,7 +178,6 @@
           [fxShow.xs]="true"
         >
           <span *ngIf="!account?.imageUrl">
-            <fa-icon icon="user"></fa-icon>
             <span jhiTranslate="global.menu.account.main">Account</span>
           </span>
           <span *ngIf="account?.imageUrl">
@@ -188,7 +193,6 @@
             [routerLinkActiveOptions]="{ exact: true }"
             data-cy="settings"
           >
-            <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.account.settings">Settings</span>
           </button>
           <button
@@ -199,15 +203,12 @@
             [routerLinkActiveOptions]="{ exact: true }"
             data-cy="passwordItem"
           >
-            <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.account.password">Password</span>
           </button>
           <button mat-menu-item *ngSwitchCase="true" (click)="logout()" id="logout" data-cy="logout">
-            <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.account.logout">Sign out</span>
           </button>
           <button mat-menu-item *ngSwitchCase="false" (click)="login()" id="login" data-cy="login">
-            <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.account.login">Sign in</span>
           </button>
           <button
@@ -218,7 +219,6 @@
             [routerLinkActiveOptions]="{ exact: true }"
             data-cy="register"
           >
-            <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.account.register">Register</span>
           </button>
         </mat-menu>
@@ -227,7 +227,6 @@
       <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="false" [fxShow.sm]="true" [fxShow.xs]="true">
         <button mat-menu-item [matMenuTriggerFor]="adminMenu" routerLinkActive="activeButton">
           <span>
-            <fa-icon icon="users-cog"></fa-icon>
             <span jhiTranslate="global.menu.admin.main">Administration</span>
           </span>
         </button>
@@ -238,15 +237,12 @@
             routerLinkActive="activeButton"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <fa-icon icon="users" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.admin.userManagement">User management</span>
           </button>
           <button mat-menu-item routerLink="admin/metrics" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
           </button>
           <button mat-menu-item routerLink="admin/health" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="heart" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.admin.health">Health</span>
           </button>
           <button
@@ -255,11 +251,9 @@
             routerLinkActive="activeButton"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <fa-icon icon="cogs" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.admin.configuration">Configuration</span>
           </button>
           <button mat-menu-item routerLink="admin/logs" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="tasks" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.admin.logs">Logs</span>
           </button>
           <button
@@ -269,11 +263,9 @@
             routerLinkActive="activeButton"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.admin.apidocs">API</span>
           </button>
           <a *ngIf="!inProduction" mat-menu-item target="_tab" href="./h2-console/">
-            <fa-icon icon="database" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.admin.database">Database</span>
           </a>
         </mat-menu>
@@ -285,27 +277,21 @@
         </button>
         <mat-menu #entitiesMenu="matMenu">
           <button mat-menu-item routerLink="product" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.entities.product">Product</span>
           </button>
           <button mat-menu-item routerLink="stock" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.entities.stock">Stock</span>
           </button>
           <button mat-menu-item routerLink="contact-details" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.entities.contactDetails">Contact Details</span>
           </button>
           <button mat-menu-item routerLink="order" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.entities.order">Order</span>
           </button>
           <button mat-menu-item routerLink="order-line" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.entities.orderLine">Order Line</span>
           </button>
           <button mat-menu-item routerLink="address" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
-            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
             <span jhiTranslate="global.menu.entities.address">Address</span>
           </button>
         </mat-menu>
@@ -315,7 +301,6 @@
         <!-- *ngIf="account !== null"> -->
         <button mat-menu-item [matMenuTriggerFor]="languageMenu">
           <span>
-            <fa-icon icon="flag"></fa-icon>
             <span jhiTranslate="global.menu.language">Language</span>
           </span>
         </button>

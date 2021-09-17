@@ -29,7 +29,7 @@ describe('Component Tests', () => {
       jest.spyOn(service, 'query').mockReturnValue(
         of(
           new HttpResponse({
-            body: [{ id: 123 }],
+            body: { content: [{ id: 123 }] },
             headers,
           })
         )

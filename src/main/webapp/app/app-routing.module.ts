@@ -38,6 +38,15 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           path: 'shopping-tunnel',
           loadChildren: () => import('./shopping-tunnel/shopping-tunnel.module').then(m => m.ShoppingTunnelModule),
         },
+        { path: 'product/:id', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) },
+        {
+          path: 'order-history',
+          data: {
+            authorities: [Authority.USER],
+          },
+          canActivate: [UserRouteAccessService],
+          loadChildren: () => import('./order-history/order-history.module').then(m => m.OrderHistoryModule),
+        },
 
         ...LAYOUT_ROUTES,
       ],

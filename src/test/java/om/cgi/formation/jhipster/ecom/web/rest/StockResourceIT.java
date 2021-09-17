@@ -38,7 +38,6 @@ class StockResourceIT {
     private static final String CART_API_URL = "/api/addStocksInCart/{id}";
     private static final String BUY_API_URL = "/api/finalbuy/{id}";
     private static final String CART_API_URL_DELETE = "/api/deleteStocksInCart/{id}";
-
     private static Random random = new Random();
     private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 

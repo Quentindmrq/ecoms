@@ -20,6 +20,10 @@ export class OrderLineService {
     return this.http.post<IOrderLine>(this.resourceUrl, orderLine, { observe: 'response' });
   }
 
+  createWithOrderId(orderLine: IOrderLine, orderId: number): Observable<EntityResponseType> {
+    return this.http.post<IOrderLine>(this.resourceUrl, orderLine, { observe: 'response', params: { id: orderId } });
+  }
+
   update(orderLine: IOrderLine): Observable<EntityResponseType> {
     return this.http.put<IOrderLine>(`${this.resourceUrl}/${getOrderLineIdentifier(orderLine) as number}`, orderLine, {
       observe: 'response',
