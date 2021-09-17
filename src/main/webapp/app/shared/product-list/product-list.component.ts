@@ -24,8 +24,7 @@ export class ProductListComponent implements OnChanges {
   dataSource: MatTableDataSource<Stock>;
   loadingPages: boolean;
   error?: any;
-  displayedColumns: string[] = ['name', 'price', 'description', 'stock', ' '];
-  private products: Stock[];
+  products: Stock[];
 
   constructor(private stockService: StockService, private cartService: CartService) {}
 
@@ -40,7 +39,6 @@ export class ProductListComponent implements OnChanges {
           this.pageInfo = stockRes.body;
           if (stockRes.body?.content) {
             this.products = stockRes.body.content;
-            this.updateDataSource();
           }
           this.loadingPages = false;
         },
@@ -61,7 +59,6 @@ export class ProductListComponent implements OnChanges {
         this.pageInfo = stockRes.body;
         if (stockRes.body?.content) {
           this.products.push(...stockRes.body.content);
-          this.updateDataSource();
         }
         this.loadingPages = false;
       },
@@ -81,21 +78,5 @@ export class ProductListComponent implements OnChanges {
   private get request(): Record<string, unknown> {
     const newReq: Record<string, unknown> = { ...this.req, page: this.page, game: this.game, type: this.productType };
     return newReq;
-  }
-  private updateDataSource(): void {
-    this.dataSource = new MatTableDataSource(this.products);
-    this.dataSource.sortingDataAccessor = (data: Stock, sortHeaderId: string): string | number => {
-      switch (sortHeaderId) {
-        case 'price':
-          return data.product?.price ? data.product.price : 'N/A';
-        case 'name':
-          return data.product?.name ? data.product.name : 'N/A';
-        case 'stock':
-          return data.stock ? data.stock : 'N/A';
-        default:
-          return 'N/A';
-      }
-    };
-    this.dataSource.sort = this.sort;
   }
 }

@@ -2,6 +2,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JhMaterialModule } from '../jhmaterial.module';
+import { TranslateDirective } from '../language/translate.directive';
+import { ProductItemComponent } from '../product-item/product-item.component';
 
 import { ProductListComponent } from './product-list.component';
 
@@ -11,7 +13,7 @@ describe('ProductListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProductListComponent],
+      declarations: [ProductListComponent, ProductItemComponent, TranslateDirective],
       imports: [JhMaterialModule, HttpClientModule, BrowserAnimationsModule],
     }).compileComponents();
   });

@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { JhMaterialModule } from 'app/shared/jhmaterial.module';
 import { TranslateDirective } from 'app/shared/language/translate.directive';
+import { ProductItemComponent } from 'app/shared/product-item/product-item.component';
 import { ProductListComponent } from 'app/shared/product-list/product-list.component';
 import { SelectProductCategoriesComponent } from 'app/shared/select-product-categories/select-product-categories.component';
 
@@ -16,7 +17,7 @@ describe('GameComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [GameComponent, SelectProductCategoriesComponent, ProductListComponent, TranslateDirective],
+      declarations: [GameComponent, SelectProductCategoriesComponent, ProductListComponent, TranslateDirective, ProductItemComponent],
       imports: [JhMaterialModule, HttpClientTestingModule, BrowserAnimationsModule, RouterTestingModule, TranslateModule.forRoot()],
     }).compileComponents();
   });

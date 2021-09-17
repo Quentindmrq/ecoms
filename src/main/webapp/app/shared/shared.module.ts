@@ -16,6 +16,9 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { JhMaterialModule } from './jhmaterial.module';
 import { SelectProductCategoriesComponent } from './select-product-categories/select-product-categories.component';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ProductItemComponent } from './product-item/product-item.component';
+
 @NgModule({
   imports: [SharedLibsModule, JhMaterialModule],
   declarations: [
@@ -32,6 +35,7 @@ import { SelectProductCategoriesComponent } from './select-product-categories/se
     ItemCountComponent,
     ProductListComponent,
     SelectProductCategoriesComponent,
+    ProductItemComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -49,6 +53,8 @@ import { SelectProductCategoriesComponent } from './select-product-categories/se
     ProductListComponent,
     SelectProductCategoriesComponent,
     JhMaterialModule,
+    FlexLayoutModule,
+    ProductItemComponent,
   ],
 })
 export class SharedModule {}
