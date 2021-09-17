@@ -69,6 +69,12 @@ public class OrderResource {
             optUser.get().getorders().add(order);
         }
 
+        Optional<Order> oldcart = orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse();
+
+        if (oldcart.isPresent()) {
+            deleteOrder(oldcart.get().getId());
+        }
+
         order.setPurchaseDate(ZonedDateTime.now());
 
         Order result = orderRepository.saveAndFlush(order);

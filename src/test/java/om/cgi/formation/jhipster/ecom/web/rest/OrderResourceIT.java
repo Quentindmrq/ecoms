@@ -182,6 +182,29 @@ class OrderResourceIT {
 
     @Test
     @Transactional
+    void create2Order() throws Exception {
+        User usr = new User();
+        usr.setLogin("user");
+        order.setOwner(usr);
+
+        int databaseSizeBeforeCreate = orderRepository.findAll().size();
+        // Create the Order
+        restOrderMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(order)))
+            .andExpect(status().isCreated());
+
+        // Create the Order
+        restOrderMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(order)))
+            .andExpect(status().isCreated());
+
+        // Validate the Order in the database
+        List<Order> orderList = orderRepository.findAll();
+        assertThat(orderList).hasSize(databaseSizeBeforeCreate + 1);
+    }
+
+    @Test
+    @Transactional
     void createOrderAndOrderLine() throws Exception {
         User usr = new User();
         usr.setLogin("user");
