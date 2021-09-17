@@ -67,4 +67,8 @@ export class CartComponent implements OnInit {
     }
     return 'NA';
   }
+
+  get login(): string | null | undefined {
+    return this.cartService.login;
+  }
 }

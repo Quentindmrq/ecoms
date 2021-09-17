@@ -36,6 +36,10 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         },
         {
           path: 'shopping-tunnel',
+          data: {
+            authorities: [Authority.USER],
+          },
+          canActivate: [UserRouteAccessService],
           loadChildren: () => import('./shopping-tunnel/shopping-tunnel.module').then(m => m.ShoppingTunnelModule),
         },
         { path: 'product/:id', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) },

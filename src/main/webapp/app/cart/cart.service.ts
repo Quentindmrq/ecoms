@@ -7,15 +7,42 @@ import { Order } from 'app/entities/order/order.model';
 import { OrderService } from 'app/entities/order/service/order.service';
 import { Product } from 'app/entities/product/product.model';
 import { User } from 'app/entities/user/user.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
+  public login: string | undefined | null;
   private shoppingCart = new BehaviorSubject<Order | null>(null);
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(private orderService: OrderService, private orderLineService: OrderLineService, private accountService: AccountService) {}
+  constructor(private orderService: OrderService, private orderLineService: OrderLineService, private accountService: AccountService) {
+    this.accountService
+      .getAuthenticationState()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(accountRes => {
+        if (!this.login && accountRes) {
+          this.login = accountRes.login;
+          const order = this.shoppingCart.getValue();
+          if (order) {
+            order.purchased = false;
+            order.owner = new User(-1, accountRes.login);
+            this.orderService.create(order).subscribe(orderRes => {
+              order.id = orderRes.body?.id;
+              this.shoppingCart.next(order);
+            });
+          } else {
+            // TODO récupérer panier
+          }
+        }
+        if (this.login && !accountRes) {
+          this.shoppingCart.next(null);
+        }
+        this.login = accountRes?.login;
+      });
+  }
 
   get cart(): Observable<Order | null> {
     return this.shoppingCart;
@@ -48,44 +75,59 @@ export class CartService {
 
   addToCart(product: Product, quantity = 1): void {
     if (!this.shoppingCart.getValue()) {
-      this.createOrder();
+      this.createOrderAndAdd(product, quantity);
+      return;
     }
 
     const cartArray = this.shoppingCart.getValue()?.orderLines?.slice();
-    if (!this.shoppingCart.getValue()?.id) {
+    if (this.login && !this.shoppingCart.getValue()?.id) {
       window.console.debug(this.shoppingCart.getValue());
       throw new Error('Invalid Order');
     }
+
     let returnArray: OrderLine[] = [];
     if (cartArray) {
       returnArray = cartArray;
       const alreadyInId = cartArray.findIndex(ol => (ol.product?.id ? product.id === ol.product.id : false));
+
       if (alreadyInId >= 0) {
         const itemQuantity = cartArray[alreadyInId].quantity;
         cartArray[alreadyInId].quantity = itemQuantity ? itemQuantity + quantity : quantity;
+
         // TODO gestion erreur
-        this.orderLineService.partialUpdate(cartArray[alreadyInId]).subscribe(
-          () => this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray }),
-          error => window.console.error(error)
-        );
+
+        if (this.login) {
+          this.orderLineService.partialUpdate(cartArray[alreadyInId]).subscribe(
+            () => this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray }),
+            error => window.console.error(error)
+          );
+          return;
+        }
+        this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray });
         return;
       }
     }
     const newOL = new OrderLine(undefined, quantity, product);
-    this.orderLineService.createWithOrderId(newOL, this.shoppingCart.getValue()?.id as number).subscribe(
-      createdOL => {
-        if (createdOL.body) {
-          returnArray.push(createdOL.body);
-          this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: returnArray });
-        }
-      },
-      err => console.error(err)
-    );
+
+    if (this.login) {
+      this.orderLineService.createWithOrderId(newOL, this.shoppingCart.getValue()?.id as number).subscribe(
+        createdOL => {
+          if (createdOL.body) {
+            returnArray.push(createdOL.body);
+            this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: returnArray });
+          }
+        },
+        err => console.error(err)
+      );
+      return;
+    }
+    returnArray.push(newOL);
+    this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: returnArray });
   }
 
   removeOneFromCart(product: Product): void {
     const cartArray = this.shoppingCart.getValue()?.orderLines?.slice();
-    if (!this.shoppingCart.getValue()?.id) {
+    if (this.login && !this.shoppingCart.getValue()?.id) {
       throw new Error('Invalid Order');
     }
     if (!cartArray) {
@@ -105,16 +147,19 @@ export class CartService {
 
     cartArray[alreadyInId].quantity = itemQuantity - 1;
     // TODO gestion erreur
-    this.orderLineService.partialUpdate(cartArray[alreadyInId]).subscribe(
-      () => this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray }),
-      error => window.console.error(error)
-    );
-    return;
+    if (this.login) {
+      this.orderLineService.partialUpdate(cartArray[alreadyInId]).subscribe(
+        () => this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray }),
+        error => window.console.error(error)
+      );
+      return;
+    }
+    this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray });
   }
 
   deleteFromCart(product: Product): void {
     const cartArray = this.shoppingCart.getValue()?.orderLines?.slice();
-    if (!this.shoppingCart.getValue()?.id) {
+    if (this.login && !this.shoppingCart.getValue()?.id) {
       throw new Error('Invalid Order');
     }
     if (!cartArray) {
@@ -133,6 +178,10 @@ export class CartService {
         error => window.console.error(error)
       );
     }
+    if (!this.login) {
+      const productId = cartArray[alreadyInId].product?.id;
+      this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray.filter(ol => ol.product?.id !== productId) });
+    }
 
     const numberOfLines = this.shoppingCart.getValue()?.orderLines?.length;
     if (numberOfLines && numberOfLines < 1) {
@@ -149,6 +198,7 @@ export class CartService {
   }
 
   validate(billingAddress: Address): void {
+    window.console.debug(this.shoppingCart.getValue());
     const order = this.shoppingCart.getValue();
     if (order) {
       order.billingAddress = billingAddress;
@@ -164,17 +214,20 @@ export class CartService {
     }
   }
 
-  private createOrder(): void {
+  private createOrderAndAdd(product: Product, quantity: number): void {
     const order = new Order();
+    order.purchased = false;
 
-    let login: string | undefined;
-    this.accountService.identity().subscribe(accountRes => (login = accountRes?.login));
-
-    if (login) {
-      order.owner = new User(-1, login);
-      order.purchased = false;
-      this.orderService.create(order).subscribe(orderRes => (order.id = orderRes.body?.id));
-      this.shoppingCart = new BehaviorSubject<Order | null>(order);
+    if (this.login) {
+      order.owner = new User(-1, this.login);
+      this.orderService.create(order).subscribe(orderRes => {
+        order.id = orderRes.body?.id;
+        this.shoppingCart.next(order);
+        this.addToCart(product, quantity);
+      });
+    } else {
+      this.shoppingCart.next(order);
+      this.addToCart(product, quantity);
     }
   }
 }
