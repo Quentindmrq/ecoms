@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Product } from 'app/entities/product/product.model';
-import { CartItem, CartService } from './cart.service';
+import { OrderLine } from 'app/entities/order-line/order-line.model';
+import { Order } from 'app/entities/order/order.model';
+import { CartService } from './cart.service';
 
 @Component({
   selector: 'jhi-cart',
@@ -9,26 +10,38 @@ import { CartItem, CartService } from './cart.service';
   styleUrls: ['./cart.component.scss'],
 })
 export class CartComponent implements OnInit {
-  cartItems: CartItem[];
+  cart: Order | null;
 
   constructor(private cartService: CartService, private router: Router) {
     // donothing
   }
 
-  addToCart(product: Product): void {
-    this.cartService.addToCart(product);
+  addToCart(ol: OrderLine): void {
+    if (ol.product) {
+      this.cartService.addToCart(ol.product);
+      return;
+    }
+    window.console.error('Invalid product');
   }
 
-  removeOneFromCart(product: Product): void {
-    this.cartService.removeOneFromCart(product);
+  removeOneFromCart(ol: OrderLine): void {
+    if (ol.product) {
+      this.cartService.removeOneFromCart(ol.product);
+      return;
+    }
+    window.console.error('Invalid product');
   }
 
-  deleteFromCart(product: Product): void {
-    this.cartService.deleteFromCart(product);
+  deleteFromCart(ol: OrderLine): void {
+    if (ol.product) {
+      this.cartService.deleteFromCart(ol.product);
+      return;
+    }
+    window.console.error('Invalid product');
   }
 
   ngOnInit(): void {
-    this.cartService.cart.subscribe(cartItems => (this.cartItems = cartItems));
+    this.cartService.cart.subscribe(cartItems => (this.cart = cartItems));
   }
 
   get totalPrice(): number {
@@ -42,5 +55,16 @@ export class CartComponent implements OnInit {
   validate(): void {
     window.console.debug('cart-validate');
     this.router.navigate(['/shopping-tunnel']);
+  }
+
+  get orderLines(): OrderLine[] {
+    return this.cart?.orderLines ? this.cart.orderLines : [];
+  }
+
+  getPrice(ol: OrderLine): number | string {
+    if (ol.product?.price && ol.quantity) {
+      return ol.product.price * ol.quantity;
+    }
+    return 'NA';
   }
 }
