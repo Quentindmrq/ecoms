@@ -43,7 +43,7 @@ public class Order implements Serializable {
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     @JsonIgnoreProperties(
-        value = { "login", "firstName", "lastName", "email", "activated", "langKey", "imageUrl", "resetDate" },
+        value = { "firstName", "lastName", "email", "activated", "langKey", "imageUrl", "resetDate" },
         allowSetters = true
     )
     private User owner;
@@ -156,6 +156,15 @@ public class Order implements Serializable {
 
     public void setOwner(User user) {
         this.owner = user;
+    }
+
+    public void removeOrderLinebyId(long id) {
+        for (OrderLine ol : this.orderLines) {
+            if (ol.getId() == id) {
+                this.orderLines.remove(ol);
+                return;
+            }
+        }
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
