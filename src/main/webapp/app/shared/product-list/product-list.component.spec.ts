@@ -1,4 +1,7 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JhMaterialModule } from '../jhmaterial.module';
 
 import { ProductListComponent } from './product-list.component';
 
@@ -9,6 +12,7 @@ describe('ProductListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProductListComponent],
+      imports: [JhMaterialModule, HttpClientModule, BrowserAnimationsModule],
     }).compileComponents();
   });
 

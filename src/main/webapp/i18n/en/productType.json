@@ -1,11 +1,12 @@
 {
   "servicesenligneApp": {
     "ProductType": {
-      "null": "",
-      "GAME_ACCOUNT": "GAME_ACCOUNT",
-      "BOOSTING": "BOOSTING",
-      "COACHING": "COACHING",
-      "INTING": "INTING"
+      "null": "N/A",
+      "GAME_ACCOUNT": "Game account",
+      "BOOSTING": "Boosting",
+      "COACHING": "Coaching",
+      "INTING": "Inting",
+      "N/A": "N/A"
     }
   }
 }

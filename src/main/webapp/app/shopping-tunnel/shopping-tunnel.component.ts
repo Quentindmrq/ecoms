@@ -1,15 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from 'app/admin/user-management/user-management.model';
 import { CartService } from 'app/cart/cart.service';
-import { AccountService } from 'app/core/auth/account.service';
 import { Address } from 'app/entities/address/address.model';
 import { AddressService } from 'app/entities/address/service/address.service';
-import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { OrderLineService } from 'app/entities/order-line/service/order-line.service';
-import { Order } from 'app/entities/order/order.model';
 import { OrderService } from 'app/entities/order/service/order.service';
-import { UserService } from 'app/entities/user/user.service';
 
 @Component({
   selector: 'jhi-shopping-tunnel',
@@ -32,9 +27,7 @@ export class ShoppingTunnelComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private addressService: AddressService,
     private orderService: OrderService,
-    private orderLineService: OrderLineService,
-    private accountService: AccountService,
-    private userService: UserService
+    private orderLineService: OrderLineService
   ) {}
 
   ngOnInit(): void {
@@ -82,29 +75,6 @@ export class ShoppingTunnelComponent implements OnInit {
     // const cardExpirationYear = this.form2.get('cardExpirationYear')?.value;
     // const cardValidationCode = this.form2.get('cardValidationCode')?.value;
 
-    const orderLines = new Array<OrderLine>();
-    this.cartService.cart.subscribe(cart => {
-      cart.forEach(item => {
-        orderLines.push(new OrderLine(undefined, item.quantity, item.product));
-      });
-    });
-
-    let login: string | undefined;
-    this.accountService.identity().subscribe(accountRes => {
-      login = accountRes?.login;
-    });
-
-    const order = new Order(undefined, true, undefined, this.cartService.totalPrice, orderLines, new User(undefined, login), this.address);
-
-    let creation: Order | null;
-    this.orderService.create(order).subscribe(
-      createRes => {
-        creation = createRes.body;
-        window.console.debug(creation);
-      },
-      error => {
-        this.error = error;
-      }
-    );
+    this.cartService.validate(this.address);
   }
 }
