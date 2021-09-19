@@ -1,5 +1,8 @@
-<div>{{ productType }}</div>
-<div>{{ game }}</div>
 <div fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="space-evenly center">
-  <jhi-product-item *ngFor="let product of products" [stock]="product"></jhi-product-item>
+  <ng-container *ngIf="products.length > 0; else noProduct">
+    <jhi-product-item *ngFor="let product of products" [stock]="product"></jhi-product-item>
+  </ng-container>
+  <ng-template #noProduct>
+    <h2>Nothing to see here for now</h2>
+  </ng-template>
 </div>
