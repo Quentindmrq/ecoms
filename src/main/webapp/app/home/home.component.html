@@ -1,5 +1,5 @@
-<div *ngFor="let game of Games | keyvalue">
-  <button mat-flat-button color="accent" routerLink="/game/{{ game.key.toLowerCase() }}">
+<div fxLayout="row" fxLayoutAlign="space-evenly center" class="homeBox">
+  <button *ngFor="let game of Games | keyvalue" mat-flat-button color="accent" routerLink="/game/{{ game.key.toLowerCase() }}">
     {{ game.key }}
   </button>
 </div>
