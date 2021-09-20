@@ -14,6 +14,8 @@ export class ProductComponent implements OnInit {
   stock: Stock | null;
   loading: boolean;
   error: any;
+  numberOfItems = 1;
+  stockArray: number[];
   constructor(private activatedRoute: ActivatedRoute, private stockService: StockService, private cartService: CartService) {}
 
   ngOnInit(): void {
@@ -35,7 +37,11 @@ export class ProductComponent implements OnInit {
       stockRes => {
         this.stock = stockRes.body;
         this.loading = false;
+        this.stockArray = Array(Math.min(this.stock?.stock ?? 15, 15))
+          .fill(0)
+          .map((x, i) => i + 1); // [0,1,2,3,4]
       },
+
       error => {
         this.error = error;
         this.loading = false;
@@ -45,7 +51,7 @@ export class ProductComponent implements OnInit {
 
   addToCart(): void {
     if (this.stock?.product) {
-      this.cartService.addToCart(this.stock.product);
+      this.cartService.addToCart(this.stock.product, this.numberOfItems);
     } else {
       this.error = "Can't add to cart, product null or undef";
     }
