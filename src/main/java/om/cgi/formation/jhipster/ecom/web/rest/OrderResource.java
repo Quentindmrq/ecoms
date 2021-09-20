@@ -71,6 +71,12 @@ public class OrderResource {
             throw new Exception("Unknown user.");
         }
 
+        Optional<Order> oldcart = orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse();
+
+        if (oldcart.isPresent()) {
+            deleteOrder(oldcart.get().getId());
+        }
+
         order.setPurchaseDate(ZonedDateTime.now());
 
         Order result = orderRepository.saveAndFlush(order);

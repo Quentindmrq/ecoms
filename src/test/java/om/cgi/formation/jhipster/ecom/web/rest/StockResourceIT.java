@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
@@ -518,40 +517,6 @@ class StockResourceIT {
     void deletefromCartBasic() throws Exception {
         stockRepository.saveAndFlush(stock);
         restStockMockMvc.perform(patch(CART_API_URL_DELETE, stock.getId()).queryParam("amount", "1")).andExpect(status().isOk());
-    }
-
-    @Test
-    @Transactional
-    void buyStock() throws Exception {
-        // Initialize the database
-        stockRepository.saveAndFlush(stock);
-        Integer beforestock = stock.getStock();
-
-        // take the whole stock
-        restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", "10")).andExpect(status().isOk());
-
-        //chek that stock was bought
-        Optional<Stock> newstock = stockRepository.findById(stock.getId());
-        assertThat(newstock.isPresent()).isTrue();
-        assertThat(beforestock == (newstock.get().getStock() + 10)).isTrue();
-    }
-
-    @Test
-    @Transactional
-    void buyEmptyStock() throws Exception {
-        // Initialize the database
-        stockRepository.saveAndFlush(stock);
-        Integer querystock = stock.getStock();
-
-        // take the whole stock
-        restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
-
-        // take the whole stock
-        restStockMockMvc.perform(patch(BUY_API_URL, stock.getId()).queryParam("amount", querystock.toString())).andExpect(status().isOk());
-        //stock should be empty
-        restStockMockMvc
-            .perform(patch(CART_API_URL, stock.getId()).queryParam("amount", querystock.toString()))
-            .andExpect(status().isBadRequest());
     }
 
     @Test
