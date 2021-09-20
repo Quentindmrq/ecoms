@@ -65,7 +65,7 @@ export class CartComponent implements OnInit {
     if (ol.product?.price && ol.quantity) {
       return ol.product.price * ol.quantity;
     }
-    return 'NA';
+    return 0.0;
   }
 
   get login(): string | null | undefined {
