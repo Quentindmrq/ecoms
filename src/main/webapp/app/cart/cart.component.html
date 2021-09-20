@@ -22,12 +22,15 @@
                 <button mat-icon-button color="accent" (click)="addToCart(item.product)">
                   <mat-icon>add_circle_outline</mat-icon>
                 </button>
-                <button mat-stroked-button color="accent" (click)="openDeleteDialog(item.product)">Delete</button>
+                <button mat-stroked-button color="warn" (click)="openDeleteDialog(item.product)">Delete</button>
               </div>
             </div>
 
             <div class="col-md-2">
               <p>{{ (item.product.price ? item.product.price * item.quantity : 'NA') | currency: 'EUR' }}</p>
+              <button mat-stroked-button color="accent" routerLink="/product/{{ item.product.id }}">
+                <mat-icon>visibility</mat-icon>
+              </button>
             </div>
           </div>
         </mat-card-content>
