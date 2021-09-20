@@ -32,20 +32,50 @@ public class GenerateData {
 
         String[] pseudos = {
             "SeekNDstroy",
-            " Bulletz4Breakfast",
-            " BigDamnHero",
-            " LaidtoRest",
-            " IronMAN77",
-            " Xenomorphing",
-            " TylerDurden",
-            " PennywiseTheClown",
-            " BluntMachete",
-            " SniperLyfe",
+            "Bulletz4Breakfast",
+            "BigDamnHero",
+            "LaidtoRest",
+            "IronMAN77",
+            "Xenomorphing",
+            "TylerDurden",
+            "PennywiseTheClown",
+            "BluntMachete",
+            "SniperLyfe",
             "SilentWraith",
-            " BloodyAssault",
-            " FightClubAlum",
-            " KillSwitch",
-            " ExecuteElectrocute",
+            "BloodyAssault",
+            "FightClubAlum",
+            "KillSwitch",
+            "ExecuteElectrocute",
+            "Hytock",
+            "Azalia",
+            "MagikarpIsGod",
+            "Atom",
+            "Sonlis",
+            "DrSad",
+            "DrHappy",
+            "Kamet0",
+            "Cinkrof",
+            "Saken",
+            "xMatty",
+            "Cabochard",
+            "Targamas",
+            "Dundred",
+            "Striker",
+            "RIP_Shanky",
+            "Asza",
+            "Djoko",
+            "Wakz",
+            "Chap",
+            "LeRoiBisou",
+            "Narkuss",
+            "AlderDuBrésil",
+            "Rhobalas",
+            "Aytron",
+            "Chips",
+            "Noi",
+            "Tweekz",
+            "Marex",
+            "Faker",
         };
 
         writerProduct.write("id;name;description;logo;price;game;product_type;region;account_level;account_rank;target_rank\n");
@@ -58,10 +88,10 @@ public class GenerateData {
                     writerProduct.write(id + ";");
 
                     //name
-                    writerProduct.write(pseudos[Math.toIntExact(rd.nextInt(pseudos.length))] + "_" + game + "_" + prod + ";");
+                    writerProduct.write(pseudos[Math.toIntExact(rd.nextInt(pseudos.length))] + ";");
 
                     //description
-                    writerProduct.write(loremIpsum.getWords(100) + ";");
+                    writerProduct.write(loremIpsum.getWords(40) + ";");
 
                     //logo pour l'instant rien
                     writerProduct.write("logo;");

@@ -25,7 +25,7 @@
 
         <sonar.organization>quentindmrq</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        
+
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
         <java.version>11</java.version>
@@ -109,6 +109,13 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>de.sven-jacobs</groupId>
+            <artifactId>loremipsum</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <dependency>
             <groupId>tech.jhipster</groupId>
             <artifactId>jhipster-framework</artifactId>
