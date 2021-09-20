@@ -1,0 +1,18 @@
+<jhi-select-product-categories [selectProductType]="false"></jhi-select-product-categories>
+<mat-tab-group dynamicHeight>
+  <mat-tab label="Overview">
+    <div *ngFor="let productType of ProductTypes; let lastItem = last" class="productListContainer" fxLayout="column" fxLayoutGap="16px">
+      <h2 jhiTranslate="servicesenligneApp.ProductType.{{ productType }}">{{ productType }}</h2>
+      <jhi-product-list [productType]="productType" [game]="selectedGame"></jhi-product-list>
+      <mat-divider *ngIf="!lastItem"></mat-divider>
+    </div>
+  </mat-tab>
+  <mat-tab *ngFor="let productType of ProductTypes">
+    <ng-template mat-tab-label>
+      <span jhiTranslate="servicesenligneApp.ProductType.{{ productType }}"> {{ productType }} </span>
+    </ng-template>
+    <div class="productListContainer">
+      <jhi-product-list [productType]="productType" [game]="selectedGame"></jhi-product-list>
+    </div>
+  </mat-tab>
+</mat-tab-group>
