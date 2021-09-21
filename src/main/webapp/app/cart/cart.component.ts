@@ -5,6 +5,7 @@ import { DeleteDialogComponent } from 'app/delete-dialog/delete-dialog.component
 import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { Order } from 'app/entities/order/order.model';
 import { Product } from 'app/entities/product/product.model';
+import { Stock } from 'app/entities/stock/stock.model';
 import { CartService } from './cart.service';
 
 @Component({
@@ -14,14 +15,20 @@ import { CartService } from './cart.service';
 })
 export class CartComponent implements OnInit {
   cart: Order | null;
+  cartStocks: Stock[];
 
   constructor(private cartService: CartService, private router: Router, public dialog: MatDialog) {
     // donothing
   }
 
+  ngOnInit(): void {
+    this.cartService.cart.subscribe(cartItems => (this.cart = cartItems));
+    this.cartService.cartStock.subscribe(cartStocks => (this.cartStocks = cartStocks));
+  }
+
   addToCart(ol: OrderLine): void {
     if (ol.product) {
-      this.cartService.addToCart(ol.product);
+      this.cartService.addToCart(this.cartStocks.find(st => st.product?.id === ol.product?.id)!);
       return;
     }
     window.console.error('Invalid product');
@@ -35,16 +42,8 @@ export class CartComponent implements OnInit {
     window.console.error('Invalid product');
   }
 
-  deleteFromCart(ol: OrderLine): void {
-    if (ol.product) {
-      this.cartService.deleteFromCart(ol.product);
-      return;
-    }
-    window.console.error('Invalid product');
-  }
-
-  ngOnInit(): void {
-    this.cartService.cart.subscribe(cartItems => (this.cart = cartItems));
+  deleteFromCart(product: Product): void {
+    this.cartService.deleteFromCart(product);
   }
 
   get totalPrice(): number {
@@ -73,6 +72,10 @@ export class CartComponent implements OnInit {
 
   get login(): string | null | undefined {
     return this.cartService.login;
+  }
+
+  productStock(producId: number): number {
+    return this.cartStocks.find(st => st.product?.id === producId)?.stock ?? 15;
   }
 
   openDeleteDialog(product: Product): void {

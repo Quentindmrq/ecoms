@@ -27,7 +27,7 @@
     <button mat-stroked-button color="accent" (click)="goToProduct()">
       <mat-icon>visibility</mat-icon>
     </button>
-    <button mat-flat-button color="accent" (click)="addToCart()">
+    <button mat-flat-button color="accent" [disabled]="productLeftInStock <= 0" (click)="addToCart()">
       <mat-icon>add_shopping_cart</mat-icon>
       {{ product?.price | currency: 'EUR' }}
     </button>

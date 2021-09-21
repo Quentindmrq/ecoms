@@ -19,7 +19,12 @@
                   <mat-icon>remove_circle_outline</mat-icon>
                 </button>
                 {{ item.quantity }}
-                <button mat-icon-button color="accent" (click)="addToCart(item)">
+                <button
+                  mat-icon-button
+                  color="accent"
+                  [disabled]="item.quantity! >= productStock(item.product?.id!)"
+                  (click)="addToCart(item)"
+                >
                   <mat-icon>add_circle_outline</mat-icon>
                 </button>
                 <button mat-stroked-button color="warn" (click)="openDeleteDialog(item.product!)">Delete</button>

@@ -11,6 +11,7 @@ import { Order } from 'app/entities/order/order.model';
 import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Product } from 'app/entities/product/product.model';
+import { Stock } from 'app/entities/stock/stock.model';
 
 describe('CartService', () => {
   let service: CartService;
@@ -40,14 +41,14 @@ describe('CartService', () => {
   describe('Service methods', () => {
     it('should have added one orderLine', () => {
       service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
-      service.addToCart(new Product(123), 3);
+      service.addToCart(new Stock(1, 10, undefined, new Product(123)), 3);
       expect(service.numberOfItems).toEqual(3);
       expect((expectedResult as Order).orderLines?.length).toEqual(1);
     });
 
     it('should be null after discard', () => {
       service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
-      service.addToCart(new Product(123), 3);
+      service.addToCart(new Stock(1, 10, undefined, new Product(123)), 3);
       service.discard();
       expect(expectedResult).toEqual(null);
     });
@@ -55,7 +56,8 @@ describe('CartService', () => {
     it('should be null after discard', () => {
       service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
       const prod = new Product(123);
-      service.addToCart(prod, 3);
+      const stock = new Stock(1, 10, undefined, prod);
+      service.addToCart(stock, 3);
       service.removeOneFromCart(prod);
       expect(service.numberOfItems).toEqual(2);
       expect((expectedResult as Order).orderLines?.length).toEqual(1);

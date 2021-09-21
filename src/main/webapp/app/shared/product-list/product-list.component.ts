@@ -71,7 +71,7 @@ export class ProductListComponent implements OnChanges {
 
   addToCart(stock: Stock): void {
     if (stock.product) {
-      this.cartService.addToCart(stock.product);
+      this.cartService.addToCart(stock);
     }
   }
 

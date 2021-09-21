@@ -27,12 +27,12 @@
   </mat-card-content>
 
   <mat-card-actions class="buttonBox">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="productLeftInStock > 0">
       <mat-select matNativeControl [(ngModel)]="numberOfItems">
         <mat-option *ngFor="let i of stockArray" [value]="i">{{ i }}</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-flat-button color="accent" (click)="addToCart()">
+    <button mat-flat-button color="accent" [disabled]="productLeftInStock <= 0" (click)="addToCart()">
       <mat-icon>add_shopping_cart</mat-icon>
       {{ stock?.product?.price | currency: 'EUR' }}
     </button>

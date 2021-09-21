@@ -37,7 +37,7 @@ export class ProductComponent implements OnInit {
       stockRes => {
         this.stock = stockRes.body;
         this.loading = false;
-        this.stockArray = Array(Math.min(this.stock?.stock ?? 15, 15))
+        this.stockArray = Array(Math.min(this.productLeftInStock, 15))
           .fill(0)
           .map((x, i) => i + 1); // [0,1,2,3,4]
       },
@@ -49,9 +49,13 @@ export class ProductComponent implements OnInit {
     );
   }
 
+  get productLeftInStock(): number {
+    return this.cartService.productLeftInStock(this.stock!);
+  }
+
   addToCart(): void {
     if (this.stock?.product) {
-      this.cartService.addToCart(this.stock.product, this.numberOfItems);
+      this.cartService.addToCart(this.stock, this.numberOfItems);
     } else {
       this.error = "Can't add to cart, product null or undef";
     }

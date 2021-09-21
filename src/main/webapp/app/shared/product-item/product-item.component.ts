@@ -11,6 +11,7 @@ import { Stock } from 'app/entities/stock/stock.model';
 })
 export class ProductItemComponent {
   @Input() public stock: Stock;
+  itemsInCart = 0;
 
   constructor(private cartService: CartService, private router: Router) {
     // donothing
@@ -18,7 +19,7 @@ export class ProductItemComponent {
 
   addToCart(): void {
     if (this.stock.product) {
-      this.cartService.addToCart(this.stock.product);
+      this.cartService.addToCart(this.stock);
     }
   }
 
@@ -27,5 +28,9 @@ export class ProductItemComponent {
   }
   get product(): Product | null | undefined {
     return this.stock.product;
+  }
+
+  get productLeftInStock(): number {
+    return this.cartService.productLeftInStock(this.stock);
   }
 }
