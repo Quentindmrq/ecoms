@@ -41,6 +41,8 @@ public class OrderResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private static final String INVALID_ID = "invalid id";
+
     private final OrderRepository orderRepository;
 
     private final UserService userService;
@@ -105,10 +107,10 @@ public class OrderResource {
         throws URISyntaxException {
         log.debug("REST request to update Order : {}, {}", id, order);
         if (order.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, order.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         if (!orderRepository.existsById(id)) {
@@ -138,10 +140,10 @@ public class OrderResource {
         throws URISyntaxException {
         log.debug("REST request to partial update Order partially : {}, {}", id, order);
         if (order.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, order.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         if (!orderRepository.existsById(id)) {
@@ -220,7 +222,7 @@ public class OrderResource {
         Optional<Order> order = orderRepository.findById(id);
 
         if (order.isEmpty()) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
         order.get().setOwner(null);
         orderRepository.saveAndFlush(order.get());

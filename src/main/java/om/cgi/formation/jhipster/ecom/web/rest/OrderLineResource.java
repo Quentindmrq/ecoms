@@ -35,6 +35,8 @@ public class OrderLineResource {
 
     private static final String ENTITY_NAME = "orderLine";
 
+    private static final String INVALID_ID = "invalid id";
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -123,10 +125,10 @@ public class OrderLineResource {
     ) throws URISyntaxException {
         log.debug("REST request to update OrderLine : {}, {}", id, orderLine);
         if (orderLine.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, orderLine.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         if (!orderLineRepository.existsById(id)) {
@@ -158,10 +160,10 @@ public class OrderLineResource {
     ) throws URISyntaxException {
         log.debug("REST request to partial update OrderLine partially : {}, {}", id, orderLine);
         if (orderLine.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, orderLine.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         if (!orderLineRepository.existsById(id)) {
@@ -170,7 +172,7 @@ public class OrderLineResource {
 
         Optional<OrderLine> result = orderLineRepository.findById(orderLine.getId());
         if (result.isEmpty()) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         // if we set the quantity to 0 or less the orderline is deleted
@@ -241,7 +243,7 @@ public class OrderLineResource {
 
         Optional<OrderLine> orderline = orderLineRepository.findById(id);
         if (orderline.isEmpty()) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
         Order order = orderline.get().getOrder();
         order.removeOrderLinebyId(id);
