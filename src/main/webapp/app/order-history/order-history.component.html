@@ -1,13 +1,13 @@
 <h1>Orders hitory</h1>
-<mat-accordion class="example-headers-align" multi>
-  <mat-expansion-panel *ngFor="let order of orders">
+<mat-accordion class="headers-align" multi>
+  <mat-expansion-panel class="expansionBox" *ngFor="let order of orders">
     <mat-expansion-panel-header>
-      <mat-panel-title class="exampleAlign">
+      <mat-panel-title class="alignment">
         Order purchased on {{ order.purchaseDate ? order.purchaseDate.format('DD/MM/YYYY') : 'N/A' }}
       </mat-panel-title>
       <mat-panel-description>
-        Total price :
-        <div class="exampleAlign">Commande Number : {{ order.id }}</div>
+        Total price : {{ order.purchasePrice | currency: 'EUR' }}
+        <div class="alignment">Commande Number : {{ order.id }}</div>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="container-fluid">
@@ -49,3 +49,15 @@
     </div>
   </mat-expansion-panel>
 </mat-accordion>
+<div fxLayout="row" fxLayoutAlign="end" class="loadBox" *ngIf="!isLastPage">
+  <button mat-flat-button color="accent" (click)="loadNewPage()">Load More</button>
+</div>
+
+<div fxLayout="column" fxLayoutAlign="center center" class="emptyOrders" *ngIf="orders.length < 1">
+  <h3>No Orders Yet !</h3>
+  <button mat-flat-button color="accent" routerLink="/">Shop Here</button>
+</div>
+
+<div class="spinner" *ngIf="loadingPages">
+  <mat-spinner> </mat-spinner>
+</div>

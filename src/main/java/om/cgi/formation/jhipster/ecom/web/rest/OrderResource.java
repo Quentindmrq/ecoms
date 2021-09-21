@@ -163,12 +163,12 @@ public class OrderResource {
      */
     @GetMapping("/orders")
     public Page<Order> getAllOrders(
-        @RequestParam(required = false, value = "page", defaultValue = "1") int page,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page,
         @RequestParam(required = false, value = "size", defaultValue = "5") int size
     ) {
         log.debug("REST request to get all Orders");
         Pageable pageRequested;
-        pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size));
+        pageRequested = PageRequest.of(Math.toIntExact(page), Math.toIntExact(size));
         Optional<User> usr = userService.getUserWithAuthorities();
         if (usr.isEmpty()) {
             throw new BadRequestAlertException("Invalid login", ENTITY_NAME, "logininvalid");

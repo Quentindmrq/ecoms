@@ -75,6 +75,10 @@ export class ProductListComponent implements OnChanges {
     }
   }
 
+  get isLastPage(): boolean {
+    return this.pageInfo?.last ?? false;
+  }
+
   private get request(): Record<string, unknown> {
     const newReq: Record<string, unknown> = { ...this.req, page: this.page, game: this.game, type: this.productType };
     return newReq;
