@@ -235,8 +235,6 @@ public class StockResource {
                 order.setOwner(null);
                 orderRepository.deleteById(order.getId());
                 it.remove();
-                //orderRepository.saveAndFlush(order);
-
             }
         }
     }

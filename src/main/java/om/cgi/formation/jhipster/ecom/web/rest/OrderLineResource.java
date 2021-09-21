@@ -87,6 +87,10 @@ public class OrderLineResource {
 
         Optional<Product> product = productRepository.findById(orderLine.getProduct().getId());
 
+        if (product.isEmpty()) {
+            throw new BadRequestAlertException("product doesnt exists", ENTITY_NAME, "productinvalid");
+        }
+
         Stock stock = product.get().getStock();
 
         //if there isn't enough stock the request wont go throught
@@ -179,6 +183,10 @@ public class OrderLineResource {
         }
 
         Optional<Product> product = productRepository.findById(result.get().getProduct().getId());
+
+        if (product.isEmpty()) {
+            throw new BadRequestAlertException("product doesnt exists", ENTITY_NAME, "productinvalid");
+        }
 
         Stock stock = product.get().getStock();
 

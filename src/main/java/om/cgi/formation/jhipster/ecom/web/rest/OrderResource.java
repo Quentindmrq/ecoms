@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import om.cgi.formation.jhipster.ecom.domain.Authority;
 import om.cgi.formation.jhipster.ecom.domain.Order;
 import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
@@ -16,6 +17,9 @@ import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -158,14 +162,29 @@ public class OrderResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("/orders")
-    public List<Order> getAllOrders() {
+    public Page<Order> getAllOrders(
+        @RequestParam(required = false, value = "page", defaultValue = "1") int page,
+        @RequestParam(required = false, value = "size", defaultValue = "5") int size
+    ) {
         log.debug("REST request to get all Orders");
-        List<String> auth = userService.getAuthorities();
-        if (auth.contains(AuthoritiesConstants.ADMIN)) {
-            return orderRepository.findAll();
+        Pageable pageRequested;
+        pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size));
+        Optional<User> usr = userService.getUserWithAuthorities();
+        if (usr.isEmpty()) {
+            throw new BadRequestAlertException("Invalid login", ENTITY_NAME, "logininvalid");
         }
-        if (auth.contains(AuthoritiesConstants.USER)) {
-            return orderRepository.findByOwnerIsCurrentUser();
+        System.err.println("AUTORITIES" + usr.get().getAuthorities());
+        String auths = "";
+        for (Authority auth : usr.get().getAuthorities()) {
+            auths += auth.getName();
+        }
+        if (auths.contains(AuthoritiesConstants.ADMIN)) {
+            System.err.println("PAS BIEN DU TOUT §§§§" + usr.get().getLogin());
+            return orderRepository.findAll(pageRequested);
+        }
+        if (auths.contains(AuthoritiesConstants.USER)) {
+            System.err.println("LOGIN TEST" + usr.get().getLogin());
+            return orderRepository.findByOwnerIsCurrentUser(pageRequested);
         }
 
         return null;
