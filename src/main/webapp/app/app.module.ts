@@ -28,6 +28,7 @@ import { FooterComponent } from './layouts/footer/footer.component';
 import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @NgModule({
   imports: [
@@ -60,7 +61,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     httpInterceptorProviders,
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, ActiveMenuDirective, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, ActiveMenuDirective, FooterComponent, DeleteDialogComponent],
   bootstrap: [MainComponent],
 })
 export class AppModule {
