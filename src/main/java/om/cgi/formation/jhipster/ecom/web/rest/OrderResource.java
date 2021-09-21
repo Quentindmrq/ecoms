@@ -173,17 +173,17 @@ public class OrderResource {
         if (usr.isEmpty()) {
             throw new BadRequestAlertException("Invalid login", ENTITY_NAME, "logininvalid");
         }
-        System.err.println("AUTORITIES" + usr.get().getAuthorities());
-        String auths = "";
+
+        StringBuilder bld = new StringBuilder();
         for (Authority auth : usr.get().getAuthorities()) {
-            auths += auth.getName();
+            bld.append(auth.getName());
         }
+
+        String auths = bld.toString();
         if (auths.contains(AuthoritiesConstants.ADMIN)) {
-            System.err.println("PAS BIEN DU TOUT §§§§" + usr.get().getLogin());
             return orderRepository.findAll(pageRequested);
         }
         if (auths.contains(AuthoritiesConstants.USER)) {
-            System.err.println("LOGIN TEST" + usr.get().getLogin());
             return orderRepository.findByOwnerIsCurrentUser(pageRequested);
         }
 
