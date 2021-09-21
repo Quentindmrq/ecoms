@@ -1,0 +1,61 @@
+<mat-card>
+  <mat-card-title>
+    <h1>Your cart {{ login }}:</h1>
+  </mat-card-title>
+  <mat-card-content>
+    <!-- Vérifie si le panier est vide, si oui -> emptyCartBlock, sinon affiche le panier -->
+    <div class="container-fluid" *ngIf="orderLines.length > 0; else emptyCartBlock">
+      <mat-card class="cartItem" *ngFor="let item of orderLines">
+        <mat-card-title routerLink="/product/{{ item.product?.id }}">
+          <a>{{ item.product?.name }}</a>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="container-fluid row">
+            <img src="{{ item.product?.logo }}" alt="Logo {{ item.product?.name }}" routerLink="/product/{{ item.product?.id }}" />
+            <div class="col-md-7">
+              <p>{{ item.product?.description }}</p>
+              <div>
+                <button mat-icon-button color="accent" [disabled]="item.quantity === 1" (click)="removeOneFromCart(item)">
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+                {{ item.quantity }}
+                <button
+                  mat-icon-button
+                  color="accent"
+                  [disabled]="item.quantity! >= productStock(item.product?.id!)"
+                  (click)="addToCart(item)"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+                <button mat-stroked-button color="warn" (click)="openDeleteDialog(item.product!)">Delete</button>
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <p>{{ getPrice(item) | currency: 'EUR' }}</p>
+              <button mat-stroked-button color="accent" routerLink="/product/{{ item.product!.id }}">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card-actions>
+        <div class="container-fluid">
+          <div class="row buttonBox">
+            <p>Total Price : {{ totalPrice | currency: 'EUR' }}</p>
+          </div>
+          <div class="row buttonBox">
+            <button mat-stroked-button style="margin-right: 5px" color="accent" (click)="discard()">Discard</button>
+            <button mat-flat-button color="accent" (click)="validate()">Validate</button>
+          </div>
+        </div>
+      </mat-card-actions>
+    </div>
+
+    <ng-template #emptyCartBlock>
+      <h3>Your cart is empty !</h3>
+    </ng-template>
+  </mat-card-content>
+</mat-card>

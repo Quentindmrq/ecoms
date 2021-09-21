@@ -142,6 +142,18 @@ public class ProductResource {
                     if (product.getProductType() != null) {
                         existingProduct.setProductType(product.getProductType());
                     }
+                    if (product.getRegion() != null) {
+                        existingProduct.setRegion(product.getRegion());
+                    }
+                    if (product.getAccountLevel() != null) {
+                        existingProduct.setAccountLevel(product.getAccountLevel());
+                    }
+                    if (product.getAccountRank() != null) {
+                        existingProduct.setAccountRank(product.getAccountRank());
+                    }
+                    if (product.getTargetRank() != null) {
+                        existingProduct.setTargetRank(product.getTargetRank());
+                    }
 
                     return existingProduct;
                 }

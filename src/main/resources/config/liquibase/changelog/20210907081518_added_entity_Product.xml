@@ -32,6 +32,18 @@
             <column name="product_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="region" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="account_level" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="account_rank" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="target_rank" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
@@ -58,6 +70,10 @@
             <column name="price" type="numeric"/>
             <column name="game" type="string"/>
             <column name="product_type" type="string"/>
+            <column name="region" type="string"/>
+            <column name="account_level" type="numeric"/>
+            <column name="account_rank" type="string"/>
+            <column name="target_rank" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

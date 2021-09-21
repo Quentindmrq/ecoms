@@ -26,6 +26,25 @@
       "fieldName": "productType",
       "fieldType": "ProductType",
       "fieldValues": "GAME_ACCOUNT,BOOSTING,COACHING,INTING"
+    },
+    {
+      "fieldName": "region",
+      "fieldType": "Region",
+      "fieldValues": "EUW,NA,KR,EUNE,OCE,JP"
+    },
+    {
+      "fieldName": "accountLevel",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "accountRank",
+      "fieldType": "Rank",
+      "fieldValues": "IRON,BRONZE,SILVER,GOLD,PLATINUM,DIAMOND,MASTER,CHALLENGER"
+    },
+    {
+      "fieldName": "targetRank",
+      "fieldType": "Rank",
+      "fieldValues": "IRON,BRONZE,SILVER,GOLD,PLATINUM,DIAMOND,MASTER,CHALLENGER"
     }
   ],
   "relationships": [

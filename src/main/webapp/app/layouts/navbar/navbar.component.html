@@ -1,256 +1,315 @@
-<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
-  <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
-    <span class="logo-img"></span>
-    <span jhiTranslate="global.title" class="navbar-title">Servicesenligne</span>
-    <span class="navbar-version">{{ version }}</span>
-  </a>
-  <a
-    class="navbar-toggler d-lg-none"
-    href="javascript:void(0);"
-    data-toggle="collapse"
-    data-target="#navbarResponsive"
-    aria-controls="navbarResponsive"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-    (click)="toggleNavbar()"
+<mat-toolbar fxLayout="row" data-cy="navbar" color="primary" [ngSwitch]="account !== null">
+  <div routerLink="/" (click)="collapseNavbar()">
+    <h1>UberElo</h1>
+  </div>
+
+  <div [fxShow]="true" [fxShow.sm]="true" [fxShow.xs]="false">
+    <button mat-button [matMenuTriggerFor]="gamesMenu" routerLinkActive="activeButton">
+      <span jhiTranslate="servicesenligneApp.gameTitle">Games</span>
+    </button>
+    <mat-menu #gamesMenu="matMenu">
+      <button
+        *ngFor="let game of games | keyvalue"
+        mat-menu-item
+        [routerLink]="['/game', game.key.toLowerCase()]"
+        routerLinkActive="activeButton"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span jhiTranslate="servicesenligneApp.Game.{{ game.key }}">{{ game.key }}</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <span class="example-spacer"></span>
+
+  <button mat-icon-button routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }" routerLink="/cart">
+    <mat-icon matBadge="{{ cartItemsNumber }}" matBadgeColor="accent">shopping_cart</mat-icon>
+  </button>
+
+  <button
+    mat-button
+    *jhiHasAnyAuthority="'ROLE_USER'"
+    routerLinkActive="activeButton"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLink="/order-history"
   >
-    <fa-icon icon="bars"></fa-icon>
-  </a>
-  <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
-          <span>
-            <fa-icon icon="home"></fa-icon>
-            <span jhiTranslate="global.menu.home">Home</span>
-          </span>
-        </a>
-      </li>
-      <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
-      <li
+    <span jhiTranslate="global.menu.entities.orderHistory">Order History</span>
+  </button>
+
+  <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">
+    <button mat-button [matMenuTriggerFor]="entitiesMenu" routerLinkActive="activeButton">
+      <span jhiTranslate="global.menu.entities.main">Entities</span>
+    </button>
+    <mat-menu #entitiesMenu="matMenu">
+      <button mat-menu-item routerLink="product" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.entities.product">Product</span>
+      </button>
+      <button mat-menu-item routerLink="stock" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.entities.stock">Stock</span>
+      </button>
+      <button mat-menu-item routerLink="contact-details" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.entities.contactDetails">Contact Details</span>
+      </button>
+      <button mat-menu-item routerLink="order" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.entities.order">Order</span>
+      </button>
+      <button mat-menu-item routerLink="order-line" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.entities.orderLine">Order Line</span>
+      </button>
+      <button mat-menu-item routerLink="address" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.entities.address">Address</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">
+    <button mat-button [matMenuTriggerFor]="adminMenu" routerLinkActive="activeButton">
+      <span>
+        <span jhiTranslate="global.menu.admin.main">Administration</span>
+      </span>
+    </button>
+    <mat-menu #adminMenu="matMenu">
+      <button mat-menu-item routerLink="admin/user-management" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.admin.userManagement">User management</span>
+      </button>
+      <button mat-menu-item routerLink="admin/metrics" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
+      </button>
+      <button mat-menu-item routerLink="admin/health" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.admin.health">Health</span>
+      </button>
+      <button mat-menu-item routerLink="admin/configuration" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.admin.configuration">Configuration</span>
+      </button>
+      <button mat-menu-item routerLink="admin/logs" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+        <span jhiTranslate="global.menu.admin.logs">Logs</span>
+      </button>
+      <button
+        *ngIf="openAPIEnabled"
+        mat-menu-item
+        routerLink="admin/docs"
+        routerLinkActive="activeButton"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span jhiTranslate="global.menu.admin.apidocs">API</span>
+      </button>
+      <a *ngIf="!inProduction" mat-menu-item target="_tab" href="./h2-console/">
+        <span jhiTranslate="global.menu.admin.database">Database</span>
+      </a>
+    </mat-menu>
+  </div>
+
+  <div *ngIf="languages && languages.length > 1" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">
+    <!-- *ngIf="account !== null"> -->
+    <button mat-button [matMenuTriggerFor]="languageMenu">
+      <span>
+        <span jhiTranslate="global.menu.language">Language</span>
+      </span>
+    </button>
+    <mat-menu #languageMenu="matMenu">
+      <button *ngFor="let language of languages" mat-menu-item (click)="changeLanguage(language)">
+        {{ language | findLanguageFromKey }}
+      </button>
+    </mat-menu>
+  </div>
+
+  <div [fxShow]="true" [fxShow.sm]="true" [fxShow.xs]="false">
+    <button mat-button [matMenuTriggerFor]="accountMenu" data-cy="accountMenu">
+      <span *ngIf="!account?.imageUrl">
+        <span jhiTranslate="global.menu.account.main">Account</span>
+      </span>
+      <span *ngIf="account?.imageUrl">
+        <img [src]="account!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
+      </span>
+    </button>
+    <mat-menu #accountMenu="matMenu">
+      <button
+        mat-menu-item
         *ngSwitchCase="true"
-        ngbDropdown
-        class="nav-item dropdown pointer"
-        display="dynamic"
-        routerLinkActive="active"
+        routerLink="account/settings"
+        routerLinkActive="activeButton"
         [routerLinkActiveOptions]="{ exact: true }"
+        data-cy="settings"
       >
-        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu" data-cy="entity">
-          <span>
-            <fa-icon icon="th-list"></fa-icon>
-            <span jhiTranslate="global.menu.entities.main">Entities</span>
-          </span>
-        </a>
-        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
-          <li>
-            <a
-              class="dropdown-item"
-              routerLink="product"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              (click)="collapseNavbar()"
-            >
-              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.entities.product">Product</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="dropdown-item"
-              routerLink="stock"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              (click)="collapseNavbar()"
-            >
-              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.entities.stock">Stock</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="dropdown-item"
-              routerLink="contact-details"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              (click)="collapseNavbar()"
-            >
-              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.entities.contactDetails">Contact Details</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="dropdown-item"
-              routerLink="address"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              (click)="collapseNavbar()"
-            >
-              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.entities.address">Address</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="dropdown-item"
-              routerLink="order"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              (click)="collapseNavbar()"
-            >
-              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.entities.order">Order</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="dropdown-item"
-              routerLink="order-line"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              (click)="collapseNavbar()"
-            >
-              <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.entities.orderLine">Order Line</span>
-            </a>
-          </li>
-          <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
-        </ul>
-      </li>
-      <li
-        *jhiHasAnyAuthority="'ROLE_ADMIN'"
-        ngbDropdown
-        class="nav-item dropdown pointer"
-        display="dynamic"
-        routerLinkActive="active"
+        <span jhiTranslate="global.menu.account.settings">Settings</span>
+      </button>
+      <button
+        mat-menu-item
+        *ngSwitchCase="true"
+        routerLink="account/password"
+        routerLinkActive="activeButton"
         [routerLinkActiveOptions]="{ exact: true }"
+        data-cy="passwordItem"
       >
-        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu" data-cy="adminMenu">
-          <span>
-            <fa-icon icon="users-cog"></fa-icon>
-            <span jhiTranslate="global.menu.admin.main">Administration</span>
-          </span>
-        </a>
-        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
-          <li>
-            <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">
-              <fa-icon icon="users" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.admin.userManagement">User management</span>
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" routerLink="admin/metrics" routerLinkActive="active" (click)="collapseNavbar()">
-              <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" routerLink="admin/health" routerLinkActive="active" (click)="collapseNavbar()">
-              <fa-icon icon="heart" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.admin.health">Health</span>
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" routerLink="admin/configuration" routerLinkActive="active" (click)="collapseNavbar()">
-              <fa-icon icon="cogs" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.admin.configuration">Configuration</span>
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" routerLink="admin/logs" routerLinkActive="active" (click)="collapseNavbar()">
-              <fa-icon icon="tasks" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.admin.logs">Logs</span>
-            </a>
-          </li>
-          <li *ngIf="openAPIEnabled">
-            <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
-              <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.admin.apidocs">API</span>
-            </a>
-          </li>
-          <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
-          <li *ngIf="!inProduction">
-            <a class="dropdown-item" href="./h2-console/" target="_tab" (click)="collapseNavbar()">
-              <fa-icon icon="database" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.admin.database">Database</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" *ngIf="languages && languages.length > 1">
-        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="languagesnavBarDropdown">
-          <span>
-            <fa-icon icon="flag"></fa-icon>
-            <span jhiTranslate="global.menu.language">Language</span>
-          </span>
-        </a>
-        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="languagesnavBarDropdown">
-          <li *ngFor="let language of languages">
-            <a
-              class="dropdown-item"
-              [jhiActiveMenu]="language"
-              href="javascript:void(0);"
-              (click)="changeLanguage(language); collapseNavbar()"
-              >{{ language | findLanguageFromKey }}</a
-            >
-          </li>
-        </ul>
-      </li>
-      <li
-        ngbDropdown
-        class="nav-item dropdown pointer"
-        display="dynamic"
-        routerLinkActive="active"
+        <span jhiTranslate="global.menu.account.password">Password</span>
+      </button>
+      <button mat-menu-item *ngSwitchCase="true" (click)="logout()" id="logout" data-cy="logout">
+        <span jhiTranslate="global.menu.account.logout">Sign out</span>
+      </button>
+      <button mat-menu-item *ngSwitchCase="false" (click)="login()" id="login" data-cy="login">
+        <span jhiTranslate="global.menu.account.login">Sign in</span>
+      </button>
+      <button
+        mat-menu-item
+        *ngSwitchCase="false"
+        routerLink="account/register"
+        routerLinkActive="activeButton"
         [routerLinkActiveOptions]="{ exact: true }"
+        data-cy="register"
       >
-        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu" data-cy="accountMenu">
+        <span jhiTranslate="global.menu.account.register">Register</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <!-- Resposive part -->
+  <div>
+    <button mat-icon-button [matMenuTriggerFor]="responsiveMenu" fxHide fxShow.sm fxShow.xs>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #responsiveMenu="matMenu">
+      <div>
+        <button
+          mat-menu-item
+          [matMenuTriggerFor]="accountMenu"
+          data-cy="accountMenu"
+          [fxShow]="false"
+          [fxShow.sm]="false"
+          [fxShow.xs]="true"
+        >
           <span *ngIf="!account?.imageUrl">
-            <fa-icon icon="user"></fa-icon>
             <span jhiTranslate="global.menu.account.main">Account</span>
           </span>
           <span *ngIf="account?.imageUrl">
             <img [src]="account!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
           </span>
-        </a>
-        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
-          <li *ngSwitchCase="true">
-            <a class="dropdown-item" routerLink="account/settings" routerLinkActive="active" (click)="collapseNavbar()" data-cy="settings">
-              <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.account.settings">Settings</span>
-            </a>
-          </li>
-          <li *ngSwitchCase="true">
-            <a
-              class="dropdown-item"
-              routerLink="account/password"
-              routerLinkActive="active"
-              (click)="collapseNavbar()"
-              data-cy="passwordItem"
-            >
-              <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.account.password">Password</span>
-            </a>
-          </li>
-          <li *ngSwitchCase="true">
-            <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
-              <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.account.logout">Sign out</span>
-            </a>
-          </li>
-          <li *ngSwitchCase="false">
-            <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
-              <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.account.login">Sign in</span>
-            </a>
-          </li>
-          <li *ngSwitchCase="false">
-            <a class="dropdown-item" routerLink="account/register" routerLinkActive="active" (click)="collapseNavbar()" data-cy="register">
-              <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
-              <span jhiTranslate="global.menu.account.register">Register</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
+        </button>
+        <mat-menu #accountMenu="matMenu">
+          <button
+            mat-menu-item
+            *ngSwitchCase="true"
+            routerLink="account/settings"
+            routerLinkActive="activeButton"
+            [routerLinkActiveOptions]="{ exact: true }"
+            data-cy="settings"
+          >
+            <span jhiTranslate="global.menu.account.settings">Settings</span>
+          </button>
+          <button
+            mat-menu-item
+            *ngSwitchCase="true"
+            routerLink="account/password"
+            routerLinkActive="activeButton"
+            [routerLinkActiveOptions]="{ exact: true }"
+            data-cy="passwordItem"
+          >
+            <span jhiTranslate="global.menu.account.password">Password</span>
+          </button>
+          <button mat-menu-item *ngSwitchCase="true" (click)="logout()" id="logout" data-cy="logout">
+            <span jhiTranslate="global.menu.account.logout">Sign out</span>
+          </button>
+          <button mat-menu-item *ngSwitchCase="false" (click)="login()" id="login" data-cy="login">
+            <span jhiTranslate="global.menu.account.login">Sign in</span>
+          </button>
+          <button
+            mat-menu-item
+            *ngSwitchCase="false"
+            routerLink="account/register"
+            routerLinkActive="activeButton"
+            [routerLinkActiveOptions]="{ exact: true }"
+            data-cy="register"
+          >
+            <span jhiTranslate="global.menu.account.register">Register</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="false" [fxShow.sm]="true" [fxShow.xs]="true">
+        <button mat-menu-item [matMenuTriggerFor]="adminMenu" routerLinkActive="activeButton">
+          <span>
+            <span jhiTranslate="global.menu.admin.main">Administration</span>
+          </span>
+        </button>
+        <mat-menu #adminMenu="matMenu">
+          <button
+            mat-menu-item
+            routerLink="admin/user-management"
+            routerLinkActive="activeButton"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span jhiTranslate="global.menu.admin.userManagement">User management</span>
+          </button>
+          <button mat-menu-item routerLink="admin/metrics" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
+          </button>
+          <button mat-menu-item routerLink="admin/health" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.admin.health">Health</span>
+          </button>
+          <button
+            mat-menu-item
+            routerLink="admin/configuration"
+            routerLinkActive="activeButton"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span jhiTranslate="global.menu.admin.configuration">Configuration</span>
+          </button>
+          <button mat-menu-item routerLink="admin/logs" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.admin.logs">Logs</span>
+          </button>
+          <button
+            *ngIf="openAPIEnabled"
+            mat-menu-item
+            routerLink="admin/docs"
+            routerLinkActive="activeButton"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span jhiTranslate="global.menu.admin.apidocs">API</span>
+          </button>
+          <a *ngIf="!inProduction" mat-menu-item target="_tab" href="./h2-console/">
+            <span jhiTranslate="global.menu.admin.database">Database</span>
+          </a>
+        </mat-menu>
+      </div>
+
+      <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="false" [fxShow.sm]="true" [fxShow.xs]="true">
+        <button mat-menu-item [matMenuTriggerFor]="entitiesMenu" routerLinkActive="activeButton">
+          <span jhiTranslate="global.menu.entities.main">Entities</span>
+        </button>
+        <mat-menu #entitiesMenu="matMenu">
+          <button mat-menu-item routerLink="product" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.entities.product">Product</span>
+          </button>
+          <button mat-menu-item routerLink="stock" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.entities.stock">Stock</span>
+          </button>
+          <button mat-menu-item routerLink="contact-details" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.entities.contactDetails">Contact Details</span>
+          </button>
+          <button mat-menu-item routerLink="order" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.entities.order">Order</span>
+          </button>
+          <button mat-menu-item routerLink="order-line" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.entities.orderLine">Order Line</span>
+          </button>
+          <button mat-menu-item routerLink="address" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
+            <span jhiTranslate="global.menu.entities.address">Address</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <div *ngIf="languages && languages.length > 1" [fxShow]="false" [fxShow.sm]="true" [fxShow.xs]="true">
+        <!-- *ngIf="account !== null"> -->
+        <button mat-menu-item [matMenuTriggerFor]="languageMenu">
+          <span>
+            <span jhiTranslate="global.menu.language">Language</span>
+          </span>
+        </button>
+        <mat-menu #languageMenu="matMenu">
+          <button *ngFor="let language of languages" mat-menu-item (click)="changeLanguage(language)">
+            {{ language | findLanguageFromKey }}
+          </button>
+        </mat-menu>
+      </div>
+    </mat-menu>
   </div>
-</nav>
+</mat-toolbar>

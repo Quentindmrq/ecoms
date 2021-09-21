@@ -2,17 +2,24 @@ package om.cgi.formation.jhipster.ecom.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import om.cgi.formation.jhipster.ecom.domain.Authority;
 import om.cgi.formation.jhipster.ecom.domain.Order;
+import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
+import om.cgi.formation.jhipster.ecom.repository.UserRepository;
 import om.cgi.formation.jhipster.ecom.security.AuthoritiesConstants;
 import om.cgi.formation.jhipster.ecom.service.UserService;
 import om.cgi.formation.jhipster.ecom.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +45,12 @@ public class OrderResource {
 
     private final UserService userService;
 
-    public OrderResource(OrderRepository orderRepository, UserService userService) {
+    private final UserRepository userRepository;
+
+    public OrderResource(OrderRepository orderRepository, UserService userService, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -48,15 +58,32 @@ public class OrderResource {
      *
      * @param order the order to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new order, or with status {@code 400 (Bad Request)} if the order has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws Exception
      */
     @PostMapping("/orders")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) throws URISyntaxException {
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) throws Exception {
         log.debug("REST request to save Order : {}", order);
         if (order.getId() != null) {
             throw new BadRequestAlertException("A new order cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Order result = orderRepository.save(order);
+
+        Optional<User> optUser = this.userRepository.findOneByLogin(order.getOwner().getLogin());
+        if (optUser.isPresent()) {
+            order.setOwner(optUser.get());
+            optUser.get().getorders().add(order);
+        } else {
+            throw new Exception("Unknown user.");
+        }
+
+        Optional<Order> oldcart = orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse();
+
+        if (oldcart.isPresent()) {
+            deleteOrder(oldcart.get().getId());
+        }
+
+        order.setPurchaseDate(ZonedDateTime.now());
+
+        Order result = orderRepository.saveAndFlush(order);
         return ResponseEntity
             .created(new URI("/api/orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -107,7 +134,7 @@ public class OrderResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/orders/{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<Order> partialUpdateOrder(@PathVariable(value = "id", required = false) final Long id, @RequestBody Order order)
+    public ResponseEntity<Order> partialUpdateOrder(@PathVariable(value = "id", required = true) final Long id, @RequestBody Order order)
         throws URISyntaxException {
         log.debug("REST request to partial update Order partially : {}, {}", id, order);
         if (order.getId() == null) {
@@ -121,18 +148,7 @@ public class OrderResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Order> result = orderRepository
-            .findById(order.getId())
-            .map(
-                existingOrder -> {
-                    if (order.getPurchaseDate() != null) {
-                        existingOrder.setPurchaseDate(order.getPurchaseDate());
-                    }
-
-                    return existingOrder;
-                }
-            )
-            .map(orderRepository::save);
+        Optional<Order> result = orderRepository.findById(order.getId());
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -146,14 +162,29 @@ public class OrderResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("/orders")
-    public List<Order> getAllOrders() {
+    public Page<Order> getAllOrders(
+        @RequestParam(required = false, value = "page", defaultValue = "1") int page,
+        @RequestParam(required = false, value = "size", defaultValue = "5") int size
+    ) {
         log.debug("REST request to get all Orders");
-        List<String> auth = userService.getAuthorities();
-        if (auth.contains(AuthoritiesConstants.ADMIN)) {
-            return orderRepository.findAll();
+        Pageable pageRequested;
+        pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size));
+        Optional<User> usr = userService.getUserWithAuthorities();
+        if (usr.isEmpty()) {
+            throw new BadRequestAlertException("Invalid login", ENTITY_NAME, "logininvalid");
         }
-        if (auth.contains(AuthoritiesConstants.USER)) {
-            return orderRepository.findByOwnerIsCurrentUser();
+
+        StringBuilder bld = new StringBuilder();
+        for (Authority auth : usr.get().getAuthorities()) {
+            bld.append(auth.getName());
+        }
+
+        String auths = bld.toString();
+        if (auths.contains(AuthoritiesConstants.ADMIN)) {
+            return orderRepository.findAll(pageRequested);
+        }
+        if (auths.contains(AuthoritiesConstants.USER)) {
+            return orderRepository.findByOwnerIsCurrentUser(pageRequested);
         }
 
         return null;
@@ -186,6 +217,14 @@ public class OrderResource {
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         log.debug("REST request to delete Order : {}", id);
+        Optional<Order> order = orderRepository.findById(id);
+
+        if (order.isEmpty()) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+        order.get().setOwner(null);
+        orderRepository.saveAndFlush(order.get());
+
         orderRepository.deleteById(id);
         return ResponseEntity
             .noContent()

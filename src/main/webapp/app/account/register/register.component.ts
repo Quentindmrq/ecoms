@@ -5,6 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/config/error.constants';
 import { RegisterService } from './register.service';
+import { LoginService } from 'app/login/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-register',
@@ -19,6 +21,7 @@ export class RegisterComponent implements AfterViewInit {
   errorEmailExists = false;
   errorUserExists = false;
   success = false;
+  authenticationError = false;
 
   registerForm = this.fb.group({
     login: [
@@ -35,7 +38,13 @@ export class RegisterComponent implements AfterViewInit {
     confirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
   });
 
-  constructor(private translateService: TranslateService, private registerService: RegisterService, private fb: FormBuilder) {}
+  constructor(
+    private translateService: TranslateService,
+    private registerService: RegisterService,
+    private loginService: LoginService,
+    private router: Router,
+    private fb: FormBuilder
+  ) {}
 
   ngAfterViewInit(): void {
     if (this.login) {
@@ -56,7 +65,10 @@ export class RegisterComponent implements AfterViewInit {
       const login = this.registerForm.get(['login'])!.value;
       const email = this.registerForm.get(['email'])!.value;
       this.registerService.save({ login, email, password, langKey: this.translateService.currentLang }).subscribe(
-        () => (this.success = true),
+        () => {
+          this.success = true;
+          this.loginOnSucess(login as string, password as string);
+        },
         response => this.processError(response)
       );
     }
@@ -70,5 +82,24 @@ export class RegisterComponent implements AfterViewInit {
     } else {
       this.error = true;
     }
+  }
+
+  private loginOnSucess(username: string, password: string): void {
+    this.loginService
+      .login({
+        username,
+        password,
+        rememberMe: false,
+      })
+      .subscribe(
+        () => {
+          this.authenticationError = false;
+          if (!this.router.getCurrentNavigation()) {
+            // There were no routing during login (eg from navigationToStoredUrl)
+            this.router.navigate(['']);
+          }
+        },
+        () => (this.authenticationError = true)
+      );
   }
 }

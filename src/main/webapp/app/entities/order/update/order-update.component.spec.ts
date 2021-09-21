@@ -9,8 +9,8 @@ import { of, Subject } from 'rxjs';
 
 import { OrderService } from '../service/order.service';
 import { IOrder, Order } from '../order.model';
-import { IContactDetails } from 'app/entities/contact-details/contact-details.model';
-import { ContactDetailsService } from 'app/entities/contact-details/service/contact-details.service';
+import { IAddress } from 'app/entities/address/address.model';
+import { AddressService } from 'app/entities/address/service/address.service';
 
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
@@ -23,8 +23,8 @@ describe('Component Tests', () => {
     let fixture: ComponentFixture<OrderUpdateComponent>;
     let activatedRoute: ActivatedRoute;
     let orderService: OrderService;
-    let contactDetailsService: ContactDetailsService;
     let userService: UserService;
+    let addressService: AddressService;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -38,33 +38,30 @@ describe('Component Tests', () => {
       fixture = TestBed.createComponent(OrderUpdateComponent);
       activatedRoute = TestBed.inject(ActivatedRoute);
       orderService = TestBed.inject(OrderService);
-      contactDetailsService = TestBed.inject(ContactDetailsService);
       userService = TestBed.inject(UserService);
+      addressService = TestBed.inject(AddressService);
 
       comp = fixture.componentInstance;
     });
 
     describe('ngOnInit', () => {
-      it('Should call ContactDetails query and add missing value', () => {
+      it('Should call Address query and add missing value', () => {
         const order: IOrder = { id: 456 };
-        const contactDetails: IContactDetails = { id: 58291 };
-        order.contactDetails = contactDetails;
+        const billingAddress: IAddress = { id: 83914 };
+        order.billingAddress = billingAddress;
 
-        const contactDetailsCollection: IContactDetails[] = [{ id: 78361 }];
-        jest.spyOn(contactDetailsService, 'query').mockReturnValue(of(new HttpResponse({ body: contactDetailsCollection })));
-        const additionalContactDetails = [contactDetails];
-        const expectedCollection: IContactDetails[] = [...additionalContactDetails, ...contactDetailsCollection];
-        jest.spyOn(contactDetailsService, 'addContactDetailsToCollectionIfMissing').mockReturnValue(expectedCollection);
+        const addressCollection: IAddress[] = [{ id: 94326 }];
+        jest.spyOn(addressService, 'query').mockReturnValue(of(new HttpResponse({ body: addressCollection })));
+        const additionalAddresses = [billingAddress];
+        const expectedCollection: IAddress[] = [...additionalAddresses, ...addressCollection];
+        jest.spyOn(addressService, 'addAddressToCollectionIfMissing').mockReturnValue(expectedCollection);
 
         activatedRoute.data = of({ order });
         comp.ngOnInit();
 
-        expect(contactDetailsService.query).toHaveBeenCalled();
-        expect(contactDetailsService.addContactDetailsToCollectionIfMissing).toHaveBeenCalledWith(
-          contactDetailsCollection,
-          ...additionalContactDetails
-        );
-        expect(comp.contactDetailsSharedCollection).toEqual(expectedCollection);
+        expect(addressService.query).toHaveBeenCalled();
+        expect(addressService.addAddressToCollectionIfMissing).toHaveBeenCalledWith(addressCollection, ...additionalAddresses);
+        expect(comp.addressesSharedCollection).toEqual(expectedCollection);
       });
 
       it('Should call User query and add missing value', () => {
@@ -88,17 +85,17 @@ describe('Component Tests', () => {
 
       it('Should update editForm', () => {
         const order: IOrder = { id: 456 };
-        const contactDetails: IContactDetails = { id: 68701 };
-        order.contactDetails = contactDetails;
         const owner: IUser = { id: 60405 };
         order.owner = owner;
+        const billingAddress: IAddress = { id: 39703 };
+        order.billingAddress = billingAddress;
 
         activatedRoute.data = of({ order });
         comp.ngOnInit();
 
         expect(comp.editForm.value).toEqual(expect.objectContaining(order));
-        expect(comp.contactDetailsSharedCollection).toContain(contactDetails);
         expect(comp.usersSharedCollection).toContain(owner);
+        expect(comp.addressesSharedCollection).toContain(billingAddress);
       });
     });
 
@@ -167,10 +164,10 @@ describe('Component Tests', () => {
     });
 
     describe('Tracking relationships identifiers', () => {
-      describe('trackContactDetailsById', () => {
-        it('Should return tracked ContactDetails primary key', () => {
+      describe('trackAddressById', () => {
+        it('Should return tracked Address primary key', () => {
           const entity = { id: 123 };
-          const trackResult = comp.trackContactDetailsById(0, entity);
+          const trackResult = comp.trackAddressById(0, entity);
           expect(trackResult).toEqual(entity.id);
         });
       });

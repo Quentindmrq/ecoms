@@ -1,0 +1,33 @@
+.productCard {
+  width: 300px;
+}
+
+.contentBox {
+  width: 100%;
+}
+
+/* (A) SQUARE CONTAINER */
+.cropA {
+  position: relative;
+  width: 300px;
+  height: 200px;
+}
+/* (B) IMAGE */
+.cropA img {
+  /* (B1) POSITION IMAGE */
+  position: absolute;
+
+  /* (B2) CROP IMAGE */
+  /* ORIGINAL IMAGE IS 600 X 420 */
+  /* RECT(TOP, RIGHT, BOTTOM, LEFT) */
+  clip-path: polygon(0px 0px, 300px 0px, 300px 200px, 0px 200px);
+}
+.buttonBox {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}

@@ -14,6 +14,11 @@
         </div>
 
         <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.order.purchased" for="field_purchased">Purchased</label>
+          <input type="checkbox" class="form-check" name="purchased" id="field_purchased" data-cy="purchased" formControlName="purchased" />
+        </div>
+
+        <div class="form-group">
           <label class="form-control-label" jhiTranslate="servicesenligneApp.order.purchaseDate" for="field_purchaseDate"
             >Purchase Date</label
           >
@@ -31,26 +36,38 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" jhiTranslate="servicesenligneApp.order.contactDetails" for="field_contactDetails"
-            >Contact Details</label
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.order.purchasePrice" for="field_purchasePrice"
+            >Purchase Price</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="purchasePrice"
+            id="field_purchasePrice"
+            data-cy="purchasePrice"
+            formControlName="purchasePrice"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="servicesenligneApp.order.billingAddress" for="field_billingAddress"
+            >Billing Address</label
           >
           <select
             class="form-control"
-            id="field_contactDetails"
-            data-cy="contactDetails"
-            name="contactDetails"
-            formControlName="contactDetails"
+            id="field_billingAddress"
+            data-cy="billingAddress"
+            name="billingAddress"
+            formControlName="billingAddress"
           >
             <option [ngValue]="null"></option>
             <option
               [ngValue]="
-                contactDetailsOption.id === editForm.get('contactDetails')!.value?.id
-                  ? editForm.get('contactDetails')!.value
-                  : contactDetailsOption
+                addressOption.id === editForm.get('billingAddress')!.value?.id ? editForm.get('billingAddress')!.value : addressOption
               "
-              *ngFor="let contactDetailsOption of contactDetailsSharedCollection; trackBy: trackContactDetailsById"
+              *ngFor="let addressOption of addressesSharedCollection; trackBy: trackAddressById"
             >
-              {{ contactDetailsOption.id }}
+              {{ addressOption.id }}
             </option>
           </select>
         </div>

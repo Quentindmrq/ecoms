@@ -12,9 +12,15 @@ import { FormatMediumDatePipe } from './date/format-medium-date.pipe';
 import { SortByDirective } from './sort/sort-by.directive';
 import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
+import { ProductListComponent } from './product-list/product-list.component';
+import { JhMaterialModule } from './jhmaterial.module';
+import { SelectProductCategoriesComponent } from './select-product-categories/select-product-categories.component';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ProductItemComponent } from './product-item/product-item.component';
 
 @NgModule({
-  imports: [SharedLibsModule],
+  imports: [SharedLibsModule, JhMaterialModule, FlexLayoutModule],
   declarations: [
     FindLanguageFromKeyPipe,
     TranslateDirective,
@@ -27,6 +33,9 @@ import { ItemCountComponent } from './pagination/item-count.component';
     SortByDirective,
     SortDirective,
     ItemCountComponent,
+    ProductListComponent,
+    SelectProductCategoriesComponent,
+    ProductItemComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -41,6 +50,11 @@ import { ItemCountComponent } from './pagination/item-count.component';
     SortByDirective,
     SortDirective,
     ItemCountComponent,
+    ProductListComponent,
+    SelectProductCategoriesComponent,
+    JhMaterialModule,
+    FlexLayoutModule,
+    ProductItemComponent,
   ],
 })
 export class SharedModule {}

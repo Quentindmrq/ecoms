@@ -30,6 +30,29 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           path: 'login',
           loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
         },
+        {
+          path: 'cart',
+          loadChildren: () => import('./cart/cart.module').then(m => m.CartModule),
+        },
+        {
+          path: 'shopping-tunnel',
+          data: {
+            authorities: [Authority.USER],
+          },
+          canActivate: [UserRouteAccessService],
+          loadChildren: () => import('./shopping-tunnel/shopping-tunnel.module').then(m => m.ShoppingTunnelModule),
+        },
+        { path: 'product/:id', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) },
+        {
+          path: 'order-history',
+          data: {
+            authorities: [Authority.USER],
+          },
+          canActivate: [UserRouteAccessService],
+          loadChildren: () => import('./order-history/order-history.module').then(m => m.OrderHistoryModule),
+        },
+
+        { path: 'game/:game', loadChildren: () => import('./game/game.module').then(m => m.GameModule) },
         ...LAYOUT_ROUTES,
       ],
       { enableTracing: DEBUG_INFO_ENABLED }
