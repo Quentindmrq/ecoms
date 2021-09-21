@@ -38,14 +38,3 @@ jobs:
               npm run build --if-present
               npm run test
               mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Quentindmrq_ecoms -Dsonar.host.url=https://sonarcloud.io
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "ecoms2021mauqv2" #Must be unique in Heroku
-          heroku_email: "quentin.demarque@etu.univ-grenoble-alpes.fr"
-          region: "eu"
