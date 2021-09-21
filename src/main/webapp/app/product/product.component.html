@@ -14,7 +14,15 @@
       {{ stock?.product?.name }}
     </mat-card-title>
 
-    <mat-card-subtitle>{{ stock?.product?.productType }} - {{ stock?.product?.game }}</mat-card-subtitle>
+    <mat-card-subtitle fxLayout="row wrap">
+      <div jhiTranslate="servicesenligneApp.ProductType.{{ stock?.product?.productType ?? 'N/A' }}">
+        {{ stock?.product ?? 'N/A' }}
+      </div>
+      &nbsp; - &nbsp;
+      <div jhiTranslate="servicesenligneApp.Game.{{ stock?.product?.game ?? 'N/A' }}">
+        {{ stock?.product?.game ?? 'N/A' }}
+      </div>
+    </mat-card-subtitle>
   </mat-card-title-group>
 
   <mat-card-content>
@@ -26,15 +34,23 @@
     </div>
   </mat-card-content>
 
-  <mat-card-actions class="buttonBox">
-    <mat-form-field appearance="outline" *ngIf="productLeftInStock > 0">
-      <mat-select matNativeControl [(ngModel)]="numberOfItems">
-        <mat-option *ngFor="let i of stockArray" [value]="i">{{ i }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-card-actions fxLayout="row wrap" fxLayoutAlign="end center" fxLayoutGap="16px" class="buttonBox">
+    <ng-container>
+      <mat-form-field appearance="outline" *ngIf="productLeftInStock > 0">
+        <mat-select matNativeControl [(ngModel)]="numberOfItems">
+          <mat-option *ngFor="let i of stockArray" [value]="i">{{ i }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
     <button mat-flat-button color="accent" [disabled]="productLeftInStock <= 0" (click)="addToCart()">
-      <mat-icon>add_shopping_cart</mat-icon>
-      {{ stock?.product?.price | currency: 'EUR' }}
+      <ng-container *ngIf="productLeftInStock > 0">
+        <mat-icon>add_shopping_cart</mat-icon>
+        {{ stock?.product?.price | currency: 'EUR' }}
+      </ng-container>
+      <ng-container *ngIf="productLeftInStock <= 0">
+        <mat-icon>production_quantity_limits</mat-icon>
+        Out of stock
+      </ng-container>
     </button>
   </mat-card-actions>
 </mat-card>

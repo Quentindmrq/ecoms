@@ -1,15 +1,15 @@
-.buttonBox {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .spinner {
   display: flex;
   justify-content: center;
   margin-top: 25px;
 }
 
-.productCard {
-  margin: 0 auto;
-  width: 60%;
+mat-form-field {
+  max-width: 110px;
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .mat-form-field-wrapper {
+  margin: 0 !important;
+  padding: 0;
 }
