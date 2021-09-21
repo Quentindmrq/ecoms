@@ -56,7 +56,7 @@ public class StockResource {
 
     private static final String NO_ENTITY = "Entity not found";
 
-    private static final String INVALID_ID = INVALID_ID;
+    private static final String INVALID_ID = "id is not valid";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
