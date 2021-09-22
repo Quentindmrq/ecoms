@@ -20,7 +20,7 @@ export class OrderComponent implements OnInit {
   loadAll(): void {
     this.isLoading = true;
 
-    this.orderService.query().subscribe(
+    this.orderService.query({ size: 100 }).subscribe(
       (res: HttpResponse<PageableResponse<IOrder>>) => {
         this.isLoading = false;
         this.orders = res.body?.content ?? [];
