@@ -2,6 +2,7 @@
   "servicesenligneApp": {
     "Rank": {
       "null": "",
+      "UNRANKED": "UNRANKED",
       "IRON": "IRON",
       "BRONZE": "BRONZE",
       "SILVER": "SILVER",
