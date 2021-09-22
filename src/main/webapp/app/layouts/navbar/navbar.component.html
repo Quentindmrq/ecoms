@@ -2,10 +2,11 @@
   <div routerLink="/" (click)="collapseNavbar()">
     <h1>UberElo</h1>
   </div>
-
-  <div [fxShow]="true" [fxShow.sm]="true" [fxShow.xs]="false">
+  {{ hasUserAuthority }}
+  <div>
     <button mat-button [matMenuTriggerFor]="gamesMenu" routerLinkActive="activeButton">
       <span jhiTranslate="servicesenligneApp.gameTitle">Games</span>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <mat-menu #gamesMenu="matMenu">
       <button
@@ -32,6 +33,9 @@
     routerLinkActive="activeButton"
     [routerLinkActiveOptions]="{ exact: true }"
     routerLink="/order-history"
+    [fxShow]="true"
+    [fxShow.sm]="false"
+    [fxShow.xs]="false"
   >
     <span jhiTranslate="global.menu.entities.orderHistory">Order History</span>
   </button>
@@ -39,6 +43,7 @@
   <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">
     <button mat-button [matMenuTriggerFor]="entitiesMenu" routerLinkActive="activeButton">
       <span jhiTranslate="global.menu.entities.main">Entities</span>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <mat-menu #entitiesMenu="matMenu">
       <button mat-menu-item routerLink="product" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
@@ -64,9 +69,8 @@
 
   <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="true" [fxShow.sm]="false" [fxShow.xs]="false">
     <button mat-button [matMenuTriggerFor]="adminMenu" routerLinkActive="activeButton">
-      <span>
-        <span jhiTranslate="global.menu.admin.main">Administration</span>
-      </span>
+      <span jhiTranslate="global.menu.admin.main">Administration</span>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <mat-menu #adminMenu="matMenu">
       <button mat-menu-item routerLink="admin/user-management" routerLinkActive="activeButton" [routerLinkActiveOptions]="{ exact: true }">
@@ -115,12 +119,11 @@
 
   <div [fxShow]="true" [fxShow.sm]="true" [fxShow.xs]="false">
     <button mat-button [matMenuTriggerFor]="accountMenu" data-cy="accountMenu">
-      <span *ngIf="!account?.imageUrl">
-        <span jhiTranslate="global.menu.account.main">Account</span>
-      </span>
+      <span *ngIf="!account?.imageUrl" jhiTranslate="global.menu.account.main">Account </span>
       <span *ngIf="account?.imageUrl">
         <img [src]="account!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
       </span>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
     <mat-menu #accountMenu="matMenu">
       <button
@@ -164,7 +167,7 @@
 
   <!-- Resposive part -->
   <div>
-    <button mat-icon-button [matMenuTriggerFor]="responsiveMenu" fxHide fxShow.sm fxShow.xs>
+    <button mat-icon-button [matMenuTriggerFor]="responsiveMenu" fxHide [fxShow.sm]="hasUserAuthority" fxShow.xs>
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #responsiveMenu="matMenu">
@@ -223,6 +226,19 @@
           </button>
         </mat-menu>
       </div>
+
+      <button
+        mat-menu-item
+        *jhiHasAnyAuthority="'ROLE_USER'"
+        routerLinkActive="activeButton"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLink="/order-history"
+        [fxShow]="false"
+        [fxShow.sm]="true"
+        [fxShow.xs]="true"
+      >
+        <span jhiTranslate="global.menu.entities.orderHistory">Order History</span>
+      </button>
 
       <div *jhiHasAnyAuthority="'ROLE_ADMIN'" [fxShow]="false" [fxShow.sm]="true" [fxShow.xs]="true">
         <button mat-menu-item [matMenuTriggerFor]="adminMenu" routerLinkActive="activeButton">
