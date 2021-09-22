@@ -8,6 +8,7 @@ import { OrderLineService } from 'app/entities/order-line/service/order-line.ser
 import { Order } from 'app/entities/order/order.model';
 import { OrderService } from 'app/entities/order/service/order.service';
 import { Product } from 'app/entities/product/product.model';
+import { StockService } from 'app/entities/stock/service/stock.service';
 import { Stock } from 'app/entities/stock/stock.model';
 import { User } from 'app/entities/user/user.model';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -27,6 +28,7 @@ export class CartService {
     private orderService: OrderService,
     private orderLineService: OrderLineService,
     private accountService: AccountService,
+    private stockService: StockService,
     private httpclient: HttpClient,
     protected applicationConfigService: ApplicationConfigService
   ) {
@@ -49,6 +51,7 @@ export class CartService {
               res => {
                 window.console.debug(res);
                 this.shoppingCart.next(res);
+                this.fetchStock();
               },
               err => window.console.error(err)
             );
@@ -97,6 +100,22 @@ export class CartService {
           return acc;
         }, 0)
       : 0;
+  }
+
+  fetchStock(): void {
+    this.shoppingCartStocks.next([]);
+    this.shoppingCart.getValue()?.orderLines?.forEach(ol => {
+      if (ol.product?.id !== undefined) {
+        this.stockService.find(ol.product.id).subscribe(res => {
+          if (res.body) {
+            this.shoppingCartStocks.next([...this.shoppingCartStocks.getValue(), res.body]);
+            if (!res.body.stock || res.body.stock < ol.quantity!) {
+              throw new Error('Not enough stock ' + (ol.product?.name ? 'for product ' + ol.product.name + ' !' : 'for a product !'));
+            }
+          }
+        });
+      }
+    });
   }
 
   addToCart(stock: Stock, quantity = 1): void {
@@ -219,13 +238,22 @@ export class CartService {
     }
   }
 
-  discard(): void {
+  discard(discardApi = true): void {
     const orderId = this.shoppingCart.getValue()?.id;
-    if (orderId) {
+    if (orderId && discardApi) {
       this.orderService.delete(orderId);
     }
     this.shoppingCartStocks.next([]);
     this.shoppingCart.next(null);
+  }
+
+  async isCartDeleted(): Promise<boolean> {
+    if (!this.login) {
+      return false;
+    }
+    const myCart = await this.httpclient.get<Order | null>(this.resourceUrl).toPromise();
+
+    return myCart === null;
   }
 
   validate(billingAddress: Address): void {

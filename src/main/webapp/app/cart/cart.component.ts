@@ -1,6 +1,9 @@
+import { state } from '@angular/animations';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { AccountService } from 'app/core/auth/account.service';
 import { DeleteDialogComponent } from 'app/delete-dialog/delete-dialog.component';
 import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { Order } from 'app/entities/order/order.model';
@@ -17,7 +20,7 @@ export class CartComponent implements OnInit {
   cart: Order | null;
   cartStocks: Stock[];
 
-  constructor(private cartService: CartService, private router: Router, public dialog: MatDialog) {
+  constructor(private cartService: CartService, private router: Router, public dialog: MatDialog, private accountService: AccountService) {
     // donothing
   }
 
@@ -55,8 +58,22 @@ export class CartComponent implements OnInit {
   }
 
   validate(): void {
-    window.console.debug('cart-validate');
-    this.router.navigate(['/shopping-tunnel']);
+    if (!this.accountService.isAuthenticated()) {
+      try {
+        this.cartService.fetchStock();
+      } catch (err) {
+        this.openNotEnoughBar(err.message);
+      }
+    }
+
+    this.cartService.isCartDeleted().then(status => {
+      if (status) {
+        this.cartService.discard(false);
+        this.openCartDeletedBar();
+      } else {
+        this.router.navigate(['/shopping-tunnel']);
+      }
+    });
   }
 
   get orderLines(): OrderLine[] {
@@ -91,6 +108,34 @@ export class CartComponent implements OnInit {
       if (result === true) {
         this.deleteFromCart(product);
       }
+    });
+  }
+
+  openCartDeletedBar(): void {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      data: {
+        content: `Your cart was deleted !`,
+        trueButton: 'Go to the HomePage',
+        trueButtonColor: 'primary',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['/']);
+    });
+  }
+
+  openNotEnoughBar(message: string): void {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      data: {
+        content: message,
+        trueButton: 'Close',
+        trueButtonColor: 'primary',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['/']);
     });
   }
 }
