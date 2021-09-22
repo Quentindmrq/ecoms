@@ -39,12 +39,12 @@
     {
       "fieldName": "accountRank",
       "fieldType": "Rank",
-      "fieldValues": "IRON,BRONZE,SILVER,GOLD,PLATINUM,DIAMOND,MASTER,CHALLENGER"
+      "fieldValues": "UNRANKED,IRON,BRONZE,SILVER,GOLD,PLATINUM,DIAMOND,MASTER,CHALLENGER"
     },
     {
       "fieldName": "targetRank",
       "fieldType": "Rank",
-      "fieldValues": "IRON,BRONZE,SILVER,GOLD,PLATINUM,DIAMOND,MASTER,CHALLENGER"
+      "fieldValues": "UNRANKED,IRON,BRONZE,SILVER,GOLD,PLATINUM,DIAMOND,MASTER,CHALLENGER"
     }
   ],
   "relationships": [

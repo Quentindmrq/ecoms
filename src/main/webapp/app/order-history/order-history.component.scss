@@ -1,10 +1,14 @@
-.example-headers-align .mat-expansion-panel-header-description {
+.headers-align .mat-expansion-panel-header-description {
   justify-content: space-between;
   align-items: center;
 }
 
-.exampleAlign {
+.alignment {
   align-items: center;
+}
+
+.expansionBox {
+  margin-bottom: 20px !important;
 }
 
 .productBox {
@@ -13,6 +17,10 @@
   align-items: center;
   margin-bottom: 5px;
   margin-top: 5px;
+}
+
+.emptyOrders {
+  margin-top: 20vh;
 }
 
 .textContentBox {
@@ -24,4 +32,14 @@
 .buttonBox {
   display: flex;
   align-items: flex-end;
+}
+
+.loadBox {
+  margin-top: 16px;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
 }

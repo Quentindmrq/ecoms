@@ -97,6 +97,7 @@
           >
           <select class="form-control" name="accountRank" formControlName="accountRank" id="field_accountRank" data-cy="accountRank">
             <option [ngValue]="null">{{ 'servicesenligneApp.Rank.null' | translate }}</option>
+            <option value="UNRANKED">{{ 'servicesenligneApp.Rank.UNRANKED' | translate }}</option>
             <option value="IRON">{{ 'servicesenligneApp.Rank.IRON' | translate }}</option>
             <option value="BRONZE">{{ 'servicesenligneApp.Rank.BRONZE' | translate }}</option>
             <option value="SILVER">{{ 'servicesenligneApp.Rank.SILVER' | translate }}</option>
@@ -112,6 +113,7 @@
           <label class="form-control-label" jhiTranslate="servicesenligneApp.product.targetRank" for="field_targetRank">Target Rank</label>
           <select class="form-control" name="targetRank" formControlName="targetRank" id="field_targetRank" data-cy="targetRank">
             <option [ngValue]="null">{{ 'servicesenligneApp.Rank.null' | translate }}</option>
+            <option value="UNRANKED">{{ 'servicesenligneApp.Rank.UNRANKED' | translate }}</option>
             <option value="IRON">{{ 'servicesenligneApp.Rank.IRON' | translate }}</option>
             <option value="BRONZE">{{ 'servicesenligneApp.Rank.BRONZE' | translate }}</option>
             <option value="SILVER">{{ 'servicesenligneApp.Rank.SILVER' | translate }}</option>
