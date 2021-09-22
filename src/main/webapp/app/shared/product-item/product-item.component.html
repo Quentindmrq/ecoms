@@ -5,12 +5,12 @@
     </mat-card-title>
 
     <mat-card-subtitle fxLayout="row wrap">
-      <div jhiTranslate="servicesenligneApp.ProductType.{{ product?.productType ? product?.productType : 'N/A' }}">
-        {{ product?.productType ? product?.productType : 'N/A' }}
+      <div jhiTranslate="servicesenligneApp.ProductType.{{ product?.productType ?? 'N/A' }}">
+        {{ product?.productType ?? 'N/A' }}
       </div>
       &nbsp; - &nbsp;
-      <div jhiTranslate="servicesenligneApp.Game.{{ product?.game ? product?.game : 'N/A' }}">
-        {{ product?.game ? product?.game : 'N/A' }}
+      <div jhiTranslate="servicesenligneApp.Game.{{ product?.game ?? 'N/A' }}">
+        {{ product?.game ?? 'N/A' }}
       </div></mat-card-subtitle
     >
   </mat-card-title-group>
@@ -19,8 +19,21 @@
     <div class="cropA">
       <img src="https://via.placeholder.com/500" alt="Product logo" />
     </div>
-    <div>
-      {{ product?.description }}
+    <div *ngIf="product?.region" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+      <div>Region:</div>
+      <div>{{ product?.region }}</div>
+    </div>
+    <div *ngIf="product?.accountLevel" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+      <div>Account Level:</div>
+      <div>{{ product?.accountLevel }}</div>
+    </div>
+    <div *ngIf="product?.accountRank" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+      <div>Account Rank:</div>
+      <div>{{ product?.accountRank }}</div>
+    </div>
+    <div *ngIf="product?.targetRank" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+      <div>Target Rank:</div>
+      <div>{{ product?.targetRank }}</div>
     </div>
   </mat-card-content>
   <mat-card-actions fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="end">
