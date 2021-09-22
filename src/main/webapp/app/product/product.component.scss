@@ -1,15 +1,39 @@
-.buttonBox {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .spinner {
   display: flex;
   justify-content: center;
   margin-top: 25px;
 }
 
-.productCard {
-  margin: 0 auto;
-  width: 60%;
+mat-form-field {
+  max-width: 110px;
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .mat-form-field-wrapper {
+  margin: 0 !important;
+  padding: 0;
+}
+
+.cropA {
+  position: relative;
+  width: 300px;
+  height: 200px;
+}
+/* (B) IMAGE */
+.cropA img {
+  /* (B1) POSITION IMAGE */
+  position: absolute;
+
+  /* (B2) CROP IMAGE */
+  /* ORIGINAL IMAGE IS 600 X 420 */
+  /* RECT(TOP, RIGHT, BOTTOM, LEFT) */
+  clip-path: polygon(0px 0px, 300px 0px, 300px 200px, 0px 200px);
+}
+
+.contentRow {
+  width: 80%;
+}
+
+.rowsWrapper {
+  min-width: 300px;
 }

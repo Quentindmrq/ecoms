@@ -11,6 +11,7 @@ import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { CartService } from 'app/cart/cart.service';
 import { Game } from 'app/entities/enumerations/game.model';
+import { Authority } from 'app/config/authority.constants';
 
 @Component({
   selector: 'jhi-navbar',
@@ -65,6 +66,10 @@ export class NavbarComponent implements OnInit {
     this.collapseNavbar();
     this.loginService.logout();
     this.router.navigate(['']);
+  }
+
+  get hasUserAuthority(): boolean {
+    return this.accountService.hasAnyAuthority(Authority.USER);
   }
 
   toggleNavbar(): void {
