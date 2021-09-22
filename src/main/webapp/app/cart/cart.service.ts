@@ -116,7 +116,7 @@ export class CartService {
     let returnArray: OrderLine[] = [];
     if (cartArray) {
       returnArray = cartArray;
-      const alreadyInId = cartArray.findIndex(ol => (ol.product?.id ? product.id === ol.product.id : false));
+      const alreadyInId = cartArray.findIndex(ol => (ol.product?.id !== undefined ? product.id === ol.product.id : false));
 
       if (alreadyInId >= 0) {
         const itemQuantity = cartArray[alreadyInId].quantity;
@@ -229,7 +229,6 @@ export class CartService {
   }
 
   validate(billingAddress: Address): void {
-    window.console.debug(this.shoppingCart.getValue());
     const order = this.shoppingCart.getValue();
     if (order) {
       order.billingAddress = billingAddress;
