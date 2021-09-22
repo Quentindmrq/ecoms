@@ -8,8 +8,6 @@
 
 <mat-card *ngIf="!loading && stock?.product" class="productCard">
   <mat-card-title-group>
-    <img mat-card-sm-image alt="product image" />
-
     <mat-card-title>
       {{ stock?.product?.name }}
     </mat-card-title>
@@ -26,10 +24,38 @@
   </mat-card-title-group>
 
   <mat-card-content>
-    {{ stock?.product?.description }}
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-5"></div>
+    <div
+      fxLayout="row wrap"
+      fxLayout.xs="column"
+      fxLayoutAlign="space-between start"
+      fxLayoutAlign.xs="space-between center"
+      fxLayoutGap="16px"
+    >
+      <div>
+        <div class="cropA">
+          <img src="https://via.placeholder.com/500" alt="Product logo" />
+        </div>
+      </div>
+      <div fxFlex="50%">
+        {{ stock?.product?.description }}
+      </div>
+      <div class="rowsWrapper" fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+        <div *ngIf="stock?.product?.region" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+          <div>Region:</div>
+          <div>{{ stock?.product?.region }}</div>
+        </div>
+        <div *ngIf="stock?.product?.accountLevel" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+          <div>Account Level:</div>
+          <div>{{ stock?.product?.accountLevel }}</div>
+        </div>
+        <div *ngIf="stock?.product?.accountRank" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+          <div>Account Rank:</div>
+          <div>{{ stock?.product?.accountRank }}</div>
+        </div>
+        <div *ngIf="stock?.product?.targetRank" class="contentRow" fxLayout="row wrap" fxLayoutAlign="space-between">
+          <div>Target Rank:</div>
+          <div>{{ stock?.product?.targetRank }}</div>
+        </div>
       </div>
     </div>
   </mat-card-content>
