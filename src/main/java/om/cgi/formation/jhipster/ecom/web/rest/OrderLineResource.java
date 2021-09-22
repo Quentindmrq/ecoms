@@ -175,6 +175,18 @@ public class OrderLineResource {
             throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
+        Optional<Product> product = productRepository.findById(result.get().getProduct().getId());
+        Stock stock = product.get().getStock();
+
+        int stockChange = orderLine.getQuantity() - result.get().getQuantity();
+
+        //if there isn't enough stock the request wont go throught
+        if (stock.getStock() < stockChange) {
+            throw new BadRequestAlertException("not enough stock", ENTITY_NAME, "no stock");
+        }
+
+        stock.setStock(stock.getStock() - stockChange);
+
         // if we set the quantity to 0 or less the orderline is deleted
         if (orderLine.getQuantity() <= 0) {
             deleteOrderLine(id);
@@ -184,20 +196,11 @@ public class OrderLineResource {
                 .build();
         }
 
-        Optional<Product> product = productRepository.findById(result.get().getProduct().getId());
+        result.get().setQuantity(orderLine.getQuantity());
 
         if (product.isEmpty()) {
             throw new BadRequestAlertException("product doesnt exists", ENTITY_NAME, "productinvalid");
         }
-
-        Stock stock = product.get().getStock();
-
-        //if there isn't enough stock the request wont go throught
-        if (stock.getStock() < orderLine.getQuantity()) {
-            throw new BadRequestAlertException("not enough stock", ENTITY_NAME, "no stock");
-        }
-
-        result.get().setQuantity(orderLine.getQuantity());
 
         orderLineRepository.saveAndFlush(result.get());
 
@@ -245,6 +248,12 @@ public class OrderLineResource {
         if (orderline.isEmpty()) {
             throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
+
+        Optional<Product> product = productRepository.findById(orderline.get().getProduct().getId());
+
+        Stock stock = product.get().getStock();
+        stock.setStock(stock.getStock() + orderline.get().getQuantity());
+
         Order order = orderline.get().getOrder();
         order.removeOrderLinebyId(id);
         orderline.get().setOrder(null);

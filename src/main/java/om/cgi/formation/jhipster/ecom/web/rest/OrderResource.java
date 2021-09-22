@@ -6,8 +6,11 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import om.cgi.formation.jhipster.ecom.domain.Authority;
 import om.cgi.formation.jhipster.ecom.domain.Order;
+import om.cgi.formation.jhipster.ecom.domain.OrderLine;
+import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
 import om.cgi.formation.jhipster.ecom.repository.UserRepository;
@@ -241,6 +244,14 @@ public class OrderResource {
         if (order.isEmpty()) {
             throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
+
+        Set<OrderLine> orderl = order.get().getOrderLines();
+        for (OrderLine ol : orderl) {
+            Stock stock = ol.getProduct().getStock();
+            log.debug(" added {} to stock already at {} ", ol.getQuantity(), stock.getStock());
+            stock.setStock(stock.getStock() + ol.getQuantity());
+        }
+
         order.get().setOwner(null);
         orderRepository.saveAndFlush(order.get());
 
