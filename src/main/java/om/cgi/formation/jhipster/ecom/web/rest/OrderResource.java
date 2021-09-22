@@ -152,6 +152,18 @@ public class OrderResource {
 
         Optional<Order> result = orderRepository.findById(order.getId());
 
+        if (result.isEmpty()) {
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
+        }
+
+        Order newOrder = result.get();
+        newOrder.setPurchasePrice(order.getPurchasePrice());
+        newOrder.setBillingAddress(order.getBillingAddress());
+        newOrder.setPurchased(order.getPurchased());
+        newOrder.setPurchaseDate(ZonedDateTime.now());
+
+        orderRepository.saveAndFlush(newOrder);
+
         return ResponseUtil.wrapOrNotFound(
             result,
             HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, order.getId().toString())
@@ -190,6 +202,12 @@ public class OrderResource {
         }
 
         return null;
+    }
+
+    @GetMapping("/myCart")
+    public Optional<Order> getMyCart() {
+        Optional<Order> order = orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse();
+        return order;
     }
 
     /**
