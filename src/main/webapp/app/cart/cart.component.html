@@ -11,7 +11,12 @@
         </mat-card-title>
         <mat-card-content>
           <div class="container-fluid" fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-between end" fxLayoutGap="16px grid">
-            <img src="{{ item.product?.logo }}" alt="Logo {{ item.product?.name }}" routerLink="/product/{{ item.product?.id }}" />
+            <img
+              src="{{ item.product?.logo }}"
+              alt="Logo {{ item.product?.name }}"
+              routerLink="/product/{{ item.product?.id }}"
+              height="100"
+            />
             <div fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="16px grid">
               <div fxFlex="80%" fxFlex.xs="100%">
                 <p>{{ item.product?.description }}</p>
