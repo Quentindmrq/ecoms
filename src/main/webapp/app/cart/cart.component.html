@@ -11,7 +11,13 @@
         </mat-card-title>
         <mat-card-content>
           <div class="container-fluid row">
-            <img src="{{ item.product?.logo }}" alt="Logo {{ item.product?.name }}" routerLink="/product/{{ item.product?.id }}" />
+            <img
+              src="{{ item.product?.logo }}"
+              alt="Logo {{ item.product?.name }}"
+              routerLink="/product/{{ item.product?.id }}"
+              width="150"
+              height="100"
+            />
             <div class="col-md-7">
               <p>{{ item.product?.description }}</p>
               <div>
