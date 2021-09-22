@@ -22,8 +22,8 @@ public class GenerateData {
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
         LoremIpsum loremIpsum = new LoremIpsum();
 
-        PrintWriter writerProduct = new PrintWriter("product.csv", "UTF-8");
-        PrintWriter writerStock = new PrintWriter("stock.csv", "UTF-8");
+        PrintWriter writerProduct = new PrintWriter("src/main/resources/config/liquibase/fake-data/product.csv", "UTF-8");
+        PrintWriter writerStock = new PrintWriter("src/main/resources/config/liquibase/fake-data/stock.csv", "UTF-8");
 
         Game games[] = Game.values();
         ProductType prods[] = ProductType.values();
@@ -78,6 +78,15 @@ public class GenerateData {
             "Faker",
         };
 
+        String[] imgs = {
+            "https://i.ibb.co/gWRVYc9/Diamond.png",
+            "https://i.ibb.co/3BW25JK/chall.jpg",
+            "https://i.ibb.co/Mh8jyRQ/defeat.jpg",
+            "https://i.ibb.co/25Tnp1t/zed.png",
+            "https://i.ibb.co/Qr9bWD1/yasuo.png",
+            "https://i.ibb.co/TqTcfVy/challenger.jpg",
+        };
+
         writerProduct.write("id;name;description;logo;price;game;product_type;region;account_level;account_rank;target_rank\n");
         writerStock.write("id;stock;product_id;version\n");
 
@@ -94,10 +103,10 @@ public class GenerateData {
                     writerProduct.write(loremIpsum.getWords(40) + ";");
 
                     //logo pour l'instant rien
-                    writerProduct.write("logo;");
+                    writerProduct.write(imgs[rd.nextInt(imgs.length)] + ";");
 
                     //price
-                    writerProduct.write(i * 10 + ";");
+                    writerProduct.write(rd.nextInt(100) + "." + rd.nextInt(10) + ";");
 
                     //game
                     writerProduct.write(game + ";");

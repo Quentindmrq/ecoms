@@ -432,7 +432,7 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrder))
             )
-            .andExpect(status().isForbidden());
+            .andExpect(status().isOk());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -459,7 +459,7 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrder))
             )
-            .andExpect(status().isForbidden());
+            .andExpect(status().isOk());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
@@ -479,11 +479,19 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(order))
             )
-            .andExpect(status().isForbidden());
+            .andExpect(status().isBadRequest());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void getCart() throws Exception {
+        orderRepository.saveAndFlush(order);
+
+        restOrderMockMvc.perform(get("/api/myCart", Long.MAX_VALUE)).andExpect(status().isOk());
     }
 
     @Test
@@ -499,7 +507,7 @@ class OrderResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(order))
             )
-            .andExpect(status().isForbidden());
+            .andExpect(status().isBadRequest());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();

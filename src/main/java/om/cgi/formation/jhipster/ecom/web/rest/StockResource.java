@@ -56,6 +56,8 @@ public class StockResource {
 
     private static final String NO_ENTITY = "Entity not found";
 
+    private static final String INVALID_ID = "id is not";
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -286,7 +288,7 @@ public class StockResource {
         }
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {
-            throw new BadRequestAlertException("id is not valid", ENTITY_NAME, "idisnull");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         int currStock = stock.get().getStock();
@@ -314,7 +316,7 @@ public class StockResource {
         }
         Optional<Stock> stock = stockRepository.findById(id);
         if (stock.isEmpty()) {
-            throw new BadRequestAlertException("id is not valid", ENTITY_NAME, "idisnull");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         return ResponseUtil.wrapOrNotFound(stock);
@@ -335,7 +337,7 @@ public class StockResource {
         }
         Optional<Order> order = orderRepository.findById(id);
         if (order.isEmpty()) {
-            throw new BadRequestAlertException("id is not valid", ENTITY_NAME, "idisnull");
+            throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
         order.get().setPurchased(true);
