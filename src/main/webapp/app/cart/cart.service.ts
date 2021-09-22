@@ -1,7 +1,9 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { AccountService } from 'app/core/auth/account.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { DeleteDialogComponent } from 'app/delete-dialog/delete-dialog.component';
 import { Address } from 'app/entities/address/address.model';
 import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { OrderLineService } from 'app/entities/order-line/service/order-line.service';
@@ -30,16 +32,19 @@ export class CartService {
     private accountService: AccountService,
     private stockService: StockService,
     private httpclient: HttpClient,
-    protected applicationConfigService: ApplicationConfigService
+    protected applicationConfigService: ApplicationConfigService,
+    public dialog: MatDialog
   ) {
     this.accountService
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
       .subscribe(accountRes => {
         if (!this.login && accountRes) {
+          // user is login in
           this.login = accountRes.login;
           const order = this.shoppingCart.getValue();
           if (order) {
+            // Has already items is Cart
             order.purchased = false;
             order.owner = new User(-1, accountRes.login);
             this.orderService.create(order).subscribe(orderRes => {
@@ -47,6 +52,7 @@ export class CartService {
               this.shoppingCart.next(order);
             });
           } else {
+            // Cart empty so we load the one saved
             this.httpclient.get<Order | null>(this.resourceUrl).subscribe(
               res => {
                 window.console.debug(res);
@@ -57,6 +63,7 @@ export class CartService {
             );
           }
         }
+        // User is login out
         if (this.login && !accountRes) {
           this.shoppingCart.next(null);
         }
@@ -73,6 +80,9 @@ export class CartService {
   }
 
   productLeftInStock(stock: Stock): number {
+    if (this.login) {
+      return stock.stock ?? 15;
+    }
     const inCart = this.shoppingCart.getValue()?.orderLines?.find(ol => ol.product?.id === stock.product?.id)?.quantity ?? 0;
     return (stock.stock ?? 15) - inCart;
   }
@@ -109,26 +119,20 @@ export class CartService {
         this.stockService.find(ol.product.id).subscribe(res => {
           if (res.body) {
             this.shoppingCartStocks.next([...this.shoppingCartStocks.getValue(), res.body]);
-            if (!res.body.stock || res.body.stock < ol.quantity!) {
-              throw new Error('Not enough stock ' + (ol.product?.name ? 'for product ' + ol.product.name + ' !' : 'for a product !'));
-            }
           }
         });
       }
     });
   }
 
-  addToCart(stock: Stock, quantity = 1): void {
-    const product = stock.product!;
-
+  addToCart(product: Product, quantity = 1): void {
     if (!this.shoppingCart.getValue()) {
-      this.createOrderAndAdd(stock, quantity);
+      this.createOrderAndAdd(product, quantity);
       return;
     }
 
     const cartArray = this.shoppingCart.getValue()?.orderLines?.slice();
     if (this.login && !this.shoppingCart.getValue()?.id) {
-      window.console.debug(this.shoppingCart.getValue());
       throw new Error('Invalid Order');
     }
 
@@ -141,12 +145,14 @@ export class CartService {
         const itemQuantity = cartArray[alreadyInId].quantity;
         cartArray[alreadyInId].quantity = itemQuantity ? itemQuantity + quantity : quantity;
 
-        // TODO gestion erreur
-
         if (this.login) {
           this.orderLineService.partialUpdate(cartArray[alreadyInId]).subscribe(
             () => this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray }),
-            error => window.console.error(error)
+            err => {
+              if (err.error.errorKey === 'idnotfound') {
+                this.openCartDeletedDialog();
+              }
+            }
           );
           return;
         }
@@ -154,7 +160,6 @@ export class CartService {
         return;
       }
     }
-    this.shoppingCartStocks.next([...this.shoppingCartStocks.getValue(), stock]);
     const newOL = new OrderLine(undefined, quantity, product);
 
     if (this.login) {
@@ -165,7 +170,11 @@ export class CartService {
             this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: returnArray });
           }
         },
-        err => console.error(err)
+        err => {
+          if (err.error.errorKey === "order doesn't exists") {
+            this.openCartDeletedDialog();
+          }
+        }
       );
       return;
     }
@@ -219,7 +228,6 @@ export class CartService {
       return;
     }
 
-    this.shoppingCartStocks.next(this.shoppingCartStocks.getValue().filter(st => st.product?.id !== product.id));
     const olId = cartArray[alreadyInId].id;
     if (olId) {
       this.orderLineService.delete(olId).subscribe(
@@ -240,20 +248,13 @@ export class CartService {
 
   discard(discardApi = true): void {
     const orderId = this.shoppingCart.getValue()?.id;
+    window.console.log(orderId && discardApi, orderId, discardApi);
     if (orderId && discardApi) {
+      window.console.log('Bonjour from delete');
       this.orderService.delete(orderId);
     }
     this.shoppingCartStocks.next([]);
     this.shoppingCart.next(null);
-  }
-
-  async isCartDeleted(): Promise<boolean> {
-    if (!this.login) {
-      return false;
-    }
-    const myCart = await this.httpclient.get<Order | null>(this.resourceUrl).toPromise();
-
-    return myCart === null;
   }
 
   validate(billingAddress: Address): void {
@@ -267,12 +268,68 @@ export class CartService {
         err => window.console.error(err)
       );
     } else {
-      window.console.debug(this.shoppingCart.getValue());
       throw new Error('Invalid Order');
     }
   }
 
-  private createOrderAndAdd(stock: Stock, quantity: number): void {
+  async isCartDeleted(): Promise<boolean> {
+    if (!this.login) {
+      return false;
+    }
+    const myCart = await this.httpclient.get<Order | null>(this.resourceUrl).toPromise();
+
+    return myCart === null;
+  }
+
+  getUnavailableItems(): OrderLine[] {
+    if (this.login) {
+      return [];
+    }
+
+    const orderLines = this.shoppingCart.getValue()?.orderLines;
+
+    if (!orderLines) {
+      throw new Error('Invalid Order');
+    }
+
+    return orderLines.filter(ol => {
+      if (Number.isNaN(ol.product?.id)) {
+        throw new Error('Invalid product in cart');
+      }
+
+      if (Number.isNaN(ol.quantity)) {
+        throw new Error('Invalid product quantity in cart');
+      }
+
+      const stock = this.shoppingCartStocks.getValue().find(st => st.product!.id === ol.product?.id);
+
+      if (!stock) {
+        throw new Error('Missing stock in cart');
+      }
+
+      if (Number.isNaN(stock.stock)) {
+        throw new Error('Invalid stock in cart');
+      }
+
+      return ol.quantity! > stock.stock!;
+    });
+  }
+
+  openCartDeletedDialog(): void {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      data: {
+        content: `Your cart was deleted due to inactivity !`,
+        trueButton: 'Close',
+        trueButtonColor: 'primary',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.discard(false);
+    });
+  }
+
+  private createOrderAndAdd(product: Product, quantity: number): void {
     const order = new Order();
     order.purchased = false;
 
@@ -281,11 +338,11 @@ export class CartService {
       this.orderService.create(order).subscribe(orderRes => {
         order.id = orderRes.body?.id;
         this.shoppingCart.next(order);
-        this.addToCart(stock, quantity);
+        this.addToCart(product, quantity);
       });
     } else {
       this.shoppingCart.next(order);
-      this.addToCart(stock, quantity);
+      this.addToCart(product, quantity);
     }
   }
 }

@@ -54,7 +54,14 @@ export class ProductComponent implements OnInit {
 
   addToCart(): void {
     if (this.stock?.product) {
-      this.cartService.addToCart(this.stock, this.numberOfItems);
+      try {
+        this.cartService.addToCart(this.stock.product, this.numberOfItems);
+        if (this.cartService.login) {
+          this.stock.stock! -= this.numberOfItems;
+        }
+      } catch (error) {
+        window.console.error(error);
+      }
     } else {
       this.error = "Can't add to cart, product null or undef";
     }

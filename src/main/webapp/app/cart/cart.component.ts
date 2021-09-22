@@ -1,5 +1,3 @@
-import { state } from '@angular/animations';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -25,13 +23,20 @@ export class CartComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cartService.fetchStock();
     this.cartService.cart.subscribe(cartItems => (this.cart = cartItems));
     this.cartService.cartStock.subscribe(cartStocks => (this.cartStocks = cartStocks));
   }
 
   addToCart(ol: OrderLine): void {
     if (ol.product) {
-      this.cartService.addToCart(this.cartStocks.find(st => st.product?.id === ol.product?.id)!);
+      this.cartService.addToCart(ol.product);
+      if (this.cartService.login) {
+        const stockId = this.cartStocks.findIndex(st => st.product?.id === ol.product?.id);
+        if (stockId !== -1) {
+          this.cartStocks[stockId].stock!--;
+        }
+      }
       return;
     }
     window.console.error('Invalid product');
@@ -40,6 +45,12 @@ export class CartComponent implements OnInit {
   removeOneFromCart(ol: OrderLine): void {
     if (ol.product) {
       this.cartService.removeOneFromCart(ol.product);
+      if (this.cartService.login) {
+        const stockId = this.cartStocks.findIndex(st => st.product?.id === ol.product?.id);
+        if (stockId !== -1) {
+          this.cartStocks[stockId].stock!++;
+        }
+      }
       return;
     }
     window.console.error('Invalid product');
@@ -60,16 +71,25 @@ export class CartComponent implements OnInit {
   validate(): void {
     if (!this.accountService.isAuthenticated()) {
       try {
-        this.cartService.fetchStock();
+        const unAv = this.cartService.getUnavailableItems();
+        if (unAv.length > 0) {
+          let msg = 'Not enough of the following items in Stock :';
+          unAv.forEach(ol => {
+            msg += ' ' + (ol.product?.name ?? '(missing name)');
+          });
+          this.openDialog(msg);
+          return;
+        }
       } catch (err) {
-        this.openNotEnoughBar(err.message);
+        this.openDialog((err as Error).message);
+        return;
       }
+      this.router.navigate(['/shopping-tunnel']);
     }
 
     this.cartService.isCartDeleted().then(status => {
       if (status) {
-        this.cartService.discard(false);
-        this.openCartDeletedBar();
+        this.openCartDeletedDialog();
       } else {
         this.router.navigate(['/shopping-tunnel']);
       }
@@ -91,8 +111,12 @@ export class CartComponent implements OnInit {
     return this.cartService.login;
   }
 
-  productStock(producId: number): number {
-    return this.cartStocks.find(st => st.product?.id === producId)?.stock ?? 15;
+  productLeftInStock(producId: number): number {
+    const stock = this.cartStocks.find(st => st.product?.id === producId);
+    if (stock) {
+      return this.cartService.productLeftInStock(stock);
+    }
+    return 0;
   }
 
   openDeleteDialog(product: Product): void {
@@ -111,7 +135,7 @@ export class CartComponent implements OnInit {
     });
   }
 
-  openCartDeletedBar(): void {
+  openCartDeletedDialog(): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: {
         content: `Your cart was deleted !`,
@@ -121,21 +145,18 @@ export class CartComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
+      this.cartService.discard(false);
       this.router.navigate(['/']);
     });
   }
 
-  openNotEnoughBar(message: string): void {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+  openDialog(message: string): void {
+    this.dialog.open(DeleteDialogComponent, {
       data: {
         content: message,
         trueButton: 'Close',
         trueButtonColor: 'primary',
       },
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.router.navigate(['/']);
     });
   }
 }

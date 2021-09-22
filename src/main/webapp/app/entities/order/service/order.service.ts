@@ -55,6 +55,7 @@ export class OrderService {
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
+    window.console.log('Bonjour from delete order service ');
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
