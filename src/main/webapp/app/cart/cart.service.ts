@@ -1,5 +1,7 @@
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AccountService } from 'app/core/auth/account.service';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { Address } from 'app/entities/address/address.model';
 import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { OrderLineService } from 'app/entities/order-line/service/order-line.service';
@@ -16,11 +18,18 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class CartService {
   public login: string | undefined | null;
+  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/myCart');
   private shoppingCart = new BehaviorSubject<Order | null>(null);
   private shoppingCartStocks = new BehaviorSubject<Stock[]>([]);
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private orderService: OrderService, private orderLineService: OrderLineService, private accountService: AccountService) {
+  constructor(
+    private orderService: OrderService,
+    private orderLineService: OrderLineService,
+    private accountService: AccountService,
+    private httpclient: HttpClient,
+    protected applicationConfigService: ApplicationConfigService
+  ) {
     this.accountService
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
@@ -36,7 +45,13 @@ export class CartService {
               this.shoppingCart.next(order);
             });
           } else {
-            // TODO récupérer panier
+            this.httpclient.get<Order | null>(this.resourceUrl).subscribe(
+              res => {
+                window.console.debug(res);
+                this.shoppingCart.next(res);
+              },
+              err => window.console.error(err)
+            );
           }
         }
         if (this.login && !accountRes) {

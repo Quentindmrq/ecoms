@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { CartService } from 'app/cart/cart.service';
 import { StockService } from 'app/entities/stock/service/stock.service';
@@ -9,7 +9,7 @@ import { Stock } from 'app/entities/stock/stock.model';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, OnChanges {
   productId: number;
   stock: Stock | null;
   loading: boolean;
@@ -17,6 +17,10 @@ export class ProductComponent implements OnInit {
   numberOfItems = 1;
   stockArray: number[];
   constructor(private activatedRoute: ActivatedRoute, private stockService: StockService, private cartService: CartService) {}
+
+  ngOnChanges(changes: any): void {
+    window.console.debug(changes);
+  }
 
   ngOnInit(): void {
     this.loading = true;
