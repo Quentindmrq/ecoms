@@ -16,12 +16,11 @@ import { Game } from 'app/entities/enumerations/game.model';
 export class ProductListComponent implements OnChanges {
   @ViewChild(MatSort) sort: MatSort;
   @Input() public req?: Record<string, unknown>;
+  @Input() public showMoreButton = false;
   @Input() public productType?: ProductType;
   @Input() public game?: Game;
 
   pageInfo: PageableResponse<IStock> | null;
-  page: number;
-  dataSource: MatTableDataSource<Stock>;
   loadingPages: boolean;
   error?: any;
   products: Stock[];
@@ -30,9 +29,9 @@ export class ProductListComponent implements OnChanges {
 
   ngOnChanges(changes: any): void {
     if (changes.game) {
-      this.page = 1;
       this.loadingPages = true;
       this.products = [];
+      this.pageInfo = null;
 
       this.stockService.query(this.request).subscribe(
         stockRes => {
@@ -51,22 +50,23 @@ export class ProductListComponent implements OnChanges {
   }
 
   loadNewPage(): void {
-    this.page++;
-    this.loadingPages = true;
+    if (!this.isLastPage) {
+      this.loadingPages = true;
 
-    this.stockService.query(this.request).subscribe(
-      stockRes => {
-        this.pageInfo = stockRes.body;
-        if (stockRes.body?.content) {
-          this.products.push(...stockRes.body.content);
+      this.stockService.query(this.request).subscribe(
+        stockRes => {
+          this.pageInfo = stockRes.body;
+          if (stockRes.body?.content) {
+            this.products.push(...stockRes.body.content);
+          }
+          this.loadingPages = false;
+        },
+        error => {
+          this.error = error;
+          this.loadingPages = false;
         }
-        this.loadingPages = false;
-      },
-      error => {
-        this.error = error;
-        this.loadingPages = false;
-      }
-    );
+      );
+    }
   }
 
   addToCart(stock: Stock): void {
@@ -75,8 +75,13 @@ export class ProductListComponent implements OnChanges {
     }
   }
 
+  get isLastPage(): boolean {
+    return this.pageInfo?.last ?? false;
+  }
+
   private get request(): Record<string, unknown> {
-    const newReq: Record<string, unknown> = { ...this.req, page: this.page, game: this.game, type: this.productType };
+    const pageNumber = this.pageInfo?.number !== undefined ? this.pageInfo.number + 1 : 0;
+    const newReq: Record<string, unknown> = { ...this.req, page: pageNumber, game: this.game, type: this.productType };
     return newReq;
   }
 }

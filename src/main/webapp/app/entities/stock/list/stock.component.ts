@@ -20,7 +20,7 @@ export class StockComponent implements OnInit {
   loadAll(): void {
     this.isLoading = true;
 
-    this.stockService.query().subscribe(
+    this.stockService.query({ size: 100 }).subscribe(
       (res: HttpResponse<PageableResponse<IStock>>) => {
         this.isLoading = false;
         this.stocks = res.body?.content ?? [];

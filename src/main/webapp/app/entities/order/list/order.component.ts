@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IOrder } from '../order.model';
 import { OrderService } from '../service/order.service';
 import { OrderDeleteDialogComponent } from '../delete/order-delete-dialog.component';
+import { PageableResponse } from 'app/entities/common/pageablehttpresponse.model';
 
 @Component({
   selector: 'jhi-order',
@@ -19,10 +20,10 @@ export class OrderComponent implements OnInit {
   loadAll(): void {
     this.isLoading = true;
 
-    this.orderService.query().subscribe(
-      (res: HttpResponse<IOrder[]>) => {
+    this.orderService.query({ size: 100 }).subscribe(
+      (res: HttpResponse<PageableResponse<IOrder>>) => {
         this.isLoading = false;
-        this.orders = res.body ?? [];
+        this.orders = res.body?.content ?? [];
       },
       () => {
         this.isLoading = false;

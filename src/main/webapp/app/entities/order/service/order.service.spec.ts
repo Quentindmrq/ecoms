@@ -121,32 +121,6 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject(expected);
       });
 
-      it('should return a list of Order', () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 1,
-            purchased: true,
-            purchaseDate: currentDate.format(DATE_TIME_FORMAT),
-            purchasePrice: 1,
-          },
-          elemDefault
-        );
-
-        const expected = Object.assign(
-          {
-            purchaseDate: currentDate,
-          },
-          returnedFromService
-        );
-
-        service.query().subscribe(resp => (expectedResult = resp.body));
-
-        const req = httpMock.expectOne({ method: 'GET' });
-        req.flush([returnedFromService]);
-        httpMock.verify();
-        expect(expectedResult).toContainEqual(expected);
-      });
-
       it('should delete a Order', () => {
         service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 

@@ -6,3 +6,11 @@
     <h2>Nothing to see here for now</h2>
   </ng-template>
 </div>
+
+<div class="spinner" *ngIf="loadingPages">
+  <mat-spinner> </mat-spinner>
+</div>
+
+<div *ngIf="showMoreButton && !isLastPage" fxLayout="row" fxLayoutAlign="end" class="buttonBox">
+  <button mat-flat-button color="accent" (click)="loadNewPage()">Load More</button>
+</div>
