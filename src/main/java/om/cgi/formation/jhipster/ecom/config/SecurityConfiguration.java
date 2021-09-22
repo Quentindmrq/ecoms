@@ -103,6 +103,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.PATCH,"/api/stocks").permitAll()
             .antMatchers(HttpMethod.PATCH,"/api/stocks/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/stocks/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/myCart").permitAll()
             .antMatchers(HttpMethod.PATCH, "/api/addStocksInCart/{id}").permitAll()
             .antMatchers(HttpMethod.PATCH, "/api/finalbuy/{id}").authenticated()
             .antMatchers(HttpMethod.PATCH, "/api/deleteStocksInCart/{id}").authenticated()
