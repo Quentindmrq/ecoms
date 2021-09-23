@@ -33,7 +33,7 @@ public class AdminUserDTO {
     @Size(max = 256)
     private String imageUrl;
 
-    private boolean activated = false;
+    private int activated = 0;
 
     @Size(min = 2, max = 10)
     private String langKey;
@@ -116,11 +116,11 @@ public class AdminUserDTO {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isActivated() {
+    public int isActivated() {
         return activated;
     }
 
-    public void setActivated(boolean activated) {
+    public void setActivated(int activated) {
         this.activated = activated;
     }
 

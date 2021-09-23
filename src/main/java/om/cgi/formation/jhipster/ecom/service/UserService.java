@@ -60,7 +60,7 @@ public class UserService {
             .map(
                 user -> {
                     // activate given user for the registration key.
-                    user.setActivated(true);
+                    user.setActivated(1);
                     user.setActivationKey(null);
                     this.clearUserCaches(user);
                     log.debug("Activated user: {}", user);
@@ -88,7 +88,6 @@ public class UserService {
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository
             .findOneByEmailIgnoreCase(mail)
-            .filter(User::isActivated)
             .map(
                 user -> {
                     user.setResetKey(RandomUtil.generateResetKey());
@@ -133,7 +132,7 @@ public class UserService {
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
         // new user is active
-        newUser.setActivated(true);
+        newUser.setActivated(1);
 
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
@@ -145,7 +144,7 @@ public class UserService {
     }
 
     private boolean removeNonActivatedUser(User existingUser) {
-        if (existingUser.isActivated()) {
+        if (existingUser.isActivated() != 0) {
             return false;
         }
         userRepository.delete(existingUser);
@@ -172,7 +171,7 @@ public class UserService {
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
-        user.setActivated(true);
+        user.setActivated(1);
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = userDTO
                 .getAuthorities()

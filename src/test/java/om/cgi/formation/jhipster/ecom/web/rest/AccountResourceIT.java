@@ -144,7 +144,7 @@ class AccountResourceIT {
         invalidUser.setFirstName("Funky");
         invalidUser.setLastName("One");
         invalidUser.setEmail("funky@example.com");
-        invalidUser.setActivated(true);
+        invalidUser.setActivated(1);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
@@ -166,7 +166,7 @@ class AccountResourceIT {
         invalidUser.setFirstName("Bob");
         invalidUser.setLastName("Green");
         invalidUser.setEmail("invalid"); // <-- invalid
-        invalidUser.setActivated(true);
+        invalidUser.setActivated(1);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
@@ -188,7 +188,7 @@ class AccountResourceIT {
         invalidUser.setFirstName("Bob");
         invalidUser.setLastName("Green");
         invalidUser.setEmail("bob@example.com");
-        invalidUser.setActivated(true);
+        invalidUser.setActivated(1);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
@@ -210,7 +210,7 @@ class AccountResourceIT {
         invalidUser.setFirstName("Bob");
         invalidUser.setLastName("Green");
         invalidUser.setEmail("bob@example.com");
-        invalidUser.setActivated(true);
+        invalidUser.setActivated(1);
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
@@ -354,7 +354,7 @@ class AccountResourceIT {
         validUser.setFirstName("Bad");
         validUser.setLastName("Guy");
         validUser.setEmail("badguy@example.com");
-        validUser.setActivated(true);
+        validUser.setActivated(1);
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -378,7 +378,7 @@ class AccountResourceIT {
         user.setLogin("activate-account");
         user.setEmail("activate-account@example.com");
         user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(false);
+        user.setActivated(0);
         user.setActivationKey(activationKey);
 
         userRepository.saveAndFlush(user);
@@ -386,7 +386,7 @@ class AccountResourceIT {
         restAccountMockMvc.perform(get("/api/activate?key={activationKey}", activationKey)).andExpect(status().isOk());
 
         user = userRepository.findOneByLogin(user.getLogin()).orElse(null);
-        assertThat(user.isActivated()).isTrue();
+        assertThat(user.isActivated() != 0).isTrue();
     }
 
     @Test
@@ -403,7 +403,7 @@ class AccountResourceIT {
         user.setLogin("save-account");
         user.setEmail("save-account@example.com");
         user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
+        user.setActivated(1);
         userRepository.saveAndFlush(user);
 
         AdminUserDTO userDTO = new AdminUserDTO();
@@ -411,7 +411,7 @@ class AccountResourceIT {
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-account@example.com");
-        userDTO.setActivated(false);
+        userDTO.setActivated(0);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -427,7 +427,7 @@ class AccountResourceIT {
         assertThat(updatedUser.getLangKey()).isEqualTo(userDTO.getLangKey());
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
         assertThat(updatedUser.getImageUrl()).isEqualTo(userDTO.getImageUrl());
-        assertThat(updatedUser.isActivated()).isTrue();
+        assertThat(updatedUser.isActivated() != 0).isTrue();
         assertThat(updatedUser.getAuthorities()).isEmpty();
     }
 
@@ -439,7 +439,7 @@ class AccountResourceIT {
         user.setLogin("save-invalid-email");
         user.setEmail("save-invalid-email@example.com");
         user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
+        user.setActivated(1);
 
         userRepository.saveAndFlush(user);
 
@@ -448,7 +448,7 @@ class AccountResourceIT {
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("invalid email");
-        userDTO.setActivated(false);
+        userDTO.setActivated(0);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -468,14 +468,14 @@ class AccountResourceIT {
         user.setLogin("save-existing-email");
         user.setEmail("save-existing-email@example.com");
         user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
+        user.setActivated(1);
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
         anotherUser.setLogin("save-existing-email2");
         anotherUser.setEmail("save-existing-email2@example.com");
         anotherUser.setPassword(RandomStringUtils.random(60));
-        anotherUser.setActivated(true);
+        anotherUser.setActivated(1);
 
         userRepository.saveAndFlush(anotherUser);
 
@@ -484,7 +484,7 @@ class AccountResourceIT {
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-existing-email2@example.com");
-        userDTO.setActivated(false);
+        userDTO.setActivated(0);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -505,7 +505,7 @@ class AccountResourceIT {
         user.setLogin("save-existing-email-and-login");
         user.setEmail("save-existing-email-and-login@example.com");
         user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
+        user.setActivated(1);
         userRepository.saveAndFlush(user);
 
         AdminUserDTO userDTO = new AdminUserDTO();
@@ -513,7 +513,7 @@ class AccountResourceIT {
         userDTO.setFirstName("firstname");
         userDTO.setLastName("lastname");
         userDTO.setEmail("save-existing-email-and-login@example.com");
-        userDTO.setActivated(false);
+        userDTO.setActivated(0);
         userDTO.setImageUrl("http://placehold.it/50x50");
         userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.ADMIN));
@@ -651,7 +651,7 @@ class AccountResourceIT {
     void testRequestPasswordReset() throws Exception {
         User user = new User();
         user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
+        user.setActivated(1);
         user.setLogin("password-reset");
         user.setEmail("password-reset@example.com");
         userRepository.saveAndFlush(user);
@@ -666,7 +666,7 @@ class AccountResourceIT {
     void testRequestPasswordResetUpperCaseEmail() throws Exception {
         User user = new User();
         user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
+        user.setActivated(1);
         user.setLogin("password-reset-upper-case");
         user.setEmail("password-reset-upper-case@example.com");
         userRepository.saveAndFlush(user);

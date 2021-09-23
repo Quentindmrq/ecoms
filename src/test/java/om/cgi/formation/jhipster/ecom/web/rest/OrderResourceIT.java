@@ -2,7 +2,6 @@ package om.cgi.formation.jhipster.ecom.web.rest;
 
 import static om.cgi.formation.jhipster.ecom.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

@@ -40,7 +40,7 @@ class DomainUserDetailsServiceIT {
         User userOne = new User();
         userOne.setLogin(USER_ONE_LOGIN);
         userOne.setPassword(RandomStringUtils.random(60));
-        userOne.setActivated(true);
+        userOne.setActivated(1);
         userOne.setEmail(USER_ONE_EMAIL);
         userOne.setFirstName("userOne");
         userOne.setLastName("doe");
@@ -50,7 +50,7 @@ class DomainUserDetailsServiceIT {
         User userTwo = new User();
         userTwo.setLogin(USER_TWO_LOGIN);
         userTwo.setPassword(RandomStringUtils.random(60));
-        userTwo.setActivated(true);
+        userTwo.setActivated(1);
         userTwo.setEmail(USER_TWO_EMAIL);
         userTwo.setFirstName("userTwo");
         userTwo.setLastName("doe");
@@ -60,7 +60,7 @@ class DomainUserDetailsServiceIT {
         User userThree = new User();
         userThree.setLogin(USER_THREE_LOGIN);
         userThree.setPassword(RandomStringUtils.random(60));
-        userThree.setActivated(false);
+        userThree.setActivated(1);
         userThree.setEmail(USER_THREE_EMAIL);
         userThree.setFirstName("userThree");
         userThree.setLastName("doe");

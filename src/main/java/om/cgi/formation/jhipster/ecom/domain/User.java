@@ -60,7 +60,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @NotNull
     @Column(nullable = false)
-    private boolean activated = false;
+    private int activated = 0;
 
     @Size(min = 2, max = 10)
     @Column(name = "lang_key", length = 10)
@@ -154,11 +154,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isActivated() {
+    public int isActivated() {
         return activated;
     }
 
-    public void setActivated(boolean activated) {
+    public void setActivated(int activated) {
         this.activated = activated;
     }
 

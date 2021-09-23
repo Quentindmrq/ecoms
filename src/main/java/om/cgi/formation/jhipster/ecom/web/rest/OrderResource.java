@@ -85,7 +85,7 @@ public class OrderResource {
 
         order.setPurchaseDate(ZonedDateTime.now());
 
-        Order result = orderRepository.saveAndFlush(order);
+        Order result = orderRepository.save(order);
         return ResponseEntity
             .created(new URI("/api/orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

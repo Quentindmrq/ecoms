@@ -43,7 +43,7 @@ class UserJWTControllerIT {
         User user = new User();
         user.setLogin("user-jwt-controller");
         user.setEmail("user-jwt-controller@example.com");
-        user.setActivated(true);
+        user.setActivated(1);
         user.setPassword(passwordEncoder.encode("test"));
 
         userRepository.saveAndFlush(user);
@@ -66,7 +66,7 @@ class UserJWTControllerIT {
         User user = new User();
         user.setLogin("user-jwt-controller-remember-me");
         user.setEmail("user-jwt-controller-remember-me@example.com");
-        user.setActivated(true);
+        user.setActivated(1);
         user.setPassword(passwordEncoder.encode("test"));
 
         userRepository.saveAndFlush(user);

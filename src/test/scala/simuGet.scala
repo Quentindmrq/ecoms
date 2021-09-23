@@ -7,13 +7,13 @@ import scala.concurrent.duration._
 class simuGet extends Simulation {
 
   val httpConf = http
-    .baseUrl("https://uberelo2021.herokuapp.com/") // Here is the root for all relative URLs
+    .baseUrl("https://uberelo2031.herokuapp.com/") // Here is the root for all relative URLs
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8") // Here are the common headers
 
   val scn = scenario("BasicSimulation")
     .exec(http("Get stocks").get("game/league_of_legends"))
     .pause(5)
 
-  setUp(scn.inject(atOnceUsers(1000)).protocols(httpConf))
-    .assertions(global.responseTime.max.lt(20000))
+  setUp(scn.inject(atOnceUsers(2200)).protocols(httpConf))
+    .assertions(global.responseTime.max.lt(10000))
 }
