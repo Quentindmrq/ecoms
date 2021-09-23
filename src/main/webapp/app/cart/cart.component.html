@@ -10,7 +10,13 @@
           <a>{{ item.product?.name }}</a>
         </mat-card-title>
         <mat-card-content>
-          <div class="container-fluid" fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-between end" fxLayoutGap="16px grid">
+          <div
+            class="container-fluid"
+            fxLayout="row wrap"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="16px grid"
+          >
             <img src="{{ item.product?.logo }}" alt="Logo {{ item.product?.name }}" routerLink="/product/{{ item.product?.id }}" />
             <div fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="16px grid">
               <div fxFlex="80%" fxFlex.xs="100%">
@@ -27,12 +33,7 @@
                 <mat-icon>remove_circle_outline</mat-icon>
               </button>
               {{ item.quantity }}
-              <button
-                mat-icon-button
-                color="accent"
-                [disabled]="productLeftInStock(item.product?.id!) <= 0"
-                (click)="addToCart(item)"
-              >
+              <button mat-icon-button color="accent" [disabled]="productLeftInStock(item.product?.id!) <= 0" (click)="addToCart(item)">
                 <mat-icon>add_circle_outline</mat-icon>
               </button>
               <button mat-stroked-button color="warn" (click)="openDeleteDialog(item.product!)">Delete</button>

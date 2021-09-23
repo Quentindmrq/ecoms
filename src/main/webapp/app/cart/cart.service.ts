@@ -61,7 +61,11 @@ export class CartService {
                 this.shoppingCart.next(res);
                 this.fetchStock();
               },
-              err => window.console.error(err)
+              err => {
+                if (err.status !== 404) {
+                  window.console.error(err);
+                }
+              }
             );
           }
         }
@@ -289,9 +293,19 @@ export class CartService {
     if (!this.login) {
       return false;
     }
-    const myCart = await this.httpclient.get<Order | null>(this.resourceUrl).toPromise();
 
-    return myCart === null;
+    let returnValue = false;
+
+    await this.httpclient
+      .get<Order | null>(this.resourceUrl)
+      .toPromise()
+      .catch(err => {
+        if (err.status === 404) {
+          returnValue = true;
+        }
+      });
+
+    return returnValue;
   }
 
   getUnavailableItems(): OrderLine[] {
