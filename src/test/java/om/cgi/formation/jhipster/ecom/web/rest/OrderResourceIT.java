@@ -491,7 +491,7 @@ class OrderResourceIT {
     void getCart() throws Exception {
         orderRepository.saveAndFlush(order);
 
-        restOrderMockMvc.perform(get("/api/myCart", Long.MAX_VALUE)).andExpect(status().isOk());
+        restOrderMockMvc.perform(get("/api/myCart", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
