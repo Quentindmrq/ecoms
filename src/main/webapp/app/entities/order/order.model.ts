@@ -5,7 +5,7 @@ import { IAddress } from 'app/entities/address/address.model';
 
 export interface IOrder {
   id?: number;
-  purchased?: boolean | null;
+  purchased?: number | null;
   purchaseDate?: dayjs.Dayjs | null;
   purchasePrice?: number | null;
   orderLines?: IOrderLine[] | null;
@@ -16,14 +16,14 @@ export interface IOrder {
 export class Order implements IOrder {
   constructor(
     public id?: number,
-    public purchased?: boolean | null,
+    public purchased?: number | null,
     public purchaseDate?: dayjs.Dayjs | null,
     public purchasePrice?: number | null,
     public orderLines?: IOrderLine[] | null,
     public owner?: IUser | null,
     public billingAddress?: IAddress | null
   ) {
-    this.purchased = this.purchased ?? false;
+    this.purchased = this.purchased ?? 0;
   }
 }
 
