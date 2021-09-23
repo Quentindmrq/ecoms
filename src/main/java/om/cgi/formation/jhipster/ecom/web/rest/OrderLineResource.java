@@ -176,6 +176,11 @@ public class OrderLineResource {
         }
 
         Optional<Product> product = productRepository.findById(result.get().getProduct().getId());
+
+        if (product.isEmpty()) {
+            throw new BadRequestAlertException("product doesnt exists", ENTITY_NAME, "productinvalid");
+        }
+
         Stock stock = product.get().getStock();
 
         int stockChange = orderLine.getQuantity() - result.get().getQuantity();
@@ -197,10 +202,6 @@ public class OrderLineResource {
         }
 
         result.get().setQuantity(orderLine.getQuantity());
-
-        if (product.isEmpty()) {
-            throw new BadRequestAlertException("product doesnt exists", ENTITY_NAME, "productinvalid");
-        }
 
         Optional<Order> order = orderRepository.findOneByIdIfOwnerIsCurrentUser(orderLine.getOrder().getId());
 
@@ -259,6 +260,9 @@ public class OrderLineResource {
 
         Optional<Product> product = productRepository.findById(orderline.get().getProduct().getId());
 
+        if (product.isEmpty()) {
+            throw new BadRequestAlertException("product doesnt exists", ENTITY_NAME, "productinvalid");
+        }
         Stock stock = product.get().getStock();
         stock.setStock(stock.getStock() + orderline.get().getQuantity());
 
