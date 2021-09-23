@@ -79,7 +79,7 @@ public class OrderLineResource {
             throw new BadRequestAlertException("The order doesn't exists", ENTITY_NAME, "order doesn't exists");
         }
 
-        if (order.get().getPurchased()) {
+        if (order.get().getPurchased() != 0) {
             throw new BadRequestAlertException("The order is done", ENTITY_NAME, "already purchased");
         }
 

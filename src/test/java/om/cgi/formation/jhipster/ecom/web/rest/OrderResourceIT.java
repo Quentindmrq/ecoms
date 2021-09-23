@@ -107,7 +107,7 @@ class OrderResourceIT {
      */
     public static Order createEntity(EntityManager em) {
         Order order = new Order().purchaseDate(DEFAULT_PURCHASE_DATE).orderLines(new HashSet<OrderLine>());
-        order.setPurchased(false);
+        order.setPurchased(0);
         order.setPurchasePrice(null);
 
         return order;
