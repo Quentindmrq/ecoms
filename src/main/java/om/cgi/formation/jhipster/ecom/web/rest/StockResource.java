@@ -192,6 +192,8 @@ public class StockResource {
         @RequestParam(required = false, value = "game", defaultValue = "none") String game,
         @RequestParam(required = false, value = "type", defaultValue = "none") String type
     ) {
+        removeOldCart();
+
         if (size <= 0) {
             throw new BadRequestAlertException("size must be superior to 0", ENTITY_NAME, "size <= 0");
         }
@@ -215,8 +217,6 @@ public class StockResource {
             }
             return stockRepository.findallbygame(Game.valueOf(game), pageRequested);
         }
-
-        removeOldCart();
 
         log.debug("REST request to get all Stocks");
         return stockRepository.findAll(pageRequested);

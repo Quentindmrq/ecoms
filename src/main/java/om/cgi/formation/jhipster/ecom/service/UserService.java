@@ -63,14 +63,12 @@ public class UserService {
                     user.setActivated(true);
                     user.setActivationKey(null);
                     this.clearUserCaches(user);
-                    log.debug("Activated user: {}", user);
                     return user;
                 }
             );
     }
 
     public Optional<User> completePasswordReset(String newPassword, String key) {
-        log.debug("Reset user password for reset key {}", key);
         return userRepository
             .findOneByResetKey(key)
             .filter(user -> user.getResetDate().isAfter(Instant.now().minusSeconds(86400)))
@@ -140,7 +138,6 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
-        log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
 
@@ -185,7 +182,6 @@ public class UserService {
         }
         userRepository.save(user);
         this.clearUserCaches(user);
-        log.debug("Created Information for User: {}", user);
         return user;
     }
 
@@ -222,7 +218,6 @@ public class UserService {
                         .map(Optional::get)
                         .forEach(managedAuthorities::add);
                     this.clearUserCaches(user);
-                    log.debug("Changed Information for User: {}", user);
                     return user;
                 }
             )
@@ -236,7 +231,6 @@ public class UserService {
                 user -> {
                     userRepository.delete(user);
                     this.clearUserCaches(user);
-                    log.debug("Deleted User: {}", user);
                 }
             );
     }
@@ -264,7 +258,6 @@ public class UserService {
                     user.setLangKey(langKey);
                     user.setImageUrl(imageUrl);
                     this.clearUserCaches(user);
-                    log.debug("Changed Information for User: {}", user);
                 }
             );
     }
@@ -283,7 +276,6 @@ public class UserService {
                     String encryptedPassword = passwordEncoder.encode(newPassword);
                     user.setPassword(encryptedPassword);
                     this.clearUserCaches(user);
-                    log.debug("Changed password for User: {}", user);
                 }
             );
     }
@@ -319,7 +311,6 @@ public class UserService {
             .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach(
                 user -> {
-                    log.debug("Deleting not activated user {}", user.getLogin());
                     userRepository.delete(user);
                     this.clearUserCaches(user);
                 }

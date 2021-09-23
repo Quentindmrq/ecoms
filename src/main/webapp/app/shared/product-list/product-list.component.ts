@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { StockService } from 'app/entities/stock/service/stock.service';
 import { IStock, Stock } from 'app/entities/stock/stock.model';
 import { CartService } from 'app/cart/cart.service';
@@ -71,7 +70,7 @@ export class ProductListComponent implements OnChanges {
 
   addToCart(stock: Stock): void {
     if (stock.product) {
-      this.cartService.addToCart(stock);
+      this.cartService.addToCart(stock.product);
     }
   }
 

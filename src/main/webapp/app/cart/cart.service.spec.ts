@@ -12,6 +12,7 @@ import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Product } from 'app/entities/product/product.model';
 import { Stock } from 'app/entities/stock/stock.model';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('CartService', () => {
   let service: CartService;
@@ -27,6 +28,7 @@ describe('CartService', () => {
         RouterTestingModule.withRoutes([]),
         TranslateModule.forRoot(),
         NgxWebstorageModule.forRoot(),
+        MatDialogModule,
       ],
     });
     expectedResult = null;
@@ -41,23 +43,47 @@ describe('CartService', () => {
   describe('Service methods', () => {
     it('should have added one orderLine', () => {
       service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
-      service.addToCart(new Stock(1, 10, undefined, new Product(123)), 3);
+      service.addToCart(new Product(123, undefined, undefined, undefined, 15), 3);
       expect(service.numberOfItems).toEqual(3);
+      expect(service.totalPrice).toEqual(45);
       expect((expectedResult as Order).orderLines?.length).toEqual(1);
     });
 
-    it('should be null after discard', () => {
+    it('should be empty', () => {
       service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
-      service.addToCart(new Stock(1, 10, undefined, new Product(123)), 3);
-      service.discard();
-      expect(expectedResult).toEqual(null);
+      let stocks: Stock[] = [];
+      service.cartStock.subscribe(cartOrder => (stocks = cartOrder));
+      expect(service.numberOfItems).toEqual(0);
+      expect(service.totalPrice).toEqual(0);
+      expect(stocks).toEqual([]);
     });
 
     it('should be null after discard', () => {
       service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
       const prod = new Product(123);
-      const stock = new Stock(1, 10, undefined, prod);
-      service.addToCart(stock, 3);
+      service.addToCart(prod, 2);
+      service.deleteFromCart(prod);
+      expect(service.numberOfItems).toEqual(0);
+    });
+
+    it('should be null after last product deleted', () => {
+      service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
+      service.addToCart(new Product(123));
+      service.discard();
+      expect(service.numberOfItems).toEqual(0);
+      expect(expectedResult).toEqual(null);
+    });
+
+    it('should return false', async () => {
+      await service.isCartDeleted().then(ret => (expectedResult = ret));
+
+      expect(expectedResult).toEqual(false);
+    });
+
+    it('should have one orderline with 2 items', () => {
+      service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
+      const prod = new Product(123);
+      service.addToCart(prod, 3);
       service.removeOneFromCart(prod);
       expect(service.numberOfItems).toEqual(2);
       expect((expectedResult as Order).orderLines?.length).toEqual(1);

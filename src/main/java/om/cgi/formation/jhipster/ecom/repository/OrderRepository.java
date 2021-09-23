@@ -17,7 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select jhiOrder from Order jhiOrder where jhiOrder.owner.login = ?#{principal.username}")
     List<Order> findByOwnerIsCurrentUser();
 
-    @Query("select jhiOrder from Order jhiOrder where jhiOrder.owner.login = ?#{principal.username}")
+    @Query("select jhiOrder from Order jhiOrder where jhiOrder.owner.login = ?#{principal.username}  and jhiOrder.purchased = 1")
     Page<Order> findByOwnerIsCurrentUser(Pageable pagerequested);
 
     @Query("select jhiOrder from Order jhiOrder where jhiOrder.owner.login = ?#{principal.username} and jhiOrder.purchased = 0")

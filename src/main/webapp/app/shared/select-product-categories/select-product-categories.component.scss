@@ -5,7 +5,7 @@
 
 @include mat-core();
 
-$app-theme: mat-dark-theme($my-theme);
+$app-theme: mat-light-theme($my-theme);
 
 @mixin mix-app-theme($app-theme) {
   $primary: map-get($app-theme, primary);

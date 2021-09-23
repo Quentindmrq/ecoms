@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartService } from 'app/cart/cart.service';
 import { Product } from 'app/entities/product/product.model';
@@ -19,7 +19,14 @@ export class ProductItemComponent {
 
   addToCart(): void {
     if (this.stock.product) {
-      this.cartService.addToCart(this.stock);
+      try {
+        this.cartService.addToCart(this.stock.product);
+        if (this.cartService.login) {
+          this.stock.stock!--;
+        }
+      } catch (error) {
+        window.console.error(error);
+      }
     }
   }
 

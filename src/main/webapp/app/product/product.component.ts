@@ -19,6 +19,11 @@ export class ProductComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private stockService: StockService, private cartService: CartService) {}
 
   ngOnInit(): void {
+    this.cartService.cart.subscribe(() => {
+      if (this.stock) {
+        this.initStockArray();
+      }
+    });
     this.loading = true;
     this.activatedRoute.params.subscribe(
       (params: Params) => {
@@ -36,10 +41,8 @@ export class ProductComponent implements OnInit {
     this.stockService.find(this.productId).subscribe(
       stockRes => {
         this.stock = stockRes.body;
+        this.initStockArray();
         this.loading = false;
-        this.stockArray = Array(Math.min(this.productLeftInStock, 15))
-          .fill(0)
-          .map((x, i) => i + 1); // [0,1,2,3,4]
       },
 
       error => {
@@ -49,15 +52,28 @@ export class ProductComponent implements OnInit {
     );
   }
 
+  addToCart(): void {
+    if (this.stock?.product) {
+      try {
+        this.cartService.addToCart(this.stock.product, this.numberOfItems);
+        if (this.cartService.login) {
+          this.stock.stock! -= this.numberOfItems;
+        }
+      } catch (error) {
+        window.console.error(error);
+      }
+    } else {
+      this.error = "Can't add to cart, product null or undef";
+    }
+  }
+
   get productLeftInStock(): number {
     return this.cartService.productLeftInStock(this.stock!);
   }
 
-  addToCart(): void {
-    if (this.stock?.product) {
-      this.cartService.addToCart(this.stock, this.numberOfItems);
-    } else {
-      this.error = "Can't add to cart, product null or undef";
-    }
+  private initStockArray(): void {
+    this.stockArray = Array(Math.min(this.productLeftInStock, 15))
+      .fill(0)
+      .map((x, i) => i + 1);
   }
 }

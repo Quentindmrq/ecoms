@@ -1,5 +1,19 @@
-<div fxLayout="row" fxLayoutAlign="space-evenly center" class="homeBox">
-  <button *ngFor="let game of Games | keyvalue" mat-flat-button color="accent" routerLink="/game/{{ game.key.toLowerCase() }}">
-    {{ game.key }}
-  </button>
+<div fxFlex="100%" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="50px" class="homeBox">
+  <div class="logoBox">
+    <img src="../../content/images/logo_homepage.svg" class="logo-img" />
+  </div>
+  <div>
+    <h1 class="slogan">All you need is right here</h1>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-evenly center" class="buttonBox">
+    <button
+      *ngFor="let game of Games | keyvalue"
+      mat-flat-button
+      color="accent"
+      routerLink="/game/{{ game.key.toLowerCase() }}"
+      jhiTranslate="servicesenligneApp.Game.{{ game.key }}"
+    >
+      {{ game.key }}
+    </button>
+  </div>
 </div>

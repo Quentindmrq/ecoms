@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { AccountService } from 'app/core/auth/account.service';
 import { DeleteDialogComponent } from 'app/delete-dialog/delete-dialog.component';
 import { OrderLine } from 'app/entities/order-line/order-line.model';
 import { Order } from 'app/entities/order/order.model';
@@ -17,18 +18,25 @@ export class CartComponent implements OnInit {
   cart: Order | null;
   cartStocks: Stock[];
 
-  constructor(private cartService: CartService, private router: Router, public dialog: MatDialog) {
+  constructor(private cartService: CartService, private router: Router, public dialog: MatDialog, private accountService: AccountService) {
     // donothing
   }
 
   ngOnInit(): void {
+    this.cartService.fetchStock();
     this.cartService.cart.subscribe(cartItems => (this.cart = cartItems));
     this.cartService.cartStock.subscribe(cartStocks => (this.cartStocks = cartStocks));
   }
 
   addToCart(ol: OrderLine): void {
     if (ol.product) {
-      this.cartService.addToCart(this.cartStocks.find(st => st.product?.id === ol.product?.id)!);
+      this.cartService.addToCart(ol.product);
+      if (this.cartService.login) {
+        const stockId = this.cartStocks.findIndex(st => st.product?.id === ol.product?.id);
+        if (stockId !== -1) {
+          this.cartStocks[stockId].stock!--;
+        }
+      }
       return;
     }
     window.console.error('Invalid product');
@@ -37,6 +45,12 @@ export class CartComponent implements OnInit {
   removeOneFromCart(ol: OrderLine): void {
     if (ol.product) {
       this.cartService.removeOneFromCart(ol.product);
+      if (this.cartService.login) {
+        const stockId = this.cartStocks.findIndex(st => st.product?.id === ol.product?.id);
+        if (stockId !== -1) {
+          this.cartStocks[stockId].stock!++;
+        }
+      }
       return;
     }
     window.console.error('Invalid product');
@@ -55,8 +69,31 @@ export class CartComponent implements OnInit {
   }
 
   validate(): void {
-    window.console.debug('cart-validate');
-    this.router.navigate(['/shopping-tunnel']);
+    if (!this.accountService.isAuthenticated()) {
+      try {
+        const unAv = this.cartService.getUnavailableItems();
+        if (unAv.length > 0) {
+          let msg = 'Not enough of the following items in Stock :';
+          unAv.forEach(ol => {
+            msg += ' ' + (ol.product?.name ? ol.product.name : '(missing name)');
+          });
+          this.openDialog(msg);
+          return;
+        }
+      } catch (err) {
+        this.openDialog((err as Error).message);
+        return;
+      }
+      this.router.navigate(['/shopping-tunnel']);
+    }
+
+    this.cartService.isCartDeleted().then(status => {
+      if (status) {
+        this.cartService.openCartDeletedDialog();
+      } else {
+        this.router.navigate(['/shopping-tunnel']);
+      }
+    });
   }
 
   get orderLines(): OrderLine[] {
@@ -74,8 +111,12 @@ export class CartComponent implements OnInit {
     return this.cartService.login;
   }
 
-  productStock(producId: number): number {
-    return this.cartStocks.find(st => st.product?.id === producId)?.stock ?? 15;
+  productLeftInStock(producId: number): number {
+    const stock = this.cartStocks.find(st => st.product?.id === producId);
+    if (stock) {
+      return this.cartService.productLeftInStock(stock);
+    }
+    return 0;
   }
 
   openDeleteDialog(product: Product): void {
@@ -91,6 +132,15 @@ export class CartComponent implements OnInit {
       if (result === true) {
         this.deleteFromCart(product);
       }
+    });
+  }
+  openDialog(message: string): void {
+    this.dialog.open(DeleteDialogComponent, {
+      data: {
+        content: message,
+        trueButton: 'Close',
+        trueButtonColor: 'primary',
+      },
     });
   }
 }

@@ -38,10 +38,10 @@ public class Order implements Serializable {
     @JsonIgnoreProperties(value = { "order" }, allowSetters = true)
     private Set<OrderLine> orderLines = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
     private Address billingAddress;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @ManyToOne
     @JsonIgnoreProperties(
         value = { "firstName", "lastName", "email", "activated", "langKey", "imageUrl", "resetDate" },
         allowSetters = true

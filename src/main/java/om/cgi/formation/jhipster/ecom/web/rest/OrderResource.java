@@ -6,8 +6,11 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import om.cgi.formation.jhipster.ecom.domain.Authority;
 import om.cgi.formation.jhipster.ecom.domain.Order;
+import om.cgi.formation.jhipster.ecom.domain.OrderLine;
+import om.cgi.formation.jhipster.ecom.domain.Stock;
 import om.cgi.formation.jhipster.ecom.domain.User;
 import om.cgi.formation.jhipster.ecom.repository.OrderRepository;
 import om.cgi.formation.jhipster.ecom.repository.UserRepository;
@@ -74,7 +77,7 @@ public class OrderResource {
             order.setOwner(optUser.get());
             optUser.get().getorders().add(order);
         } else {
-            throw new Exception("Unknown user.");
+            throw new BadRequestAlertException("unknown user", ENTITY_NAME, "nouser");
         }
 
         Optional<Order> oldcart = orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse();
@@ -85,7 +88,7 @@ public class OrderResource {
 
         order.setPurchaseDate(ZonedDateTime.now());
 
-        Order result = orderRepository.saveAndFlush(order);
+        Order result = orderRepository.save(order);
         return ResponseEntity
             .created(new URI("/api/orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -135,7 +138,7 @@ public class OrderResource {
      * or with status {@code 500 (Internal Server Error)} if the order couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/orders/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/orders/{id}", consumes = "application/json")
     public ResponseEntity<Order> partialUpdateOrder(@PathVariable(value = "id", required = true) final Long id, @RequestBody Order order)
         throws URISyntaxException {
         log.debug("REST request to partial update Order partially : {}, {}", id, order);
@@ -162,7 +165,7 @@ public class OrderResource {
         newOrder.setPurchased(order.getPurchased());
         newOrder.setPurchaseDate(ZonedDateTime.now());
 
-        orderRepository.saveAndFlush(newOrder);
+        orderRepository.save(newOrder);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -242,8 +245,16 @@ public class OrderResource {
         if (order.isEmpty()) {
             throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
+
+        Set<OrderLine> orderl = order.get().getOrderLines();
+        for (OrderLine ol : orderl) {
+            Stock stock = ol.getProduct().getStock();
+            log.debug(" added {} to stock already at {} ", ol.getQuantity(), stock.getStock());
+            stock.setStock(stock.getStock() + ol.getQuantity());
+        }
+
         order.get().setOwner(null);
-        orderRepository.saveAndFlush(order.get());
+        orderRepository.save(order.get());
 
         orderRepository.deleteById(id);
         return ResponseEntity
