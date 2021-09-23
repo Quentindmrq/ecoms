@@ -77,7 +77,7 @@ public class OrderResource {
             order.setOwner(optUser.get());
             optUser.get().getorders().add(order);
         } else {
-            throw new Exception("Unknown user.");
+            throw new BadRequestAlertException("unknown user", ENTITY_NAME, "nouser");
         }
 
         Optional<Order> oldcart = orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse();
