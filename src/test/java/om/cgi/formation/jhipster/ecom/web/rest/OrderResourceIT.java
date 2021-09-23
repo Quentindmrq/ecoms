@@ -429,7 +429,7 @@ class OrderResourceIT {
         restOrderMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedOrder.getId())
-                    .contentType("application/merge-patch+json")
+                    .contentType("application/json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrder))
             )
             .andExpect(status().isOk());
@@ -456,7 +456,7 @@ class OrderResourceIT {
         restOrderMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedOrder.getId())
-                    .contentType("application/merge-patch+json")
+                    .contentType("application/json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOrder))
             )
             .andExpect(status().isOk());
@@ -475,9 +475,7 @@ class OrderResourceIT {
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restOrderMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, order.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(order))
+                patch(ENTITY_API_URL_ID, order.getId()).contentType("application/json").content(TestUtil.convertObjectToJsonBytes(order))
             )
             .andExpect(status().isBadRequest());
 
@@ -503,7 +501,7 @@ class OrderResourceIT {
         restOrderMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .contentType("application/merge-patch+json")
+                    .contentType("application/json")
                     .content(TestUtil.convertObjectToJsonBytes(order))
             )
             .andExpect(status().isBadRequest());
@@ -521,7 +519,7 @@ class OrderResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOrderMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(order)))
+            .perform(patch(ENTITY_API_URL).contentType("application/json").content(TestUtil.convertObjectToJsonBytes(order)))
             .andExpect(status().isForbidden());
 
         // Validate the Order in the database

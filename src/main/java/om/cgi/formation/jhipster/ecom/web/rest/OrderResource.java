@@ -88,7 +88,7 @@ public class OrderResource {
 
         order.setPurchaseDate(ZonedDateTime.now());
 
-        Order result = orderRepository.saveAndFlush(order);
+        Order result = orderRepository.save(order);
         return ResponseEntity
             .created(new URI("/api/orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -165,7 +165,7 @@ public class OrderResource {
         newOrder.setPurchased(order.getPurchased());
         newOrder.setPurchaseDate(ZonedDateTime.now());
 
-        orderRepository.saveAndFlush(newOrder);
+        orderRepository.save(newOrder);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -254,7 +254,7 @@ public class OrderResource {
         }
 
         order.get().setOwner(null);
-        orderRepository.saveAndFlush(order.get());
+        orderRepository.save(order.get());
 
         orderRepository.deleteById(id);
         return ResponseEntity
