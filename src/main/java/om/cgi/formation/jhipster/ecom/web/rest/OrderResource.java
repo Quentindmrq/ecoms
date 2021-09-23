@@ -138,7 +138,7 @@ public class OrderResource {
      * or with status {@code 500 (Internal Server Error)} if the order couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/orders/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/orders/{id}", consumes = "application/json")
     public ResponseEntity<Order> partialUpdateOrder(@PathVariable(value = "id", required = true) final Long id, @RequestBody Order order)
         throws URISyntaxException {
         log.debug("REST request to partial update Order partially : {}, {}", id, order);

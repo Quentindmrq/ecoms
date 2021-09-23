@@ -64,7 +64,6 @@ describe('CartService', () => {
       service.addToCart(prod, 2);
       service.deleteFromCart(prod);
       expect(service.numberOfItems).toEqual(0);
-      expect(expectedResult).toEqual(null);
     });
 
     it('should be null after last product deleted', () => {
