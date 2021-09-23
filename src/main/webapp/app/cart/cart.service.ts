@@ -281,7 +281,7 @@ export class CartService {
       order.purchasePrice = this.totalPrice;
       order.purchased = 1;
       this.orderService.partialUpdate(order).subscribe(
-        () => this.discard(),
+        () => this.discard(false),
         err => window.console.error(err)
       );
     } else {
