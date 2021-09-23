@@ -29,12 +29,10 @@
       fxLayout.xs="column"
       fxLayoutAlign="space-between start"
       fxLayoutAlign.xs="space-between center"
-      fxLayoutGap="16px"
+      fxLayoutGap="16px grid"
     >
       <div>
-        <div class="cropA">
-          <img src="https://via.placeholder.com/500" alt="Product logo" />
-        </div>
+        <img src="{{ stock?.product?.logo }}" alt="Logo {{ stock?.product?.name }}" width="300" height="200" />
       </div>
       <div fxFlex="50%">
         {{ stock?.product?.description }}
@@ -73,10 +71,7 @@
         <mat-icon>add_shopping_cart</mat-icon>
         {{ stock?.product?.price | currency: 'EUR' }}
       </ng-container>
-      <ng-container *ngIf="productLeftInStock <= 0">
-        <mat-icon>production_quantity_limits</mat-icon>
-        Out of stock
-      </ng-container>
+      <ng-container *ngIf="productLeftInStock <= 0"> Out of stock </ng-container>
     </button>
   </mat-card-actions>
 </mat-card>

@@ -1,16 +1,22 @@
 <mat-card>
-  <mat-card-title>
+  <mat-card-title *ngIf="orderLines.length > 0">
     <h1>Your cart {{ login }}:</h1>
   </mat-card-title>
   <mat-card-content>
     <!-- Vérifie si le panier est vide, si oui -> emptyCartBlock, sinon affiche le panier -->
-    <div class="container-fluid" *ngIf="orderLines.length > 0; else emptyCartBlock">
+    <div class="container-fluid" *ngIf="orderLines.length > 0">
       <mat-card class="cartItem" *ngFor="let item of orderLines">
         <mat-card-title routerLink="/product/{{ item.product?.id }}">
           <a>{{ item.product?.name }}</a>
         </mat-card-title>
         <mat-card-content>
-          <div class="container-fluid" fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="16px grid">
+          <div
+            class="container-fluid"
+            fxLayout="row wrap"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="16px grid"
+          >
             <img
               src="{{ item.product?.logo }}"
               alt="Logo {{ item.product?.name }}"
@@ -58,8 +64,9 @@
       </mat-card-actions>
     </div>
 
-    <ng-template #emptyCartBlock>
+    <div *ngIf="orderLines.length <= 0" fxLayout="column" fxLayoutAlign="center center">
       <h3>Your cart is empty !</h3>
-    </ng-template>
+      <button mat-flat-button color="accent" routerLink="/">Shop Here</button>
+    </div>
   </mat-card-content>
 </mat-card>
