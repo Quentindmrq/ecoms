@@ -1,6 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AccountService } from 'app/core/auth/account.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { DeleteDialogComponent } from 'app/delete-dialog/delete-dialog.component';
@@ -33,7 +34,8 @@ export class CartService {
     private stockService: StockService,
     private httpclient: HttpClient,
     protected applicationConfigService: ApplicationConfigService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {
     this.accountService
       .getAuthenticationState()
@@ -191,26 +193,28 @@ export class CartService {
       throw new Error('Cart empty');
     }
 
-    const alreadyInId = cartArray.findIndex(ol => (ol.product?.id ? product.id === ol.product.id : false));
+    const alreadyInId = cartArray.findIndex(ol => (ol.product?.id !== undefined ? product.id === ol.product.id : false));
     if (alreadyInId < 0) {
-      return;
+      throw new Error('Product not found in cart');
     }
 
     const itemQuantity = cartArray[alreadyInId].quantity;
     if (!itemQuantity || itemQuantity <= 1) {
+      // Product with 0 quantity so we delete it
       this.deleteFromCart(product);
       return;
     }
 
     cartArray[alreadyInId].quantity = itemQuantity - 1;
-    // TODO gestion erreur
     if (this.login) {
+      // If logged in we patch the database
       this.orderLineService.partialUpdate(cartArray[alreadyInId]).subscribe(
         () => this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray }),
         error => window.console.error(error)
       );
       return;
     }
+    // We update the BehSub
     this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray });
   }
 
@@ -223,35 +227,44 @@ export class CartService {
       throw new Error('Cart empty');
     }
 
-    const alreadyInId = cartArray.findIndex(ol => (ol.product?.id ? product.id === ol.product.id : false));
+    const alreadyInId = cartArray.findIndex(ol => (ol.product?.id !== undefined ? product.id === ol.product.id : false));
     if (alreadyInId < 0) {
-      return;
+      throw new Error('Product not found in cart');
     }
 
     const olId = cartArray[alreadyInId].id;
     if (olId) {
+      // We delete the orderLine in the database
+
       this.orderLineService.delete(olId).subscribe(
         () => this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray.filter(ol => ol.id !== olId) }),
         error => window.console.error(error)
       );
     }
     if (!this.login) {
+      // We update only the BehSub when not loged in
       const productId = cartArray[alreadyInId].product?.id;
       this.shoppingCart.next({ ...this.shoppingCart.getValue(), orderLines: cartArray.filter(ol => ol.product?.id !== productId) });
     }
 
     const numberOfLines = this.shoppingCart.getValue()?.orderLines?.length;
     if (numberOfLines && numberOfLines < 1) {
+      // We delete the order if there is no orderLine in it
       this.discard();
     }
   }
 
   discard(discardApi = true): void {
     const orderId = this.shoppingCart.getValue()?.id;
-    window.console.log(orderId && discardApi, orderId, discardApi);
     if (orderId && discardApi) {
-      window.console.log('Bonjour from delete');
-      this.orderService.delete(orderId);
+      this.orderService.delete(orderId).subscribe(
+        () => {
+          this.shoppingCartStocks.next([]);
+          this.shoppingCart.next(null);
+        },
+        error => window.console.error(error)
+      );
+      return;
     }
     this.shoppingCartStocks.next([]);
     this.shoppingCart.next(null);
@@ -318,7 +331,7 @@ export class CartService {
   openCartDeletedDialog(): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: {
-        content: `Your cart was deleted due to inactivity !`,
+        content: `Your cart was deleted due to inactivity ! You will be redirected to the Homepage`,
         trueButton: 'Close',
         trueButtonColor: 'primary',
       },
@@ -326,6 +339,7 @@ export class CartService {
 
     dialogRef.afterClosed().subscribe(() => {
       this.discard(false);
+      this.router.navigate(['/']);
     });
   }
 

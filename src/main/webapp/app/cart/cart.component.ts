@@ -75,7 +75,7 @@ export class CartComponent implements OnInit {
         if (unAv.length > 0) {
           let msg = 'Not enough of the following items in Stock :';
           unAv.forEach(ol => {
-            msg += ' ' + (ol.product?.name ?? '(missing name)');
+            msg += ' ' + (ol.product?.name ? ol.product.name : '(missing name)');
           });
           this.openDialog(msg);
           return;
@@ -89,7 +89,7 @@ export class CartComponent implements OnInit {
 
     this.cartService.isCartDeleted().then(status => {
       if (status) {
-        this.openCartDeletedDialog();
+        this.cartService.openCartDeletedDialog();
       } else {
         this.router.navigate(['/shopping-tunnel']);
       }
@@ -134,22 +134,6 @@ export class CartComponent implements OnInit {
       }
     });
   }
-
-  openCartDeletedDialog(): void {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      data: {
-        content: `Your cart was deleted !`,
-        trueButton: 'Go to the HomePage',
-        trueButtonColor: 'primary',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.cartService.discard(false);
-      this.router.navigate(['/']);
-    });
-  }
-
   openDialog(message: string): void {
     this.dialog.open(DeleteDialogComponent, {
       data: {
