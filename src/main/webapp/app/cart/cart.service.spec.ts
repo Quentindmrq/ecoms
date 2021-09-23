@@ -45,7 +45,7 @@ describe('CartService', () => {
       service.cart.subscribe(cartOrder => (expectedResult = cartOrder));
       service.addToCart(new Product(123, undefined, undefined, undefined, 15), 3);
       expect(service.numberOfItems).toEqual(3);
-      expect(service.totalPrice).toEqual(15);
+      expect(service.totalPrice).toEqual(45);
       expect((expectedResult as Order).orderLines?.length).toEqual(1);
     });
 
