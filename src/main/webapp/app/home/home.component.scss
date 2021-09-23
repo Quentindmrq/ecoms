@@ -1,19 +1,41 @@
+@use '~@angular/material' as mat;
+@use 'sass:map';
+@import '~@angular/material/theming';
+@import 'src/main/webapp/content/scss/styles.scss';
 /* ==========================================================================
 Main page styles
 ========================================================================== */
 .homeBox {
   width: 100%;
-  height: 100%;
+  height: 80vh;
+}
+.logoBox {
+  height: 50%;
+  width: 100%;
 }
 
-/* wait autoprefixer update to allow simple generation of high pixel density media query */
-@media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (-moz-min-device-pixel-ratio: 2),
-  only screen and (-o-min-device-pixel-ratio: 2/1),
-  only screen and (min-resolution: 192dpi),
-  only screen and (min-resolution: 2dppx) {
-  .hipster {
-    background: url('../../content/images/jhipster_family_member_2.svg') no-repeat center top;
-    background-size: contain;
+.logo-img {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+}
+
+.buttonBox {
+  width: 100%;
+}
+
+@include mat-core();
+
+$app-theme: mat-light-theme($my-theme);
+
+@mixin mix-app-theme($app-theme) {
+  $primary: map-get($app-theme, primary);
+
+  .slogan {
+    text-align: center;
+    color: mat-color($primary);
   }
 }
+
+// Include the mixin
+@include mix-app-theme($app-theme);

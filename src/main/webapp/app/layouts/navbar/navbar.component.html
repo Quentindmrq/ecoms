@@ -1,7 +1,5 @@
 <mat-toolbar fxLayout="row" data-cy="navbar" color="primary" [ngSwitch]="account !== null">
-  <div routerLink="/" (click)="collapseNavbar()">
-    <h1>UberElo</h1>
-  </div>
+  <div routerLink="/" (click)="collapseNavbar()" class="logo-img"></div>
   <div>
     <button mat-button [matMenuTriggerFor]="gamesMenu" routerLinkActive="activeButton">
       <span jhiTranslate="servicesenligneApp.gameTitle">Games</span>

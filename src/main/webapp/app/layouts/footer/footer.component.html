@@ -1,7 +1,18 @@
-<mat-toolbar fxLayout="row" color="primary" fxLayoutAlign="center center">
-  <button mat-button>Legal terms</button> - <button mat-button>Contact</button> -
-  <button mat-button><fa-icon [icon]="['fab', 'twitter']"></fa-icon> @uberelo</button>
-  <button mat-button><fa-icon [icon]="['fab', 'instagram']"></fa-icon> @uberelo</button>
-  <button mat-button><fa-icon [icon]="['fab', 'facebook']"></fa-icon> @uberelo</button>
-  <button mat-button><fa-icon [icon]="['fab', 'linkedin']"></fa-icon> @uberelo</button>
+<mat-toolbar fxLayout="row" color="primary" fxLayoutAlign="center center" fxLayoutGap="5px" fxLayoutGap.xs="0px">
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+    <button mat-button class="buttonFooter">Legal terms</button>
+    <div fxHide.xs>-</div>
+    <button mat-button class="buttonFooter">Contact</button>
+    <div fxHide.xs>-</div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+    <button mat-button fxHide.xs><fa-icon [icon]="['fab', 'twitter']"></fa-icon><span fxHide.xs> @uberelo </span></button>
+    <button mat-icon-button fxShow.xs fxHide><fa-icon [icon]="['fab', 'twitter']"></fa-icon></button>
+    <button mat-button fxHide.xs><fa-icon [icon]="['fab', 'instagram']"></fa-icon><span fxHide.xs> @uberelo </span></button>
+    <button mat-icon-button fxShow.xs fxHide><fa-icon [icon]="['fab', 'instagram']"></fa-icon></button>
+    <button mat-button fxHide.xs><fa-icon [icon]="['fab', 'facebook']"></fa-icon> <span fxHide.xs> @uberelo </span></button>
+    <button mat-icon-button fxShow.xs fxHide><fa-icon [icon]="['fab', 'facebook']"></fa-icon></button>
+    <button mat-button fxHide.xs><fa-icon [icon]="['fab', 'linkedin']"></fa-icon> <span fxHide.xs> @uberelo </span></button>
+    <button mat-icon-button fxShow.xs fxHide><fa-icon [icon]="['fab', 'linkedin']"></fa-icon></button>
+  </div>
 </mat-toolbar>
