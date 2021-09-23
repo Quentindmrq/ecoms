@@ -45,10 +45,7 @@
         <mat-icon>add_shopping_cart</mat-icon>
         {{ product?.price | currency: 'EUR' }}
       </ng-container>
-      <ng-container *ngIf="productLeftInStock <= 0">
-        <mat-icon>production_quantity_limits</mat-icon>
-        Out of stock
-      </ng-container>
+      <ng-container *ngIf="productLeftInStock <= 0"> Out of stock </ng-container>
     </button>
   </mat-card-actions>
 </mat-card>
