@@ -15,6 +15,8 @@ import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { LoginService } from 'app/login/login.service';
 
 import { NavbarComponent } from './navbar.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 describe('Component Tests', () => {
   describe('Navbar Component', () => {
@@ -36,7 +38,7 @@ describe('Component Tests', () => {
     beforeEach(
       waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot(), TranslateModule.forRoot()],
+          imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot(), TranslateModule.forRoot(), MatDialogModule],
           declarations: [NavbarComponent],
           providers: [Router, LoginService],
         })
