@@ -197,6 +197,14 @@ public class OrderLineResource {
             throw new BadRequestAlertException("not enough stock", ENTITY_NAME, "no stock");
         }
 
+        Optional<Order> order = orderRepository.findOneByIdIfOwnerIsCurrentUser(orderLine.getOrder().getId());
+
+        if (order.isEmpty()) {
+            throw new BadRequestAlertException("order doesnt exists", ENTITY_NAME, "orderinvalid");
+        }
+
+        order.get().setPurchaseDate(ZonedDateTime.now());
+
         result.get().setQuantity(orderLine.getQuantity());
 
         orderLineRepository.saveAndFlush(result.get());
