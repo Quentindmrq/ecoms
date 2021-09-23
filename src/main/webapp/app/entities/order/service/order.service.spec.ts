@@ -26,7 +26,7 @@ describe('Service Tests', () => {
 
       elemDefault = {
         id: 0,
-        purchased: false,
+        purchased: 0,
         purchaseDate: currentDate,
         purchasePrice: 0,
       };

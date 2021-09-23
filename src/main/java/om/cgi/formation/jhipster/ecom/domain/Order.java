@@ -25,7 +25,7 @@ public class Order implements Serializable {
     private Long id;
 
     @Column(name = "purchased")
-    private Boolean purchased;
+    private int purchased;
 
     @Column(name = "purchase_date")
     private ZonedDateTime purchaseDate;
@@ -62,16 +62,16 @@ public class Order implements Serializable {
         return this;
     }
 
-    public Boolean getPurchased() {
+    public int getPurchased() {
         return this.purchased;
     }
 
-    public Order purchased(Boolean purchased) {
+    public Order purchased(int purchased) {
         this.purchased = purchased;
         return this;
     }
 
-    public void setPurchased(Boolean purchased) {
+    public void setPurchased(int purchased) {
         this.purchased = purchased;
     }
 

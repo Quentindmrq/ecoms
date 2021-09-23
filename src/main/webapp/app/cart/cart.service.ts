@@ -47,7 +47,7 @@ export class CartService {
           const order = this.shoppingCart.getValue();
           if (order) {
             // Has already items is Cart
-            order.purchased = false;
+            order.purchased = 0;
             order.owner = new User(-1, accountRes.login);
             this.orderService.create(order).subscribe(orderRes => {
               order.id = orderRes.body?.id;
@@ -275,7 +275,7 @@ export class CartService {
     if (order) {
       order.billingAddress = billingAddress;
       order.purchasePrice = this.totalPrice;
-      order.purchased = true;
+      order.purchased = 1;
       this.orderService.partialUpdate(order).subscribe(
         () => this.discard(),
         err => window.console.error(err)
@@ -345,7 +345,7 @@ export class CartService {
 
   private createOrderAndAdd(product: Product, quantity: number): void {
     const order = new Order();
-    order.purchased = false;
+    order.purchased = 0;
 
     if (this.login) {
       order.owner = new User(-1, this.login);

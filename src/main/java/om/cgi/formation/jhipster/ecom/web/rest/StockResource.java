@@ -340,7 +340,7 @@ public class StockResource {
             throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
         }
 
-        order.get().setPurchased(true);
+        order.get().setPurchased(1);
 
         return ResponseUtil.wrapOrNotFound(order);
     }

@@ -79,7 +79,7 @@ public class OrderLineResource {
             throw new BadRequestAlertException("The order doesn't exists", ENTITY_NAME, "order doesn't exists");
         }
 
-        if (order.get().getPurchased()) {
+        if (order.get().getPurchased() != 0) {
             throw new BadRequestAlertException("The order is done", ENTITY_NAME, "already purchased");
         }
 
@@ -201,6 +201,14 @@ public class OrderLineResource {
         if (product.isEmpty()) {
             throw new BadRequestAlertException("product doesnt exists", ENTITY_NAME, "productinvalid");
         }
+
+        Optional<Order> order = orderRepository.findOneByIdIfOwnerIsCurrentUser(orderLine.getOrder().getId());
+
+        if (order.isEmpty()) {
+            throw new BadRequestAlertException("order doesnt exists", ENTITY_NAME, "orderinvalid");
+        }
+
+        order.get().setPurchaseDate(ZonedDateTime.now());
 
         orderLineRepository.saveAndFlush(result.get());
 
