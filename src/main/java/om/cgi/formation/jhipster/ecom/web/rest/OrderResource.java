@@ -208,8 +208,8 @@ public class OrderResource {
     }
 
     @GetMapping("/myCart")
-    public Optional<Order> getMyCart() {
-        return orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse();
+    public ResponseEntity<Order> getMyCart() {
+        return ResponseUtil.wrapOrNotFound(orderRepository.findOneByOwnerIsCurrentUserAndPurchasedIsFalse());
     }
 
     /**
