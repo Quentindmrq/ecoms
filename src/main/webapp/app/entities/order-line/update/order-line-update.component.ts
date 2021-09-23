@@ -11,6 +11,7 @@ import { IProduct } from 'app/entities/product/product.model';
 import { ProductService } from 'app/entities/product/service/product.service';
 import { IOrder } from 'app/entities/order/order.model';
 import { OrderService } from 'app/entities/order/service/order.service';
+import { PageableResponse } from 'app/entities/common/pageablehttpresponse.model';
 
 @Component({
   selector: 'jhi-order-line-update',
@@ -109,7 +110,7 @@ export class OrderLineUpdateComponent implements OnInit {
 
     this.orderService
       .query()
-      .pipe(map((res: HttpResponse<IOrder[]>) => res.body ?? []))
+      .pipe(map((res: HttpResponse<PageableResponse<IOrder>>) => res.body?.content ?? []))
       .pipe(map((orders: IOrder[]) => this.orderService.addOrderToCollectionIfMissing(orders, this.editForm.get('order')!.value)))
       .subscribe((orders: IOrder[]) => (this.ordersSharedCollection = orders));
   }

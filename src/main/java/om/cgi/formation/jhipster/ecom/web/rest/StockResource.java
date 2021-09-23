@@ -185,7 +185,7 @@ public class StockResource {
     @Lock(LockModeType.OPTIMISTIC)
     @GetMapping("/stocks")
     public Page<Stock> getAllStocksPageInBody(
-        @RequestParam(required = false, value = "page", defaultValue = "1") int page,
+        @RequestParam(required = false, value = "page", defaultValue = "0") int page,
         @RequestParam(required = false, value = "size", defaultValue = "5") int size,
         @RequestParam(required = false, value = "sort", defaultValue = "stock") String sort,
         @RequestParam(required = false, value = "way", defaultValue = "descending") String way,
@@ -203,7 +203,7 @@ public class StockResource {
         } else {
             pageSort = Sort.by(sort);
         }
-        pageRequested = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(size), pageSort);
+        pageRequested = PageRequest.of(Math.toIntExact(page), Math.toIntExact(size), pageSort);
 
         //verify the asked game does exists
         //an invalid one will return the generic page

@@ -8,10 +8,10 @@
 $app-theme: mat-dark-theme($my-theme);
 
 @mixin mix-app-theme($app-theme) {
-  $accent: map-get($app-theme, accent);
+  $primary: map-get($app-theme, primary);
 
   .selectedButton {
-    color: mat-color($accent);
+    color: mat-color($primary);
   }
 }
 
@@ -25,8 +25,4 @@ button {
   padding-left: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
-}
-
-.buttonBox {
-  margin: 20px;
 }

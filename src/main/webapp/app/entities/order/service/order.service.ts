@@ -8,9 +8,11 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IOrder, getOrderIdentifier } from '../order.model';
+import { PageableResponse } from 'app/entities/common/pageablehttpresponse.model';
 
 export type EntityResponseType = HttpResponse<IOrder>;
 export type EntityArrayResponseType = HttpResponse<IOrder[]>;
+export type PageableEntityResponseType = HttpResponse<PageableResponse<IOrder>>;
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -45,11 +47,11 @@ export class OrderService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<PageableEntityResponseType> {
     const options = createRequestOption(req);
     return this.http
-      .get<IOrder[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+      .get<PageableResponse<IOrder>>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((res: PageableEntityResponseType) => this.convertDateArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -86,9 +88,9 @@ export class OrderService {
     return res;
   }
 
-  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
-    if (res.body) {
-      res.body.forEach((order: IOrder) => {
+  protected convertDateArrayFromServer(res: PageableEntityResponseType): PageableEntityResponseType {
+    if (res.body?.content) {
+      res.body.content.forEach((order: IOrder) => {
         order.purchaseDate = order.purchaseDate ? dayjs(order.purchaseDate) : undefined;
       });
     }

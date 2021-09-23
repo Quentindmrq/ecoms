@@ -69,7 +69,7 @@ describe('Component Tests', () => {
         orderLine.order = order;
 
         const orderCollection: IOrder[] = [{ id: 89430 }];
-        jest.spyOn(orderService, 'query').mockReturnValue(of(new HttpResponse({ body: orderCollection })));
+        jest.spyOn(orderService, 'query').mockReturnValue(of(new HttpResponse({ body: { content: orderCollection } })));
         const additionalOrders = [order];
         const expectedCollection: IOrder[] = [...additionalOrders, ...orderCollection];
         jest.spyOn(orderService, 'addOrderToCollectionIfMissing').mockReturnValue(expectedCollection);
