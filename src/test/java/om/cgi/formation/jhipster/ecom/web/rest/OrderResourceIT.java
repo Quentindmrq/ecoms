@@ -107,7 +107,7 @@ class OrderResourceIT {
      */
     public static Order createEntity(EntityManager em) {
         Order order = new Order().purchaseDate(DEFAULT_PURCHASE_DATE).orderLines(new HashSet<OrderLine>());
-        order.setPurchased(false);
+        order.setPurchased(0);
         order.setPurchasePrice(null);
 
         return order;
@@ -490,8 +490,7 @@ class OrderResourceIT {
     @Transactional
     void getCart() throws Exception {
         orderRepository.saveAndFlush(order);
-
-        restOrderMockMvc.perform(get("/api/myCart", Long.MAX_VALUE)).andExpect(status().isOk());
+        restOrderMockMvc.perform(get("/api/myCart", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -541,7 +540,7 @@ class OrderResourceIT {
         // Delete the order
         restOrderMockMvc
             .perform(delete(ENTITY_API_URL_ID, order.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isBadRequest());
 
         // Validate the database contains one less item
         List<Order> orderList = orderRepository.findAll();
