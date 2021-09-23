@@ -29,7 +29,7 @@ export class CartService {
           this.login = accountRes.login;
           const order = this.shoppingCart.getValue();
           if (order) {
-            order.purchased = false;
+            order.purchased = 0;
             order.owner = new User(-1, accountRes.login);
             this.orderService.create(order).subscribe(orderRes => {
               order.id = orderRes.body?.id;
@@ -219,7 +219,7 @@ export class CartService {
     if (order) {
       order.billingAddress = billingAddress;
       order.purchasePrice = this.totalPrice;
-      order.purchased = true;
+      order.purchased = 1;
       this.orderService.partialUpdate(order).subscribe(
         () => this.discard(),
         err => window.console.error(err)
@@ -232,7 +232,7 @@ export class CartService {
 
   private createOrderAndAdd(stock: Stock, quantity: number): void {
     const order = new Order();
-    order.purchased = false;
+    order.purchased = 0;
 
     if (this.login) {
       order.owner = new User(-1, this.login);

@@ -236,7 +236,8 @@ public class OrderResource {
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         log.debug("REST request to delete Order : {}", id);
-        Optional<Order> order = orderRepository.findById(id);
+
+        Optional<Order> order = orderRepository.findOneByIdIfOwnerIsCurrentUser(id);
 
         if (order.isEmpty()) {
             throw new BadRequestAlertException(INVALID_ID, ENTITY_NAME, INVALID_ID);
