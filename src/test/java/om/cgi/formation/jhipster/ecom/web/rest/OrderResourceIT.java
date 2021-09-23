@@ -540,7 +540,7 @@ class OrderResourceIT {
         // Delete the order
         restOrderMockMvc
             .perform(delete(ENTITY_API_URL_ID, order.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isBadRequest());
 
         // Validate the database contains one less item
         List<Order> orderList = orderRepository.findAll();
